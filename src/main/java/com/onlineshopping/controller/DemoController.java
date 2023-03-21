@@ -15,11 +15,24 @@ public class DemoController {
 
     @RequestMapping("/demo")
     public CommonResult getUserById(Integer id) {
-        CommonResult cm = new CommonResult();
-        DemoDTO demoDTO = demoService.getUserById(id);
+        CommonResult cm = new CommonResult(false);
+        if (id == null) {
+            cm.setMessage("查询id为空");
+            return cm;
+        }
+        DemoDTO demoDTO;
+        try {
+            demoDTO = demoService.getUserById(id);
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        if (demoDTO == null) {
+            cm.setMessage("service未知异常");
+            return cm;
+        }
         DemoVO demoVO = new DemoVO(demoDTO.getUserName(), demoDTO.getUserRole(), "我也不知道为什么要加这个字段");
         cm.setSuccess(true);
-        cm.setMessage("成功");
         cm.setObject(demoVO);
         return cm;
     }

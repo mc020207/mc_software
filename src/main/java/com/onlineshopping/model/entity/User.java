@@ -2,7 +2,7 @@ package com.onlineshopping.model.entity;
 
 import java.io.Serializable;
 
-public class Userinfo implements Serializable {
+public class User implements Serializable {
 
   private Integer userId;
   private Integer userRole;

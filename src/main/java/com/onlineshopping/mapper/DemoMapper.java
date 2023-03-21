@@ -1,9 +1,9 @@
 package com.onlineshopping.mapper;
 
-import com.onlineshopping.model.entity.Userinfo;
+import com.onlineshopping.model.entity.User;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DemoMapper {
-    Userinfo selectUserInfoById(Integer id);
+    User selectUserById(Integer id);
 }
