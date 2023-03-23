@@ -24,7 +24,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             String userToken = (String) session.getAttribute("userToken");
             JwtUserUtil.verify(userToken);
         } catch (Exception e) {
-            response.sendRedirect(request.getContextPath() + "/"); //验证失败则返回首页
+            response.sendRedirect(request.getContextPath() + "/error");
             return false;
         }
         return true;
