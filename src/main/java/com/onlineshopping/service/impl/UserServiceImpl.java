@@ -2,15 +2,18 @@ package com.onlineshopping.service.impl;
 
 import com.onlineshopping.exception.ServiceException;
 import com.onlineshopping.mapper.UserMapper;
+import com.onlineshopping.model.dto.UserDetailDTO;
 import com.onlineshopping.model.dto.UserLoginDTO;
 import com.onlineshopping.model.dto.UserRegisterDTO;
 import com.onlineshopping.model.entity.User;
+import com.onlineshopping.model.vo.UserDetailVO;
 import com.onlineshopping.service.UserService;
 import com.onlineshopping.util.FormatUtil;
 import com.onlineshopping.util.JwtUserUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
@@ -94,5 +97,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
         JwtUserUtil.deleteSessionAndCookie(request, response);
+    }
+
+    @Override
+    public UserDetailDTO info(HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
+        HttpSession session = request.getSession();
+        String token = (String) session.getAttribute("userToken");
+        String userId = JwtUserUtil.getInfo(token, "userId");
+        List<User> userList = userMapper.selectUsersBySingleAttr("userId", userId);
+        if (userList.size() == 0)
+            throw new ServiceException("用户不存在");
+        if (userList.size() > 1)
+            throw new ServiceException("数据库发生错误，存在同名");
+        return new UserDetailDTO(userList.get(0));
     }
 }
