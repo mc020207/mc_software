@@ -90,4 +90,9 @@ public class UserServiceImpl implements UserService {
         int expiryMS = 24 * 60 * 60 * 1000; // 1天
         JwtUserUtil.setSessionAndCookie(request, response, userId, userName, userPwd, expiryMS);
     }
+
+    @Override
+    public void logout(HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
+        JwtUserUtil.deleteSessionAndCookie(request, response);
+    }
 }

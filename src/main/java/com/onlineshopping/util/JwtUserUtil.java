@@ -26,11 +26,19 @@ public class JwtUserUtil {
     private static final JWTVerifier verifier = JWT.require(algorithm).build();
 
     /**
+    * @Description: 检查token是否合法
+    * @Author: Lin-Yanjun
+    */
+    public static void verify(String token) throws RuntimeException {
+        verifier.verify(token);
+    }
+
+    /**
      * @Description: 获得token中的信息
      * @Author: Lin-Yanjun
      */
     public static String getInfo(String token, String fieldName) throws RuntimeException {
-        verifier.verify(token);
+        verify(token);
         DecodedJWT jwt = JWT.decode(token);
         return jwt.getClaim(fieldName).asString();
     }
@@ -66,7 +74,12 @@ public class JwtUserUtil {
                            String userId, String userName, String userPwd, int expiry) {
         String token = sign(userId, userName, userPwd, expiry);
         HttpSession session = request.getSession();
-        session.setAttribute("userToken", token);
+        if (token.equals("")) { //关闭session
+            if (session != null)
+                session.invalidate();
+        } else { // 设置session
+            session.setAttribute("userToken", token);
+        }
         Cookie cookie = new Cookie("userToken", token);
         cookie.setMaxAge(expiry);
         cookie.setPath(request.getContextPath());

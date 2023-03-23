@@ -44,4 +44,17 @@ public class UserController {
         cm.setSuccess(true);
         return cm;
     }
+
+    @RequestMapping(value = "/user/logout", method = RequestMethod.GET)
+    public CommonResult logout(HttpServletRequest request, HttpServletResponse response) {
+        CommonResult cm = new CommonResult(false);
+        try {
+            userService.logout(request, response);
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
+        return cm;
+    }
 }

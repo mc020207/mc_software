@@ -17,4 +17,10 @@ public interface UserService {
      * @Author: Lin-Yanjun
      */
     void login(HttpServletRequest request, HttpServletResponse response, UserLoginDTO userLoginDTO) throws RuntimeException;
+
+    /**
+    * @Description: 清除session和cookie
+    * @Author: Lin-Yanjun
+    */
+    void logout(HttpServletRequest request, HttpServletResponse response) throws RuntimeException;
 }
