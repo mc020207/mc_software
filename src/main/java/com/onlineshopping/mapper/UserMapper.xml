@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.onlineshopping.mapper.UserMapper">
+
+    <select id="selectUsersBySingleAttr" resultType="User">
+        select * from `user` where ${fieldName} = #{fieldValue} order by userId
+    </select>
+
+    <select id="insertUser">
+        insert into `user`(userRole, userName, userPhone, userIdCard, userEmail, userPwd)
+        values (#{userRole}, #{userName}, #{userPhone}, #{userIdCard}, #{userEmail}, #{userPwd})
+    </select>
+
+</mapper>
