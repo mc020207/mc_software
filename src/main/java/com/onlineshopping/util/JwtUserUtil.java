@@ -73,6 +73,10 @@ public class JwtUserUtil {
         response.addCookie(cookie);
     }
 
+    /**
+    * @Description: 删除session和cookie
+    * @Author: Lin-Yanjun
+    */
     public static void deleteSessionAndCookie(HttpServletRequest request, HttpServletResponse response) {
         setSessionAndCookie(request, response, "", "", "", 0);
     }

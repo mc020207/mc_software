@@ -8,9 +8,6 @@ public class UserRegisterFVO {
     private String userEmail;
     private String userPwd;
 
-    public UserRegisterFVO() {
-    }
-
     public Integer getUserRole() {
         return userRole;
     }
