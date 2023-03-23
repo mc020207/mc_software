@@ -9,6 +9,7 @@ import com.onlineshopping.util.FormatUtil;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.DigestUtils;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void registerUser(UserRegisterDTO userRegisterDTO) throws RuntimeException {
+    public void register(UserRegisterDTO userRegisterDTO) throws RuntimeException {
         // 获取字段
         Integer userRole = userRegisterDTO.getUserRole();
         String userName = userRegisterDTO.getUserName();
@@ -57,7 +58,21 @@ public class UserServiceImpl implements UserService {
         user.setUserPhone(userPhone);
         user.setUserIdCard(userIdCard);
         user.setUserEmail(userEmail);
-        user.setUserPwd(userPwd);
+        user.setUserPwd(DigestUtils.md5DigestAsHex(userPwd.getBytes()));
         userMapper.insertUser(user);
+    }
+
+    @Override
+    @Transactional
+    public String login(String userName, String userPwd) throws RuntimeException {
+        List<User> userList = userMapper.selectUsersBySingleAttr("userName", userName);
+        if (userList.size() == 0)
+            throw new ServiceException("用户名不存在");
+        if (userList.size() > 1)
+            throw new ServiceException("数据库发生错误，存在同名");
+        User user = userList.get(0);
+        if (!(user.getUserPwd().equals(DigestUtils.md5DigestAsHex(userPwd.getBytes()))))
+            throw new ServiceException("密码错误");
+        return String.valueOf(user.getUserId());
     }
 }
