@@ -7,7 +7,6 @@ import com.onlineshopping.exception.ServiceException;
 * @Author: Lin-Yanjun
 */
 public final class FormatUtil {
-    public static final Integer PAGE_SIZE = 9;
 
     /**
     * @Description: 检查字段是否不为空
@@ -24,8 +23,8 @@ public final class FormatUtil {
     */
     public static void checkUserRole(Integer userRole) throws ServiceException {
         checkNotNull("用户角色", userRole);
-        if (!(userRole == 0 || userRole == 1))
-            throw new ServiceException("用户角色应满足：只能注册普通用户(0)或商户(1)");
+        if (!(userRole.equals(ConstantUtil.USER_NORMAL) || userRole.equals(ConstantUtil.USER_OWNER)))
+            throw new ServiceException("用户角色应满足：只能注册普通用户或商户");
     }
 
     /**

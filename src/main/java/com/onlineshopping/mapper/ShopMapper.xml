@@ -3,7 +3,7 @@
 
 <mapper namespace="com.onlineshopping.mapper.ShopMapper">
 
-    <select id="selectShopsByRange" resultType="Shop">
+    <select id="selectOpenShopsByRange" resultType="Shop">
         select * from `shop`
         where shopIsOpen = 2
         order by shopId
