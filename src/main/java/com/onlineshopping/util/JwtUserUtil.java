@@ -47,7 +47,7 @@ public class JwtUserUtil {
     * @Description: 生成签名，expiry(ms)后过期
     * @Author: Lin-Yanjun
     */
-    public static String sign(String userId, String userName, String userPwd, int expiry) {
+    public static String sign(String userId, String userRole, String userName, String userPwd, int expiry) {
         if (expiry <= 0)
             return "";
         // 过期时间
@@ -60,6 +60,7 @@ public class JwtUserUtil {
         return JWT.create()
                 .withHeader(header)
                 .withClaim("userId", userId)
+                .withClaim("userRole", userRole)
                 .withClaim("userName", userName)
                 .withClaim("userPwd", userPwd)
                 .withExpiresAt(date)
@@ -71,8 +72,8 @@ public class JwtUserUtil {
      * @Author: Lin-Yanjun
      */
     public static void setSessionAndCookie(HttpServletRequest request, HttpServletResponse response,
-                           String userId, String userName, String userPwd, int expiry) {
-        String token = sign(userId, userName, userPwd, expiry);
+                           String userId, String userRole, String userName, String userPwd, int expiry) {
+        String token = sign(userId, userRole, userName, userPwd, expiry);
         HttpSession session = request.getSession();
         if (token.equals("")) { //关闭session
             if (session != null)
@@ -91,6 +92,6 @@ public class JwtUserUtil {
     * @Author: Lin-Yanjun
     */
     public static void deleteSessionAndCookie(HttpServletRequest request, HttpServletResponse response) {
-        setSessionAndCookie(request, response, "", "", "", 0);
+        setSessionAndCookie(request, response, "", "", "", "", 0);
     }
 }

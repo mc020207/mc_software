@@ -9,7 +9,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import java.io.IOException;
 
 
-public class LoginInterceptor implements HandlerInterceptor {
+public class UserInterceptor implements HandlerInterceptor {
     /**
     * @Description: 拦截/user开头的请求，检查session
     * @Author: Lin-Yanjun

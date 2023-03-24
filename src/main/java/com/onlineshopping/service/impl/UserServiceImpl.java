@@ -6,7 +6,6 @@ import com.onlineshopping.model.dto.UserDetailDTO;
 import com.onlineshopping.model.dto.UserLoginDTO;
 import com.onlineshopping.model.dto.UserRegisterDTO;
 import com.onlineshopping.model.entity.User;
-import com.onlineshopping.model.vo.UserDetailVO;
 import com.onlineshopping.service.UserService;
 import com.onlineshopping.util.FormatUtil;
 import com.onlineshopping.util.JwtUserUtil;
@@ -76,7 +75,7 @@ public class UserServiceImpl implements UserService {
         JwtUserUtil.deleteSessionAndCookie(request, response);
         // 检查用户名是否唯一存在
         String userName = userLoginDTO.getUserName();
-        FormatUtil.checkNull("用户名", userName);
+        FormatUtil.checkNotNull("用户名", userName);
         List<User> userList = userMapper.selectUsersBySingleAttr("userName", userName);
         if (userList.size() == 0)
             throw new ServiceException("用户名不存在");
@@ -84,14 +83,15 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("数据库发生错误，存在同名");
         // 检查密码是否匹配
         String userPwd = userLoginDTO.getUserPwd();
-        FormatUtil.checkNull("密码", userPwd);
+        FormatUtil.checkNotNull("密码", userPwd);
         User user = userList.get(0);
         if (!(user.getUserPwd().equals(DigestUtils.md5DigestAsHex(userPwd.getBytes()))))
             throw new ServiceException("密码错误");
         // 设置session和cookie
         String userId = String.valueOf(user.getUserId());
+        String userRole = String.valueOf(user.getUserRole());
         int expiryMS = 24 * 60 * 60 * 1000; // 1天
-        JwtUserUtil.setSessionAndCookie(request, response, userId, userName, userPwd, expiryMS);
+        JwtUserUtil.setSessionAndCookie(request, response, userId, userRole, userName, userPwd, expiryMS);
     }
 
     @Override
