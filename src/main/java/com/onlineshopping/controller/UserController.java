@@ -20,7 +20,7 @@ public class UserController {
     UserService userService;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public CommonResult userRegister(@RequestBody UserRegisterFVO userRegisterFVO) {
+    public CommonResult register(@RequestBody UserRegisterFVO userRegisterFVO) {
         CommonResult cm = new CommonResult(false);
         UserRegisterDTO userRegisterDTO = new UserRegisterDTO(userRegisterFVO);
         try {

@@ -7,6 +7,8 @@ import com.onlineshopping.exception.ServiceException;
 * @Author: Lin-Yanjun
 */
 public final class FormatUtil {
+    public static final Integer PAGE_SIZE = 9;
+
     /**
     * @Description: 检查字段是否不为空
     * @Author: Lin-Yanjun
