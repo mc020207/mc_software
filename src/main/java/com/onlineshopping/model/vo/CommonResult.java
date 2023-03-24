@@ -5,11 +5,16 @@ public class CommonResult {
     String message; //提示信息
     Object object; //具体返回内容
 
+    public CommonResult() {
+    }
+
     public CommonResult(Boolean success) {
         this.success = success;
     }
 
-    public CommonResult() {
+    public CommonResult(Boolean success, String message) {
+        this.success = success;
+        this.message = message;
     }
 
     public Boolean getSuccess() {
