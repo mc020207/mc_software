@@ -10,4 +10,8 @@
         limit ${startRow}, ${number}
     </select>
 
+    <select id="selectShopsBySingleAttr" resultType="Shop">
+        select * from `shop` where ${fieldName} = #{fieldValue} order by shopId
+    </select>
+
 </mapper>
