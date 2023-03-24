@@ -1,6 +1,5 @@
 package com.onlineshopping.controller;
 
-import com.onlineshopping.model.dto.UserInfoDTO;
 import com.onlineshopping.model.dto.UserLoginDTO;
 import com.onlineshopping.model.dto.UserRegisterDTO;
 import com.onlineshopping.model.vo.CommonResult;
@@ -64,15 +63,15 @@ public class UserController {
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public CommonResult info(HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
-        UserInfoDTO userInfoDTO;
+        UserInfoVO userInfoVO;
         try {
-            userInfoDTO = userService.info(request, response);
+            userInfoVO = userService.info(request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
         }
         cm.setSuccess(true);
-        cm.setObject(new UserInfoVO(userInfoDTO));
+        cm.setObject(userInfoVO);
         return cm;
     }
 }

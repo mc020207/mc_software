@@ -1,8 +1,8 @@
 package com.onlineshopping.service;
 
-import com.onlineshopping.model.dto.UserInfoDTO;
 import com.onlineshopping.model.dto.UserLoginDTO;
 import com.onlineshopping.model.dto.UserRegisterDTO;
+import com.onlineshopping.model.vo.UserInfoVO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -29,5 +29,5 @@ public interface UserService {
     * @Description: 获取用户详细信息
     * @Author: Lin-Yanjun
     */
-    UserInfoDTO info(HttpServletRequest request, HttpServletResponse response) throws RuntimeException;
+    UserInfoVO info(HttpServletRequest request, HttpServletResponse response) throws RuntimeException;
 }

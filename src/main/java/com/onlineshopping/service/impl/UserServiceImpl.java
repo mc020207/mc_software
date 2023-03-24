@@ -2,10 +2,10 @@ package com.onlineshopping.service.impl;
 
 import com.onlineshopping.exception.ServiceException;
 import com.onlineshopping.mapper.UserMapper;
-import com.onlineshopping.model.dto.UserInfoDTO;
 import com.onlineshopping.model.dto.UserLoginDTO;
 import com.onlineshopping.model.dto.UserRegisterDTO;
 import com.onlineshopping.model.entity.User;
+import com.onlineshopping.model.vo.UserInfoVO;
 import com.onlineshopping.service.UserService;
 import com.onlineshopping.util.FormatUtil;
 import com.onlineshopping.util.JwtUserUtil;
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoDTO info(HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
+    public UserInfoVO info(HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
         HttpSession session = request.getSession();
         String token = (String) session.getAttribute("userToken");
         String userId = JwtUserUtil.getInfo(token, "userId");
@@ -109,6 +109,6 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("用户不存在");
         if (userList.size() > 1)
             throw new ServiceException("数据库发生错误，存在同名");
-        return new UserInfoDTO(userList.get(0));
+        return new UserInfoVO(userList.get(0));
     }
 }

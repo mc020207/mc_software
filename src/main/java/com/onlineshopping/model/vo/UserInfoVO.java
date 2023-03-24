@@ -1,6 +1,6 @@
 package com.onlineshopping.model.vo;
 
-import com.onlineshopping.model.dto.UserInfoDTO;
+import com.onlineshopping.model.entity.User;
 
 public class UserInfoVO {
     private Integer userRole;
@@ -9,12 +9,12 @@ public class UserInfoVO {
     private String userIdCard;
     private String userEmail;
 
-    public UserInfoVO(UserInfoDTO userInfoDTO) {
-        this.userRole = userInfoDTO.getUserRole();
-        this.userName = userInfoDTO.getUserName();
-        this.userPhone = userInfoDTO.getUserPhone();
-        this.userIdCard = userInfoDTO.getUserIdCard();
-        this.userEmail = userInfoDTO.getUserEmail();
+    public UserInfoVO(User user) {
+        this.userRole = user.getUserRole();
+        this.userName = user.getUserName();
+        this.userPhone = user.getUserPhone();
+        this.userIdCard = user.getUserIdCard();
+        this.userEmail = user.getUserEmail();
     }
 
     public Integer getUserRole() {
