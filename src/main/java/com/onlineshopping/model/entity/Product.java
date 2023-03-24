@@ -4,35 +4,35 @@ import java.io.Serializable;
 
 public class Product implements Serializable {
 
-  private Integer productId;
-  private Integer shopId;
-  private String productName;
+    private Integer productId;
+    private Integer shopId;
+    private String productName;
 
 
-  public Integer getProductId() {
-    return productId;
-  }
+    public Integer getProductId() {
+        return productId;
+    }
 
-  public void setProductId(Integer productId) {
-    this.productId = productId;
-  }
-
-
-  public Integer getShopId() {
-    return shopId;
-  }
-
-  public void setShopId(Integer shopId) {
-    this.shopId = shopId;
-  }
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
 
 
-  public String getProductName() {
-    return productName;
-  }
+    public Integer getShopId() {
+        return shopId;
+    }
 
-  public void setProductName(String productName) {
-    this.productName = productName;
-  }
+    public void setShopId(Integer shopId) {
+        this.shopId = shopId;
+    }
+
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
 }

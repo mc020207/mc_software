@@ -4,85 +4,85 @@ import java.io.Serializable;
 
 public class Shop implements Serializable {
 
-  private Integer shopId;
-  private Integer userId;
-  private String shopName;
-  private String shopIntro;
-  private String shopAddr;
-  private Double shopRegisterFund;
-  private java.sql.Date shopRegisterDate;
-  private Integer shopIsOpen;
+    private Integer shopId;
+    private Integer userId;
+    private String shopName;
+    private String shopIntro;
+    private String shopAddr;
+    private Double shopRegisterFund;
+    private java.sql.Date shopRegisterDate;
+    private Integer shopIsOpen;
 
 
-  public Integer getShopId() {
-    return shopId;
-  }
+    public Integer getShopId() {
+        return shopId;
+    }
 
-  public void setShopId(Integer shopId) {
-    this.shopId = shopId;
-  }
-
-
-  public Integer getUserId() {
-    return userId;
-  }
-
-  public void setUserId(Integer userId) {
-    this.userId = userId;
-  }
+    public void setShopId(Integer shopId) {
+        this.shopId = shopId;
+    }
 
 
-  public String getShopName() {
-    return shopName;
-  }
+    public Integer getUserId() {
+        return userId;
+    }
 
-  public void setShopName(String shopName) {
-    this.shopName = shopName;
-  }
-
-
-  public String getShopIntro() {
-    return shopIntro;
-  }
-
-  public void setShopIntro(String shopIntro) {
-    this.shopIntro = shopIntro;
-  }
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
 
-  public String getShopAddr() {
-    return shopAddr;
-  }
+    public String getShopName() {
+        return shopName;
+    }
 
-  public void setShopAddr(String shopAddr) {
-    this.shopAddr = shopAddr;
-  }
-
-
-  public Double getShopRegisterFund() {
-    return shopRegisterFund;
-  }
-
-  public void setShopRegisterFund(Double shopRegisterFund) {
-    this.shopRegisterFund = shopRegisterFund;
-  }
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
 
 
-  public java.sql.Date getShopRegisterDate() {
-    return shopRegisterDate;
-  }
+    public String getShopIntro() {
+        return shopIntro;
+    }
 
-  public void setShopRegisterDate(java.sql.Date shopRegisterDate) {
-    this.shopRegisterDate = shopRegisterDate;
-  }
+    public void setShopIntro(String shopIntro) {
+        this.shopIntro = shopIntro;
+    }
 
 
-  public Integer getShopIsOpen() {
-    return shopIsOpen;
-  }
+    public String getShopAddr() {
+        return shopAddr;
+    }
 
-  public void setShopIsOpen(Integer shopIsOpen) {
-    this.shopIsOpen = shopIsOpen;
-  }
+    public void setShopAddr(String shopAddr) {
+        this.shopAddr = shopAddr;
+    }
+
+
+    public Double getShopRegisterFund() {
+        return shopRegisterFund;
+    }
+
+    public void setShopRegisterFund(Double shopRegisterFund) {
+        this.shopRegisterFund = shopRegisterFund;
+    }
+
+
+    public java.sql.Date getShopRegisterDate() {
+        return shopRegisterDate;
+    }
+
+    public void setShopRegisterDate(java.sql.Date shopRegisterDate) {
+        this.shopRegisterDate = shopRegisterDate;
+    }
+
+
+    public Integer getShopIsOpen() {
+        return shopIsOpen;
+    }
+
+    public void setShopIsOpen(Integer shopIsOpen) {
+        this.shopIsOpen = shopIsOpen;
+    }
 
 }

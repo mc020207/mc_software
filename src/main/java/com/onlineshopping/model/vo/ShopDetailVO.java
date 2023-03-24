@@ -20,7 +20,7 @@ public class ShopDetailVO {
         this.shopId = shop.getShopId();
         this.shopName = shop.getShopName();
         productNames = new ArrayList<>();
-        for (Product product: products)
+        for (Product product : products)
             productNames.add(product.getProductName());
         this.shopIntro = shop.getShopIntro();
         this.shopAddr = shop.getShopAddr();

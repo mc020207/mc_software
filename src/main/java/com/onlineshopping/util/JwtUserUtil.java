@@ -26,9 +26,9 @@ public class JwtUserUtil {
     private static final JWTVerifier verifier = JWT.require(algorithm).build();
 
     /**
-    * @Description: 检查token是否合法
-    * @Author: Lin-Yanjun
-    */
+     * @Description: 检查token是否合法
+     * @Author: Lin-Yanjun
+     */
     public static void verify(String token) throws RuntimeException {
         verifier.verify(token);
     }
@@ -44,9 +44,9 @@ public class JwtUserUtil {
     }
 
     /**
-    * @Description: 生成签名，expiry(ms)后过期
-    * @Author: Lin-Yanjun
-    */
+     * @Description: 生成签名，expiry(ms)后过期
+     * @Author: Lin-Yanjun
+     */
     public static String sign(String userId, String userRole, String userName, String userPwd, int expiry) {
         if (expiry <= 0)
             return "";
@@ -72,7 +72,7 @@ public class JwtUserUtil {
      * @Author: Lin-Yanjun
      */
     public static void setSessionAndCookie(HttpServletRequest request, HttpServletResponse response,
-                           String userId, String userRole, String userName, String userPwd, int expiry) {
+                                           String userId, String userRole, String userName, String userPwd, int expiry) {
         String token = sign(userId, userRole, userName, userPwd, expiry);
         HttpSession session = request.getSession();
         if (token.equals("")) { //关闭session
@@ -88,9 +88,9 @@ public class JwtUserUtil {
     }
 
     /**
-    * @Description: 删除session和cookie
-    * @Author: Lin-Yanjun
-    */
+     * @Description: 删除session和cookie
+     * @Author: Lin-Yanjun
+     */
     public static void deleteSessionAndCookie(HttpServletRequest request, HttpServletResponse response) {
         setSessionAndCookie(request, response, "", "", "", "", 0);
     }

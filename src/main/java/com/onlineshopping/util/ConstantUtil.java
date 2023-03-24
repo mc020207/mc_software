@@ -1,9 +1,9 @@
 package com.onlineshopping.util;
 
 /**
-* @Description: 存储一些常量
-* @Author: Lin-Yanjun
-*/
+ * @Description: 存储一些常量
+ * @Author: Lin-Yanjun
+ */
 public final class ConstantUtil {
     // shopIsOpen
     public static final Integer SHOP_OPEN = 2;

@@ -1,8 +1,6 @@
 package com.onlineshopping.mapper;
 
 import com.onlineshopping.model.entity.Product;
-import com.onlineshopping.model.entity.Shop;
-import com.onlineshopping.model.entity.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

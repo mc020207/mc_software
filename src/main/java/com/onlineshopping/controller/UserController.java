@@ -10,7 +10,10 @@ import com.onlineshopping.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user")
@@ -34,7 +37,7 @@ public class UserController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public CommonResult login(HttpServletRequest request, HttpServletResponse response,
-                              @RequestBody UserLoginFVO userLoginFVO){
+                              @RequestBody UserLoginFVO userLoginFVO) {
         CommonResult cm = new CommonResult(false);
         UserLoginDTO userLoginDTO = new UserLoginDTO(userLoginFVO);
         try {

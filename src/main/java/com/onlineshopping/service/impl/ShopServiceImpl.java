@@ -39,7 +39,7 @@ public class ShopServiceImpl implements ShopService {
             throw new ServiceException("没有这么多开放的商店");
         // 返回VO
         List<ShopDisplayVO> shopsDisplay = new ArrayList<>();
-        for (Shop shop: shops) {
+        for (Shop shop : shops) {
             shopsDisplay.add(new ShopDisplayVO(shop));
         }
         return new ShopsDisplayVO(shopsDisplay);

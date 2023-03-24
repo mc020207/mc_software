@@ -11,9 +11,9 @@ import java.io.IOException;
 
 public class UserInterceptor implements HandlerInterceptor {
     /**
-    * @Description: 拦截/user开头的请求，检查session
-    * @Author: Lin-Yanjun
-    */
+     * @Description: 拦截/user开头的请求，检查session
+     * @Author: Lin-Yanjun
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws IOException {
