@@ -4,7 +4,10 @@
 <mapper namespace="com.onlineshopping.mapper.UserMapper">
 
     <select id="selectUsersBySingleAttr" resultType="User">
-        select * from `user` where ${fieldName} = #{fieldValue} order by userId
+        select *
+        from `user`
+        where ${fieldName} = #{fieldValue}
+        order by userId
     </select>
 
     <select id="insertUser">

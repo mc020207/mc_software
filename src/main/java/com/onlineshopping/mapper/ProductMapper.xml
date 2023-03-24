@@ -4,7 +4,10 @@
 <mapper namespace="com.onlineshopping.mapper.ProductMapper">
 
     <select id="selectProductsBySingleAttr" resultType="Product">
-        select * from `product` where ${fieldName} = #{fieldValue} order by productId
+        select *
+        from `product`
+        where ${fieldName} = #{fieldValue}
+        order by productId
     </select>
 
 </mapper>

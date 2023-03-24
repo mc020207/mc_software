@@ -4,14 +4,18 @@
 <mapper namespace="com.onlineshopping.mapper.ShopMapper">
 
     <select id="selectOpenShopsByRange" resultType="Shop">
-        select * from `shop`
+        select *
+        from `shop`
         where shopIsOpen = 2
         order by shopId
         limit ${startRow}, ${number}
     </select>
 
     <select id="selectShopsBySingleAttr" resultType="Shop">
-        select * from `shop` where ${fieldName} = #{fieldValue} order by shopId
+        select *
+        from `shop`
+        where ${fieldName} = #{fieldValue}
+        order by shopId
     </select>
 
 </mapper>

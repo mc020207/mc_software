@@ -17,7 +17,7 @@ import java.util.Map;
  * @Description: 加密用户信息
  * @Author: Lin-Yanjun
  */
-public class JwtUserUtil {
+public final class JwtUserUtil {
     // token私钥
     private static final String TOKEN_SECRET = "SoftwareEngineering2023";
     // 校验算法

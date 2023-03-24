@@ -9,6 +9,7 @@ import com.onlineshopping.model.vo.UserInfoVO;
 import com.onlineshopping.service.UserService;
 import com.onlineshopping.util.FormatUtil;
 import com.onlineshopping.util.JwtUserUtil;
+import com.onlineshopping.util.ListUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -77,10 +78,7 @@ public class UserServiceImpl implements UserService {
         String userName = userLoginDTO.getUserName();
         FormatUtil.checkNotNull("用户名", userName);
         List<User> userList = userMapper.selectUsersBySingleAttr("userName", userName);
-        if (userList.size() == 0)
-            throw new ServiceException("用户名不存在");
-        if (userList.size() > 1)
-            throw new ServiceException("数据库发生错误，存在同名");
+        ListUtil.checkSingle("用户名", userList);
         // 检查密码是否匹配
         String userPwd = userLoginDTO.getUserPwd();
         FormatUtil.checkNotNull("密码", userPwd);
@@ -105,10 +103,7 @@ public class UserServiceImpl implements UserService {
         String token = (String) session.getAttribute("userToken");
         String userId = JwtUserUtil.getInfo(token, "userId");
         List<User> userList = userMapper.selectUsersBySingleAttr("userId", userId);
-        if (userList.size() == 0)
-            throw new ServiceException("用户不存在");
-        if (userList.size() > 1)
-            throw new ServiceException("数据库发生错误，存在同名");
+        ListUtil.checkSingle("用户", userList);
         return new UserInfoVO(userList.get(0));
     }
 }

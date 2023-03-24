@@ -76,4 +76,14 @@ public final class FormatUtil {
         if (!userPwd.matches("^(?!^(\\d+|[a-zA-Z]+|[-_]+)$)[\\da-zA-Z-_]{6,32}$"))
             throw new ServiceException("密码应满足：长度为6-32个字符，而且字母，数字或者特殊字符（-_）至少包含两种");
     }
+
+    /**
+     * @Description: 检查num非负
+     * @Author: Lin-Yanjun
+     */
+    public static void checkNotNegative(String field, Integer num) throws ServiceException {
+        checkNotNull(field, num);
+        if (num < 0)
+            throw new ServiceException(field + "不能为负数");
+    }
 }

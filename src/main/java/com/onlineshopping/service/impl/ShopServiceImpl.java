@@ -11,6 +11,7 @@ import com.onlineshopping.model.vo.ShopsDisplayVO;
 import com.onlineshopping.service.ShopService;
 import com.onlineshopping.util.ConstantUtil;
 import com.onlineshopping.util.FormatUtil;
+import com.onlineshopping.util.ListUtil;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,18 +31,15 @@ public class ShopServiceImpl implements ShopService {
     @Transactional
     public ShopsDisplayVO display(Integer page) throws ServiceException {
         // 检查page
-        FormatUtil.checkNotNull("分页", page);
-        if (page < 0)
-            throw new ServiceException("页数不能为负数");
+        FormatUtil.checkNotNegative("分页", page);
         // 查询shops
         List<Shop> shops = shopMapper.selectOpenShopsByRange(page * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
         if (shops.size() == 0)
             throw new ServiceException("没有这么多开放的商店");
         // 返回VO
         List<ShopDisplayVO> shopsDisplay = new ArrayList<>();
-        for (Shop shop : shops) {
+        for (Shop shop : shops)
             shopsDisplay.add(new ShopDisplayVO(shop));
-        }
         return new ShopsDisplayVO(shopsDisplay);
     }
 
@@ -52,10 +50,7 @@ public class ShopServiceImpl implements ShopService {
         FormatUtil.checkNotNull("商店id", shopId);
         // 查询shop
         List<Shop> shops = shopMapper.selectShopsBySingleAttr("shopId", shopId);
-        if (shops.size() == 0)
-            throw new ServiceException("商店不存在");
-        if (shops.size() > 1)
-            throw new ServiceException("数据库出错，shopId重复");
+        ListUtil.checkSingle("商店", shops);
         Shop shop = shops.get(0);
         // 检查shopIsOpen
         Integer shopIsOpen = shop.getShopIsOpen();
