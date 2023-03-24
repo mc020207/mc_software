@@ -1,10 +1,10 @@
 package com.onlineshopping.controller;
 
-import com.onlineshopping.model.dto.UserDetailDTO;
+import com.onlineshopping.model.dto.UserInfoDTO;
 import com.onlineshopping.model.dto.UserLoginDTO;
 import com.onlineshopping.model.dto.UserRegisterDTO;
 import com.onlineshopping.model.vo.CommonResult;
-import com.onlineshopping.model.vo.UserDetailVO;
+import com.onlineshopping.model.vo.UserInfoVO;
 import com.onlineshopping.model.vo.UserLoginFVO;
 import com.onlineshopping.model.vo.UserRegisterFVO;
 import com.onlineshopping.service.UserService;
@@ -64,15 +64,15 @@ public class UserController {
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public CommonResult info(HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
-        UserDetailDTO userDetailDTO;
+        UserInfoDTO userInfoDTO;
         try {
-            userDetailDTO = userService.info(request, response);
+            userInfoDTO = userService.info(request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
         }
         cm.setSuccess(true);
-        cm.setObject(new UserDetailVO(userDetailDTO));
+        cm.setObject(new UserInfoVO(userInfoDTO));
         return cm;
     }
 }

@@ -1,20 +1,20 @@
-package com.onlineshopping.model.dto;
+package com.onlineshopping.model.vo;
 
-import com.onlineshopping.model.entity.User;
+import com.onlineshopping.model.dto.UserInfoDTO;
 
-public class UserDetailDTO {
+public class UserInfoVO {
     private Integer userRole;
     private String userName;
     private String userPhone;
     private String userIdCard;
     private String userEmail;
 
-    public UserDetailDTO(User user) {
-        this.userRole = user.getUserRole();
-        this.userName = user.getUserName();
-        this.userPhone = user.getUserPhone();
-        this.userIdCard = user.getUserIdCard();
-        this.userEmail = user.getUserEmail();
+    public UserInfoVO(UserInfoDTO userInfoDTO) {
+        this.userRole = userInfoDTO.getUserRole();
+        this.userName = userInfoDTO.getUserName();
+        this.userPhone = userInfoDTO.getUserPhone();
+        this.userIdCard = userInfoDTO.getUserIdCard();
+        this.userEmail = userInfoDTO.getUserEmail();
     }
 
     public Integer getUserRole() {
