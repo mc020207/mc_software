@@ -89,10 +89,15 @@ export default {
         // result=await this.$http.post('/user/login',this.loginForm);
         //提示登录信息
         var result={success:true,
-              message:"登录成功"};
-              
+              message:"登录成功",
+              token:"adadad"
+              };
+
         if(!result.success) return this.$message.error(result.message);
         this.$message.success(result.message);
+        //保存token
+        window.sessionStorage.setItem('token',result.token);
+        this.$router.push('/home');
     })
     }
   }
