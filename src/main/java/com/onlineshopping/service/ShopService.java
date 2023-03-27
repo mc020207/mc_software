@@ -51,7 +51,15 @@ public interface ShopService {
      */
     void rejectShopRegister(Integer shopId);
 
+    /**
+     * @Description: 商户注册一个商店
+     * @Author: mc
+     */
     void shopRegister(ShopRegisterDTO shopRegisterDTO,HttpServletRequest request,HttpServletResponse response);
 
+    /**
+     * @Description: 商户提交审核
+     * @Author: mc
+     */
     void shopSubmit(HttpServletRequest request,HttpServletResponse response);
 }

@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ShopServiceImpl implements ShopService {
@@ -75,6 +76,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    @Transactional
     public ShopInfoVO getInfo(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         String token = (String) session.getAttribute("userToken");
@@ -86,6 +88,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    @Transactional
     public ShopsInspectVO inspect(Integer page) {
         FormatUtil.checkPositive("page",page);
         List<Shop> shops = shopMapper.selectShopsByRangeAndShopIsOpen((page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE, ConstantUtil.SHOP_IN_INSPECTION);
@@ -98,7 +101,9 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    @Transactional
     public ShopInspectVO inspectDetail(Integer shopId) {
+        FormatUtil.checkPositive("shopId",shopId);
         List<Shop> shops = shopMapper.selectShopsBySingleAttr("shopId", shopId);
         ListUtil.checkSingle("shopId",shops);
         Shop shop=shops.get(0);
@@ -109,22 +114,26 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    @Transactional
     public void approveShopRegister(Integer shopId) {
+        FormatUtil.checkPositive("shopId",shopId);
         List<Shop> shops = shopMapper.selectShopsBySingleAttr("shopId", shopId);
         ListUtil.checkSingle("shopId",shops);
         Shop shop=shops.get(0);
-        if (shop.getShopIsOpen()!=ConstantUtil.SHOP_IN_INSPECTION){
+        if (!Objects.equals(shop.getShopIsOpen(), ConstantUtil.SHOP_IN_INSPECTION)){
             throw new ServiceException("该商店没有请求审核");
         }
         shopMapper.updateShopInfo(new Shop(shopId,null, null, null, null, null, null, ConstantUtil.SHOP_OPEN));
     }
 
     @Override
+    @Transactional
     public void rejectShopRegister(Integer shopId) {
+        FormatUtil.checkPositive("shopId",shopId);
         List<Shop> shops = shopMapper.selectShopsBySingleAttr("shopId", shopId);
         ListUtil.checkSingle("shopId",shops);
         Shop shop=shops.get(0);
-        if (shop.getShopIsOpen()!=ConstantUtil.SHOP_IN_INSPECTION){
+        if (!Objects.equals(shop.getShopIsOpen(), ConstantUtil.SHOP_IN_INSPECTION)){
             throw new ServiceException("该商店没有请求审核");
         }
         productMapper.deleteProductsByShopId(shopId);
@@ -133,6 +142,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    @Transactional
     public void shopRegister(ShopRegisterDTO shopRegisterDTO, HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         String token = (String) session.getAttribute("userToken");
@@ -152,6 +162,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    @Transactional
     public void shopSubmit(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         String token = (String) session.getAttribute("userToken");
