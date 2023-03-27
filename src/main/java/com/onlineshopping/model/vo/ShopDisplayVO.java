@@ -1,16 +1,27 @@
 package com.onlineshopping.model.vo;
 
+import com.onlineshopping.model.entity.Product;
 import com.onlineshopping.model.entity.Shop;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class ShopDisplayVO {
     Integer shopId;
     String shopName;
     String shopIntro;
+    String shopAddr;
+    Double shopRegisterFund;
+    Date shopRegisterDate;
 
     public ShopDisplayVO(Shop shop) {
         this.shopId = shop.getShopId();
         this.shopName = shop.getShopName();
         this.shopIntro = shop.getShopIntro();
+        this.shopAddr = shop.getShopAddr();
+        this.shopRegisterFund = shop.getShopRegisterFund();
+        this.shopRegisterDate = shop.getShopRegisterDate();
     }
 
     public Integer getShopId() {
@@ -35,5 +46,29 @@ public class ShopDisplayVO {
 
     public void setShopIntro(String shopIntro) {
         this.shopIntro = shopIntro;
+    }
+
+    public String getShopAddr() {
+        return shopAddr;
+    }
+
+    public void setShopAddr(String shopAddr) {
+        this.shopAddr = shopAddr;
+    }
+
+    public Double getShopRegisterFund() {
+        return shopRegisterFund;
+    }
+
+    public void setShopRegisterFund(Double shopRegisterFund) {
+        this.shopRegisterFund = shopRegisterFund;
+    }
+
+    public Date getShopRegisterDate() {
+        return shopRegisterDate;
+    }
+
+    public void setShopRegisterDate(Date shopRegisterDate) {
+        this.shopRegisterDate = shopRegisterDate;
     }
 }

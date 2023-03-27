@@ -5,7 +5,7 @@ import com.onlineshopping.mapper.ProductMapper;
 import com.onlineshopping.mapper.ShopMapper;
 import com.onlineshopping.model.entity.Product;
 import com.onlineshopping.model.entity.Shop;
-import com.onlineshopping.model.vo.ShopDetailVO;
+import com.onlineshopping.model.vo.ShopDisplayVO;
 import com.onlineshopping.model.vo.ShopDisplayVO;
 import com.onlineshopping.model.vo.ShopsDisplayVO;
 import com.onlineshopping.service.ShopService;
@@ -45,7 +45,7 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     @Transactional
-    public ShopDetailVO detail(Integer shopId) throws ServiceException {
+    public ShopDisplayVO detail(Integer shopId) throws ServiceException {
         // 检查shopId
         FormatUtil.checkNotNull("商店id", shopId);
         // 查询shop
@@ -60,6 +60,6 @@ public class ShopServiceImpl implements ShopService {
         // 查询products
         List<Product> products = productMapper.selectProductsBySingleAttr("shopId", shopId);
         // 返回VO
-        return new ShopDetailVO(shop, products);
+        return new ShopDisplayVO(shop);
     }
 }

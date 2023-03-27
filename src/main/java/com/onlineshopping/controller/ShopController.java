@@ -1,7 +1,7 @@
 package com.onlineshopping.controller;
 
 import com.onlineshopping.model.vo.CommonResult;
-import com.onlineshopping.model.vo.ShopDetailVO;
+import com.onlineshopping.model.vo.ShopDisplayVO;
 import com.onlineshopping.model.vo.ShopsDisplayVO;
 import com.onlineshopping.service.ShopService;
 import jakarta.annotation.Resource;
@@ -34,15 +34,15 @@ public class ShopController {
     @RequestMapping(value = "/detail/{shopId}", method = RequestMethod.GET)
     public CommonResult detail(@PathVariable("shopId") Integer shopId) {
         CommonResult cm = new CommonResult(false);
-        ShopDetailVO shopDetailVO;
+        ShopDisplayVO shopDisplayVO;
         try {
-            shopDetailVO = shopService.detail(shopId);
+            shopDisplayVO = shopService.detail(shopId);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
         }
         cm.setSuccess(true);
-        cm.setObject(shopDetailVO);
+        cm.setObject(shopDisplayVO);
         return cm;
     }
 }
