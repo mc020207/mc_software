@@ -18,13 +18,14 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
+@Service
 public class ProductServiceImpl implements ProductService {
     @Resource
     ProductMapper productMapper;
@@ -71,8 +72,8 @@ public class ProductServiceImpl implements ProductService {
         List<Shop> shops = shopMapper.selectShopsBySingleAttr("shopId", shopId);
         ListUtil.checkSingle("shopId",shops);
         Shop shop=shops.get(0);
-        if (!Objects.equals(shop.getShopIsOpen(), ConstantUtil.SHOP_IN_INSPECTION)){
-            throw new ServiceException("该商店没有请求审核");
+        if (!Objects.equals(shop.getShopIsOpen(), ConstantUtil.SHOP_OPEN)){
+            throw new ServiceException("该商店为开放");
         }
         List<Product> products = productMapper.selectProductByRangeAndShopId((page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE, shopId);
         List<ProductDisplayVO> productDisplayVOs=new ArrayList<>();
