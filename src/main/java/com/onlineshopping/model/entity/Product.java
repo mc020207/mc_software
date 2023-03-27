@@ -35,4 +35,21 @@ public class Product implements Serializable {
         this.productName = productName;
     }
 
+    public Product(Integer productId, Integer shopId, String productName) {
+        this.productId = productId;
+        this.shopId = shopId;
+        this.productName = productName;
+    }
+
+    public Product() {
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId=" + productId +
+                ", shopId=" + shopId +
+                ", productName='" + productName + '\'' +
+                '}';
+    }
 }
