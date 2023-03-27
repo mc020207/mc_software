@@ -3,10 +3,10 @@
 
 <mapper namespace="com.onlineshopping.mapper.ShopMapper">
 
-    <select id="selectOpenShopsByRange" resultType="Shop">
+    <select id="selectShopsByRangeAndShopIsOpen" resultType="Shop">
         select *
         from `shop`
-        where shopIsOpen = 2
+        where shopIsOpen = #{shopIsOpen}
         order by shopId
         limit ${startRow}, ${number}
     </select>
@@ -17,5 +17,39 @@
         where ${fieldName} = #{fieldValue}
         order by shopId
     </select>
+
+    <insert id="insertShop">
+        insert into `shop` (userid,shopName,shopIntro,shopAddr,shopRegisterFund,shopRegisterDate,shopIsOpen)
+        values (#{userId},#{shopName},#{shopIntro},#{shopAddr},#{shopRegisterFund},CURRENT_DATE,0)
+    </insert>
+
+    <update id="updateShopInfo">
+        update `shop`
+        <set>
+            <if test="shopName!=null">
+                shopName = #{shopName},
+            </if>
+            <if test="shopIntro!=null">
+                shopIntro = #{shopIntro},
+            </if>
+            <if test="shopAddr!=null">
+                shopAddr = #{shopAddr},
+            </if>
+            <if test="shopRegisterFund!=null">
+                shopRegisterFund = #{shopRegisterFund},
+            </if>
+        </set>
+        where userId = #{userId}
+    </update>
+
+    <update id="changeShopOpen">
+        update `shop` set shopIsOpen=#{isApprove}
+        where shopId=#{shopId}
+    </update>
+
+    <delete id="deleteShopByShopId">
+        delete from `shop`
+        where shopId=#{shopId}
+    </delete>
 
 </mapper>

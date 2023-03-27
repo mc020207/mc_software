@@ -33,7 +33,7 @@ public class ShopServiceImpl implements ShopService {
         // 检查page
         FormatUtil.checkNotNegative("分页", page);
         // 查询shops
-        List<Shop> shops = shopMapper.selectOpenShopsByRange(page * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
+        List<Shop> shops = shopMapper.selectShopsByRangeAndShopIsOpen(page * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE,ConstantUtil.SHOP_OPEN);
         if (shops.size() == 0)
             throw new ServiceException("没有这么多开放的商店");
         // 返回VO
