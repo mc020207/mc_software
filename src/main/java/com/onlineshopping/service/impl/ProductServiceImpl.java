@@ -5,10 +5,7 @@ import com.onlineshopping.mapper.ProductMapper;
 import com.onlineshopping.mapper.ShopMapper;
 import com.onlineshopping.model.entity.Product;
 import com.onlineshopping.model.entity.Shop;
-import com.onlineshopping.model.vo.ProductDisplayVO;
-import com.onlineshopping.model.vo.ProductInspectVO;
-import com.onlineshopping.model.vo.ProductsDisplayVO;
-import com.onlineshopping.model.vo.ProductsInspectVO;
+import com.onlineshopping.model.vo.*;
 import com.onlineshopping.service.ProductService;
 import com.onlineshopping.util.ConstantUtil;
 import com.onlineshopping.util.FormatUtil;
@@ -48,6 +45,8 @@ public class ProductServiceImpl implements ProductService {
         Shop shop=getShop(request,response);
         Product product = new Product(null, shop.getShopId(), productName);
         productMapper.insertProduct(product);
+        shop.setShopIsOpen(ConstantUtil.SHOP_NOT_IN_INSPECTION);
+        shopMapper.updateShopInfo(shop);
     }
 
     @Override
@@ -62,6 +61,8 @@ public class ProductServiceImpl implements ProductService {
             throw new ServiceException("不可以删除别人的商品");
         }
         productMapper.deleteProductsByShopId(productId);
+        shop.setShopIsOpen(ConstantUtil.SHOP_NOT_IN_INSPECTION);
+        shopMapper.updateShopInfo(shop);
     }
 
     @Override
@@ -73,14 +74,33 @@ public class ProductServiceImpl implements ProductService {
         ListUtil.checkSingle("shopId",shops);
         Shop shop=shops.get(0);
         if (!Objects.equals(shop.getShopIsOpen(), ConstantUtil.SHOP_OPEN)){
-            throw new ServiceException("该商店为开放");
+            throw new ServiceException("该商店未开放");
         }
         List<Product> products = productMapper.selectProductByRangeAndShopId((page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE, shopId);
         List<ProductDisplayVO> productDisplayVOs=new ArrayList<>();
         for (Product product : products){
             productDisplayVOs.add(new ProductDisplayVO(product));
         }
+        if (products.size()==0){
+            throw new ServiceException("没有这么多商品");
+        }
         return new ProductsDisplayVO(productDisplayVOs);
+    }
+
+    @Override
+    @Transactional
+    public ProductsInfoVO getProductsInfo(Integer page, HttpServletRequest request, HttpServletResponse response) {
+        FormatUtil.checkPositive("page",page);
+        Shop shop=getShop(request,response);
+        List<Product> products = productMapper.selectProductByRangeAndShopId((page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE, shop.getShopId());
+        List<ProductInfoVO> productInfoVOList=new ArrayList<>();
+        for (Product product : products){
+            productInfoVOList.add(new ProductInfoVO(product));
+        }
+        if (productInfoVOList.size()==0){
+            throw new ServiceException("没有这么多商品");
+        }
+        return new ProductsInfoVO(productInfoVOList);
     }
 
     @Override
@@ -98,6 +118,9 @@ public class ProductServiceImpl implements ProductService {
         List<ProductInspectVO> productInspectVOs=new ArrayList<>();
         for (Product product : products){
             productInspectVOs.add(new ProductInspectVO(product));
+        }
+        if (products.size()==0){
+            throw new ServiceException("没有这么多商品");
         }
         return new ProductsInspectVO(productInspectVOs);
     }

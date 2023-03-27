@@ -146,10 +146,14 @@ public class ShopServiceImpl implements ShopService {
     public void shopRegister(ShopRegisterDTO shopRegisterDTO, HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         String token = (String) session.getAttribute("userToken");
-        String userId = JwtUserUtil.getInfo(token, "userId");
+        Integer userId = Integer.valueOf(JwtUserUtil.getInfo(token, "userId"));
         List<User> users = userMapper.selectUsersBySingleAttr("userId", userId);
         ListUtil.checkSingle("userId",users);
         User user=users.get(0);
+        List<Shop> shops = shopMapper.selectShopsBySingleAttr("userId", userId);
+        if (shops!=null && shops.size()!=0){
+            throw new ServiceException("不可以开多家店");
+        }
         if (!user.getUserIdCard().equals(shopRegisterDTO.getUserIdCard())){
             throw new ServiceException("身份证号不匹配");
         }
