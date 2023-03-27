@@ -25,10 +25,10 @@ const router = new VueRouter({
 //挂载路由导航守卫
 // next()   next('/user/login') 强制跳转
 router.beforeEach((to, from, next) => {
-  if (to.path == "/user/login") return next();
+  if(to.path=='/user/login') return next();
   //获取token
-  const tokenStr = window.sessionStorage.getItem("token");
-  if (!tokenStr) return next("/user/login");
+  const tokenStr=window.sessionStorage.getItem('token');
+  if(!tokenStr) return next("/user/login");
   next();
 });
 export default router;
