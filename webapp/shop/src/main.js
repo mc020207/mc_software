@@ -10,7 +10,7 @@ import './assets/css/global.css'
 
 import axios from 'axios'
 
-//配置请问的根路径
+//配置请求的根路径
 axios.defaults.baseURL='http://127.0.0.1:4523/m1/2461559-0-default'
 
 Vue.prototype.$http=axios

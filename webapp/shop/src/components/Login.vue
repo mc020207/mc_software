@@ -85,9 +85,14 @@ export default {
     login(){ 
         this.$refs.loginFormRef.validate(async valid=>{
         if(!valid) return;
-        result=await this.$http.post('/user/login',this.loginForm);
+        // 后端没部署，暂时注释
+        // result=await this.$http.post('/user/login',this.loginForm);
         //提示登录信息
-        alert(result);
+        var result={success:true,
+              message:"登录成功"};
+              
+        if(!result.success) return this.$message.error(result.message);
+        this.$message.success(result.message);
     })
     }
   }

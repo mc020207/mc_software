@@ -6,9 +6,13 @@ Vue.use(VueRouter)
 
 const routes = [
     {
+      path:'/',component:Login
+    },
+    {
       
       path:'/user/login',component:Login
-    }
+    },
+   
 ]
 
 const router = new VueRouter({
