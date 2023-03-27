@@ -16,4 +16,6 @@ public final class ConstantUtil {
     public static final Integer USER_NORMAL = 0;
     // 分页信息
     public static final Integer PAGE_SIZE = 9;
+    // 最低商户启动资金
+    public static final Double MIN_SHOP_REGISTER_FUND=1000.0;
 }

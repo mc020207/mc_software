@@ -4,25 +4,35 @@ import com.onlineshopping.model.entity.Shop;
 
 import java.util.Date;
 
-public class ShopInspectVO {
+public class ShopInfoVO {
     private String shopAddr;
     private Integer shopId;
     private String shopIntro;
+    private Integer shopIsOpen;
     private String shopName;
     private Date shopRegisterDate;
     private double shopRegisterFund;
-    private String userIdCard;
+
+    public ShopInfoVO(String shopAddr, Integer shopId, String shopIntro, Integer shopIsOpen, String shopName, Date shopRegisterDate, double shopRegisterFund) {
+        this.shopAddr = shopAddr;
+        this.shopId = shopId;
+        this.shopIntro = shopIntro;
+        this.shopIsOpen = shopIsOpen;
+        this.shopName = shopName;
+        this.shopRegisterDate = shopRegisterDate;
+        this.shopRegisterFund = shopRegisterFund;
+    }
 
     @Override
     public String toString() {
-        return "ShopInspectVO{" +
+        return "ShopInfoVO{" +
                 "shopAddr='" + shopAddr + '\'' +
                 ", shopId=" + shopId +
                 ", shopIntro='" + shopIntro + '\'' +
+                ", shopIsOpen=" + shopIsOpen +
                 ", shopName='" + shopName + '\'' +
                 ", shopRegisterDate=" + shopRegisterDate +
                 ", shopRegisterFund=" + shopRegisterFund +
-                ", userIdCard='" + userIdCard + '\'' +
                 '}';
     }
 
@@ -50,6 +60,14 @@ public class ShopInspectVO {
         this.shopIntro = shopIntro;
     }
 
+    public Integer getShopIsOpen() {
+        return shopIsOpen;
+    }
+
+    public void setShopIsOpen(Integer shopIsOpen) {
+        this.shopIsOpen = shopIsOpen;
+    }
+
     public String getShopName() {
         return shopName;
     }
@@ -74,31 +92,14 @@ public class ShopInspectVO {
         this.shopRegisterFund = shopRegisterFund;
     }
 
-    public String getUserIdCard() {
-        return userIdCard;
+    public ShopInfoVO() {
     }
 
-    public void setUserIdCard(String userIdCard) {
-        this.userIdCard = userIdCard;
-    }
-
-    public ShopInspectVO() {
-    }
-
-    public ShopInspectVO(String shopAddr, Integer shopId, String shopIntro, String shopName, Date shopRegisterDate, double shopRegisterFund, String userIdCard) {
-        this.shopAddr = shopAddr;
-        this.shopId = shopId;
-        this.shopIntro = shopIntro;
-        this.shopName = shopName;
-        this.shopRegisterDate = shopRegisterDate;
-        this.shopRegisterFund = shopRegisterFund;
-        this.userIdCard = userIdCard;
-    }
-
-    public ShopInspectVO(Shop shop) {
+    public ShopInfoVO(Shop shop) {
         this.shopAddr = shop.getShopAddr();
         this.shopId = shop.getShopId();
         this.shopIntro = shop.getShopIntro();
+        this.shopIsOpen = shop.getShopIsOpen();
         this.shopName = shop.getShopName();
         this.shopRegisterDate = shop.getShopRegisterDate();
         this.shopRegisterFund = shop.getShopRegisterFund();

@@ -81,9 +81,9 @@ public final class FormatUtil {
      * @Description: 检查num非负
      * @Author: Lin-Yanjun
      */
-    public static void checkNotNegative(String field, Integer num) throws ServiceException {
+    public static void checkPositive(String field, Integer num) throws ServiceException {
         checkNotNull(field, num);
-        if (num < 0)
-            throw new ServiceException(field + "不能为负数");
+        if (num <= 0)
+            throw new ServiceException(field + "应该是正数");
     }
 }

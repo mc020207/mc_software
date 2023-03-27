@@ -36,7 +36,7 @@ public class ShopController {
         CommonResult cm = new CommonResult(false);
         ShopDisplayVO shopDisplayVO;
         try {
-            shopDisplayVO = shopService.detail(shopId);
+            shopDisplayVO = shopService.displayDetail(shopId);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

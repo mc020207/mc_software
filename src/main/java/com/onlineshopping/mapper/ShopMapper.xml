@@ -38,8 +38,18 @@
             <if test="shopRegisterFund!=null">
                 shopRegisterFund = #{shopRegisterFund},
             </if>
+            <if test="shopIsOpen">
+                shopIsOpen=#{shopIsOpen}
+            </if>
         </set>
-        where userId = #{userId}
+        <where>
+            <if test="userId!=null">
+                userId=#{userId}
+            </if>
+            <if test="shopId!=null">
+                shopId=#{shopId}
+            </if>
+        </where>
     </update>
 
     <update id="changeShopOpen">
