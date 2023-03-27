@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Login from "../components/Login.vue";
 import Home from "../components/Home.vue";
+import Welcome from '../components/Welcome'
 Vue.use(VueRouter);
 
 const routes = [
@@ -10,12 +11,14 @@ const routes = [
     component: Login,
   },
   {
-    path: "/user/login",
+    path: "/login",
     component: Login,
   },
   {
     path: "/home",
     component: Home,
+    redirect:'/welcome',
+    children:[{path:'/Welcome',component:Welcome}]
   },
 ];
 
@@ -23,12 +26,12 @@ const router = new VueRouter({
   routes,
 });
 //挂载路由导航守卫
-// next()   next('/user/login') 强制跳转
+// next()   next('/login') 强制跳转
 router.beforeEach((to, from, next) => {
-  if(to.path=='/user/login') return next();
+  if(to.path=='/login') return next();
   //获取token
   const tokenStr=window.sessionStorage.getItem('token');
-  if(!tokenStr) return next("/user/login");
+  if(!tokenStr) return next("/login");
   next();
 });
 export default router;

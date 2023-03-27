@@ -85,7 +85,7 @@ export default {
       this.$refs.loginFormRef.validate(async (valid) => {
         if (!valid) return;
         // 后端没部署，暂时注释
-        // result=await this.$http.post('/user/login',this.loginForm);
+        // result=await this.$http.post('/login',this.loginForm);
         //提示登录信息
         var result = { success: true, message: "登录成功", token: "adadad" };
 

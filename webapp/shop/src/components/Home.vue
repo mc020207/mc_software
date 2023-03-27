@@ -16,34 +16,43 @@
       <!-- 主体区域 -->
       <el-container>
         <!-- 侧边栏 -->
-        <el-aside width="200px">
+        <el-aside :width="isCollapse?'64px':'200px'">
+          <div class="toggle-button" @click="toggleCollapse">|||</div>
           <!-- 侧边栏菜单区-->
           <el-menu
             background-color="#333744"
             text-color="#fff"
-            active-text-color="#ffd04b"
+            active-text-color="#409eff"
+            :unique-opened="true"   
+            :collapse="isCollapse"  
+            :collapse-transition="false"
+            :router="true"
           >
             <!-- 一级菜单 -->
-            <el-submenu index="1">
+            <el-submenu :index="item.id+''" v-for="item in menuList" :key="item.id">
               <!-- 一级菜单模板区域 -->
               <template slot="title">
-                <!-- 图标 -->
+                <!-- 图标  先不搞，最后处理-->
                 <i class="el-icon-location"></i>
                 <!-- 文本 -->
-                <span>导航一</span>
+                <span>{{ item.authName }}</span>
               </template>
-              <!-- 二级菜单 -->
-              <el-menu-item index="1-4-1">
+              
+              <!-- 二级菜单  -->
+              <el-menu-item :index="subItem.path" v-for="subItem in item.children" :key="subItem.id">
                 <!-- 图标 -->
-                <i class="el-icon-location"></i>
+                <i class="el-icon-menu"></i>
                 <!-- 文本 -->
-                <span>导航一</span></el-menu-item
+                <span>导航</span></el-menu-item
               >
             </el-submenu>
           </el-menu>
         </el-aside>
         <!-- 右侧内容主体 -->
-        <el-main>Main</el-main>
+        <el-main>
+          <!-- 路由占位符 -->
+          <router-view></router-view>
+        </el-main>
       </el-container>
     </el-container>
   </div>
@@ -51,13 +60,56 @@
 
 <script>
 export default {
- 
+  data() {
+    return {
+      //左侧菜单数据
+      menuList: [],
+      isCollapse:false
+    };
+  },
+  created() {
+    this.getMenuList();
+  },
   methods: {
     logout() {
       window.sessionStorage.clear();
-      this.$router.push("/user/login");
+      this.$router.push("/login");
     },
     //获取所有菜单
+    getMenuList() {
+      //根据用户信息，获得对应菜单
+      var x = 1;
+      for (let i = 0; i < 4; i++) {
+        let item = {
+          id: i,
+          children:[
+            {
+            path:i+''                //在这里写每个路由路径
+          }]
+        };
+        this.menuList.push(item);
+      }
+      this.menuList[0].authName = "用户管理";
+      this.menuList[1].authName = "权限管理";
+      this.menuList[2].authName = "商品管理";
+      this.menuList[3].authName = "订单管理";
+
+      switch (x) {
+        case 1:
+          // this.menuList=[];
+          break;
+        case 2:
+          // this.menuList=[];
+          break;
+        case 3:
+          // this.menuList=[];
+          break;
+      }
+    },
+    //点击按钮，切换菜单的折叠与展开
+    toggleCollapse(){
+      this.isCollapse=!this.isCollapse;
+    }
   },
 };
 </script>
@@ -87,8 +139,20 @@ export default {
 }
 .el-aside {
   background-color: #333744;
+  .el-menu{
+    border-right: none;
+  }
 }
 .el-main {
   background-color: #eaedf1;
+}
+.toggle-button{
+  background-color:#4A5064 ;
+  font-size: 10px;
+  line-height: 24px;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 0.2em;
+  cursor: pointer;
 }
 </style>
