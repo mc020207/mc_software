@@ -6,8 +6,6 @@ import com.onlineshopping.model.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.net.http.HttpRequest;
-
 public interface ShopService {
     /**
      * @Description: 分页查询已开放商店的简略信息，page从1开始
@@ -55,11 +53,11 @@ public interface ShopService {
      * @Description: 商户注册一个商店
      * @Author: mc
      */
-    void shopRegister(ShopRegisterDTO shopRegisterDTO,HttpServletRequest request,HttpServletResponse response);
+    void shopRegister(ShopRegisterDTO shopRegisterDTO, HttpServletRequest request, HttpServletResponse response);
 
     /**
      * @Description: 商户提交审核
      * @Author: mc
      */
-    void shopSubmit(HttpServletRequest request,HttpServletResponse response);
+    void shopSubmit(HttpServletRequest request, HttpServletResponse response);
 }

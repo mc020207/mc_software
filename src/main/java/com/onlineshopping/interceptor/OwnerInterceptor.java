@@ -18,8 +18,8 @@ public class OwnerInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         try {
             String userToken = (String) session.getAttribute("userToken");
-            Integer userRole= Integer.valueOf(JwtUserUtil.getInfo(userToken,"userRole"));
-            if (!userRole.equals(ConstantUtil.USER_OWNER)){
+            Integer userRole = Integer.valueOf(JwtUserUtil.getInfo(userToken, "userRole"));
+            if (!userRole.equals(ConstantUtil.USER_OWNER)) {
                 throw new Exception();
             }
         } catch (Exception e) {

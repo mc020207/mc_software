@@ -1,6 +1,5 @@
 package com.onlineshopping.controller;
 
-import com.onlineshopping.model.entity.Product;
 import com.onlineshopping.model.vo.CommonResult;
 import com.onlineshopping.model.vo.ProductsDisplayVO;
 import com.onlineshopping.model.vo.ShopDisplayVO;
@@ -8,7 +7,6 @@ import com.onlineshopping.model.vo.ShopsDisplayVO;
 import com.onlineshopping.service.ProductService;
 import com.onlineshopping.service.ShopService;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,12 +48,13 @@ public class ShopController {
         cm.setObject(shopDisplayVO);
         return cm;
     }
+
     @RequestMapping(value = "/product/list", method = RequestMethod.GET)
-    public CommonResult displayProduct(Integer page,Integer shopId){
+    public CommonResult displayProduct(Integer page, Integer shopId) {
         CommonResult cm = new CommonResult(false);
         ProductsDisplayVO productsDisplayVO;
         try {
-            productsDisplayVO = productService.displayProducts(page,shopId);
+            productsDisplayVO = productService.displayProducts(page, shopId);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
