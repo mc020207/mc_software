@@ -62,6 +62,7 @@
         <el-form-item class="btns">
           <el-button type="primary" @click="register">提交</el-button>
           <el-button type="info" @click="resetregisterForm">重置</el-button>
+          <el-button type="warning" @click="backLogin">返回</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -142,6 +143,9 @@ export default {
         // result=await this.$http.post('/register',this.registerForm);
         this.$router.push("/login");
       });
+    },
+    backLogin() {
+        this.$router.push("/login");
     },
   },
 };
