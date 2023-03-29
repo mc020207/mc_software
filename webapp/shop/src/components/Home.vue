@@ -23,13 +23,14 @@
             background-color="#333744"
             text-color="#fff"
             active-text-color="#409eff"
-            :unique-opened="true"   
+            :unique-opened="false"   
             :collapse="isCollapse"  
             :collapse-transition="false"
             :router="true"
+            :default-active="activePath"
           >
             <!-- 一级菜单 -->
-            <el-submenu :index="item.id+''" v-for="item in menuList" :key="item.id">
+            <el-submenu :index="item.id" v-for="item in menuList" :key="item.id">
               <!-- 一级菜单模板区域 -->
               <template slot="title">
                 <!-- 图标  先不搞，最后处理-->
@@ -39,7 +40,9 @@
               </template>
               
               <!-- 二级菜单  -->
-              <el-menu-item :index="subItem.path" v-for="subItem in item.children" :key="subItem.id">
+              <el-menu-item :index="subItem.path" v-for="subItem in item.children" :key="subItem.path"
+               @click="saveNaveState(subItem.path)"
+              >
                 <!-- 图标 -->
                 <i class="el-icon-menu"></i>
                 <!-- 文本 -->
@@ -64,11 +67,14 @@ export default {
     return {
       //左侧菜单数据
       menuList: [],
-      isCollapse:false
+      isCollapse:false,
+      //激活的链接地址
+       activePath:''
     };
   },
   created() {
     this.getMenuList();
+    this.activePath=window.sessionStorage.getItem('activePath');
   },
   methods: {
     logout() {
@@ -82,60 +88,60 @@ export default {
      //在path中填写对应路径
       this.menuList=[
         {
-          id:0,
+          id:"user",
           authName: "用户界面",
           children:[
             { 
-              id:0,
-              path:"/0/0",
+             
+              path:"/user/info",
               nextName:"我的信息"
             }
           ]
         },
         {
-          id:1,
+          id:"shop",
           authName: "商店界面",
           children:[
             { 
-              id:0,
-              path:"/1/0",
+             
+              path:"/shop/list",
               nextName:"已开放商店列表"
             },
             { 
-              id:1,
-              path:"/1/1",
+             
+              path:"/shop/info",
               nextName:"当前商店"
             }
           ]
         },
         {
-          id:2,
+          id:"owner",
           authName: "我的商店",
           children:[
             { 
-              id:0,
-              path:"/2/0",
+              
+              path:"/owner/register",
               nextName:"注册我的商店"
             },
             { 
-              id:1,
-              path:"/2/0",
+              
+              path:"/owner/info",
               nextName:"我的商店信息"
             }
           ]
         },
         {
-          id:3,
+          id:"admin",
           authName: "管理员",
           children:[
             { 
-              id:0,
-              path:"/3/0",
+              
+              path:"/admin/list",
               nextName:"待审核商店信息列表"
             },
             { 
-              id:1,
-              path:"/3/1",
+             
+              path:"/admin/info",
               nextName:"待审核商店信息"
             }
           ]
@@ -158,6 +164,11 @@ export default {
     //点击按钮，切换菜单的折叠与展开
     toggleCollapse(){
       this.isCollapse=!this.isCollapse;
+    },
+    //保持链接的激活状态
+    saveNaveState(activePath){
+        window.sessionStorage.setItem('activePath',activePath);
+        this.activePath=activePath;
     }
   },
 };

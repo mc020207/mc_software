@@ -4,6 +4,8 @@ import Login from "../components/Login.vue";
 import Register from "../components/Register.vue";
 import Home from "../components/Home.vue";
 import Welcome from '../components/Welcome'
+import UserInfo from '../components/user/UserInfo.vue'
+import ShopRegister from '../components/owner/OwnerRegister.vue'
 Vue.use(VueRouter);
 
 const routes = [
@@ -23,7 +25,10 @@ const routes = [
     path: "/home",
     component: Home,
     redirect:'/welcome',
-    children:[{path:'/Welcome',component:Welcome}]
+    children:[{path:'/Welcome',component:Welcome},
+    {path:'/user/info',component:UserInfo},
+    {path:'/owner/register',component:ShopRegister}
+  ]
   },
 ];
 
