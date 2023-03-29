@@ -5,6 +5,8 @@ import {
   Form,
   FormItem,
   Input,
+  Radio,
+  RadioGroup,
   Message,
   Container,
   Header,
@@ -20,6 +22,8 @@ Vue.use(Button);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Input);
+Vue.use(Radio);
+Vue.use(RadioGroup);
 Vue.use(Container);
 Vue.use(Header);
 Vue.use(Aside);

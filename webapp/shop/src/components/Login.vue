@@ -32,6 +32,7 @@
         <el-form-item class="btns">
           <el-button type="primary" @click="login">登录</el-button>
           <el-button type="info" @click="resetLoginForm">重置</el-button>
+          <el-button type="success" @click="register">注册</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -96,6 +97,10 @@ export default {
         this.$router.push("/home");
       });
     },
+    register(){
+        this.$router.push("/register");
+    }
+
   },
 };
 </script>

@@ -1,8 +1,8 @@
 @font-face {
   font-family: "element-icons"; /* Project id 3977768 */
-  src: url('iconfont.woff2?t=1679835697712') format('woff2'),
-       url('iconfont.woff?t=1679835697712') format('woff'),
-       url('iconfont.ttf?t=1679835697712') format('truetype');
+  src: url('iconfont.woff2?t=1680093972945') format('woff2'),
+       url('iconfont.woff?t=1680093972945') format('woff'),
+       url('iconfont.ttf?t=1680093972945') format('truetype');
 }
 
 .element-icons {
@@ -11,6 +11,18 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.el-icon-shenfenzheng:before {
+  content: "\e614";
+}
+
+.el-icon-youxiang:before {
+  content: "\e664";
+}
+
+.el-icon-dianhua:before {
+  content: "\e88b";
 }
 
 .el-icon-password:before {
