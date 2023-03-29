@@ -43,7 +43,7 @@
                 <!-- 图标 -->
                 <i class="el-icon-menu"></i>
                 <!-- 文本 -->
-                <span>导航</span></el-menu-item
+                <span>{{subItem.nextName}}</span></el-menu-item
               >
             </el-submenu>
           </el-menu>
@@ -79,20 +79,69 @@ export default {
     getMenuList() {
       //根据用户信息，获得对应菜单
       var x = 1;
-      for (let i = 0; i < 4; i++) {
-        let item = {
-          id: i,
+     //在path中填写对应路径
+      this.menuList=[
+        {
+          id:0,
+          authName: "用户界面",
           children:[
-            {
-            path:i+''                //在这里写每个路由路径
-          }]
-        };
-        this.menuList.push(item);
-      }
-      this.menuList[0].authName = "用户管理";
-      this.menuList[1].authName = "权限管理";
-      this.menuList[2].authName = "商品管理";
-      this.menuList[3].authName = "订单管理";
+            { 
+              id:0,
+              path:"/0/0",
+              nextName:"我的信息"
+            }
+          ]
+        },
+        {
+          id:1,
+          authName: "商店界面",
+          children:[
+            { 
+              id:0,
+              path:"/1/0",
+              nextName:"已开放商店列表"
+            },
+            { 
+              id:1,
+              path:"/1/1",
+              nextName:"当前商店"
+            }
+          ]
+        },
+        {
+          id:2,
+          authName: "我的商店",
+          children:[
+            { 
+              id:0,
+              path:"/2/0",
+              nextName:"注册我的商店"
+            },
+            { 
+              id:1,
+              path:"/2/0",
+              nextName:"我的商店信息"
+            }
+          ]
+        },
+        {
+          id:3,
+          authName: "管理员",
+          children:[
+            { 
+              id:0,
+              path:"/3/0",
+              nextName:"待审核商店信息列表"
+            },
+            { 
+              id:1,
+              path:"/3/1",
+              nextName:"待审核商店信息"
+            }
+          ]
+        }
+      ]
+
 
       switch (x) {
         case 1:
