@@ -71,7 +71,8 @@ public class ShopServiceImpl implements ShopService {
         List<ShopDisplayVO> shopsDisplay = new ArrayList<>();
         for (Shop shop : shops)
             shopsDisplay.add(new ShopDisplayVO(shop));
-        return new ShopsDisplayVO(shopsDisplay);
+        Integer totalNumber=shopMapper.getCountByShopIsOpen(ConstantUtil.SHOP_OPEN);
+        return new ShopsDisplayVO(shopsDisplay,totalNumber);
     }
 
     @Override
@@ -100,7 +101,8 @@ public class ShopServiceImpl implements ShopService {
         List<ShopInspectVO> shopsInspect = new ArrayList<>();
         for (Shop shop : shops)
             shopsInspect.add(new ShopInspectVO(shop));
-        return new ShopsInspectVO(shopsInspect);
+        Integer totalNumber=shopMapper.getCountByShopIsOpen(ConstantUtil.SHOP_IN_INSPECTION);
+        return new ShopsInspectVO(shopsInspect,totalNumber);
     }
 
     @Override

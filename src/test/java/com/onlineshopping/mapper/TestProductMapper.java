@@ -28,4 +28,9 @@ public class TestProductMapper {
     public void testDeleteProductsByShopId(){
         productMapper.deleteProductsByShopId(3);
     }
+
+    @Test
+    public void testCountProductsByShopId(){
+        System.out.println(productMapper.countProductsByShopId(23));
+    }
 }

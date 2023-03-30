@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/inspect")
+@RequestMapping("/api/inspect")
 public class AdminController {
     @Resource
     ShopService shopService;

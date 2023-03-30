@@ -17,6 +17,12 @@
         limit #{startRow},#{num}
     </select>
 
+    <select id="countProductsByShopId" resultType="int">
+        select count(*)
+        from `product`
+        where shopId = #{shopId}
+    </select>
+
     <insert id="insertProduct">
         insert into `product` (shopId, productName)
         values (#{shopId}, #{productName})

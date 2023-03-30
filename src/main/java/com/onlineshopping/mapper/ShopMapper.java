@@ -12,6 +12,8 @@ public interface ShopMapper {
 
     List<Shop> selectShopsBySingleAttr(@Param("fieldName") String name, @Param("fieldValue") Object value);
 
+    Integer getCountByShopIsOpen(Integer shopIsOpen);
+
     void insertShop(Shop shop);
 
     void updateShopInfo(Shop shop);

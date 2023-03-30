@@ -12,6 +12,8 @@ public interface ProductMapper {
 
     List<Product> selectProductByRangeAndShopId(Integer startRow, Integer num, Integer shopId);
 
+    Integer countProductsByShopId(Integer shopId);
+
     void insertProduct(Product product);
 
     void deleteProductsByShopId(Integer shopId);
