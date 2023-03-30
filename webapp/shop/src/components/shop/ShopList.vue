@@ -66,7 +66,7 @@ export default {
     return {
       inspectShopList: {},
       currentPage:1,
-      pageSize:20,
+      pageSize:15,   //一页的数量
       total:100
     };
   },
@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     async getShopList() {
-    //   var result=await this.$http.get('/user/info',{
+    //   var result=await this.$http.get('/shop/list',{
     //     page:this.currentPage
     //   });
       var result = { success: true, message: "获取成功" };

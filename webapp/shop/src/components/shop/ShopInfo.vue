@@ -3,8 +3,8 @@
     <!-- 导航区 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>我的商店</el-breadcrumb-item>
-      <el-breadcrumb-item>我的商店信息</el-breadcrumb-item>
+      <el-breadcrumb-item>商店界面</el-breadcrumb-item>
+      <el-breadcrumb-item>当前商店</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 面包屑卡片视图 -->
     <el-card>
@@ -33,6 +33,28 @@
         }}</el-descriptions-item>
       </el-descriptions>
     </el-card>
+      <el-table :data="productShopList.object.products.products" border stripe>
+        <el-table-column type="index"></el-table-column>
+         <el-table-column
+          label="商品id"
+          prop="productId"
+          width="550"
+        ></el-table-column>
+        <el-table-column
+          label="商品名"
+          prop="productName"
+          width="550"
+        ></el-table-column>
+      </el-table>
+       <!-- 分页区域 -->
+      <el-pagination 
+       layout="total, prev, pager, next, jumper"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-size="pageSize"
+      :total="total">
+    </el-pagination>
+     
   </div>
 </template>
 
@@ -40,6 +62,9 @@
 export default {
   data() {
     return {
+       currentPage:1,
+      pageSize:5,     //一页的数量
+      total:100,
       shopRegisterForm: {
         shopName: "",
         userCard: "",
@@ -48,20 +73,24 @@ export default {
         shopRegisterFund: "",
       },
       shopInfo: {},
+      productShopList:{}
     };
   },
   created() {
     this.getShopInfo();
+    
   },
   methods: {
     async getShopInfo() {
       var shopId = window.sessionStorage.getItem("shopId");
       if (shopId == null) {
         // token中有对应信息
-        // var result=await this.$http.get('/myshop/info');
+        // var result1=await this.$http.get('/myshop/info');
+        // var result2=await this.$http.get('/myshop/product/list');
       } else {
         window.sessionStorage.removeItem("shopId");
         // var result=await this.$http.get('/inspect/info',shopId);
+        // var result2=await this.$http.get('/inspect/product/list',shopId);
       }      
         this.shopInfo = {
           shopId: 62,
@@ -71,6 +100,25 @@ export default {
           shopRegisterFund: 86791089.96111247,
           shopRegisterDate: "1977-08-19 19:38:23",
           shopIsOpen: 1,
+        };
+        this.productShopList= {
+            object: {
+            products: {
+              products: [
+                  {
+                      productId: 95,
+                      productName: "际建斗数",
+                      shopId: 58
+                  },
+                  {
+                      productId: 94,
+                      productName: "省造记两参",
+                      shopId: 68
+                  }
+              ],
+            totalNumber: 31
+        }
+        }
         };
       switch (this.shopInfo.shopIsOpen) {
         case 0:
@@ -86,6 +134,11 @@ export default {
           this.shopInfo.shopIsOpenStr = "开发";
           break;
       }
+    },
+    //监听页面值改变的事件
+    handleCurrentChange(newPage){
+       this.currentPage=newPage;
+       this.getShopList();
     },
   },
 };

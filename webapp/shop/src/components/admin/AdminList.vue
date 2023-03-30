@@ -73,7 +73,7 @@ export default {
     return {
       inspectShopList: {},
       currentPage:1,
-      pageSize:20,
+      pageSize:15,     //一页的数量
       total:100
     };
   },

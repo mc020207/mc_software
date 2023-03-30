@@ -19,7 +19,17 @@
   <el-descriptions-item label="注册日期">{{shopInfo.shopRegisterDate}}</el-descriptions-item>
    <el-descriptions-item label="状态">{{shopInfo.shopIsOpenStr}}</el-descriptions-item>
   </el-descriptions>
-  </el-card>
+  <!-- </el-card>
+  <el-table :data="productList.object.products" border stripe>
+        <el-table-column type="index"></el-table-column>
+        <el-table-column
+          label="商店名"
+          prop="shopName"
+          width="150" ></el-table-column>
+          </el-table>
+  <el-card> -->
+    
+     </el-card>
     <el-dialog
       title="注册商店"
       :visible.sync="addDialogVisible"
@@ -94,6 +104,9 @@ export default {
         shopRegisterFund:""
       },
       shopInfo:{
+
+      },
+      productList:{
 
       },
       //这是登录表单的验证规则对象
@@ -178,7 +191,7 @@ export default {
     //获得商店信息
    async getShopInfo(){
       // 判断从token中的逻辑，待补全
-      if(true){
+      if(false){
          this.shopInfo.shopIsOpen=0;
       }
       else{
