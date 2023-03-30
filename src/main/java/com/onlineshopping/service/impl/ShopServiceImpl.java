@@ -98,17 +98,23 @@ public class ShopServiceImpl implements ShopService {
         List<Shop> shops = shopMapper.selectShopsByRangeAndShopIsOpen((page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE, ConstantUtil.SHOP_IN_INSPECTION);
         if (shops.size() == 0)
             throw new ServiceException("没有这么多待审核的商店");
-        List<ShopInspectVO> shopsInspect = new ArrayList<>();
-        for (Shop shop : shops)
-            shopsInspect.add(new ShopInspectVO(shop));
+        List<ShopInspectVO> shopsInspects = new ArrayList<>();
+        for (Shop shop : shops) {
+            ShopInspectVO shopInspectVO = new ShopInspectVO(shop);
+            shopInspectVO.setUserIdCard(userMapper.selectUsersBySingleAttr("userId",shop.getUserId()).get(0).getUserIdCard());
+            shopsInspects.add(shopInspectVO);
+        }
         Integer totalNumber=shopMapper.getCountByShopIsOpen(ConstantUtil.SHOP_IN_INSPECTION);
-        return new ShopsInspectVO(shopsInspect,totalNumber);
+        return new ShopsInspectVO(shopsInspects,totalNumber);
     }
 
     @Override
     @Transactional
     public ShopInspectVO inspectDetail(Integer shopId) {
-        return new ShopInspectVO(getShopByShopIsOpen(shopId, ConstantUtil.SHOP_IN_INSPECTION));
+        Shop shop = getShopByShopIsOpen(shopId, ConstantUtil.SHOP_IN_INSPECTION);
+        ShopInspectVO shopInspectVO = new ShopInspectVO(shop);
+        shopInspectVO.setUserIdCard(userMapper.selectUsersBySingleAttr("userId",shop.getUserId()).get(0).getUserIdCard());
+        return shopInspectVO;
     }
 
     @Override

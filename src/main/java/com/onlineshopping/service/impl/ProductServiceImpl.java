@@ -124,7 +124,7 @@ public class ProductServiceImpl implements ProductService {
         if (products.size() == 0) {
             throw new ServiceException("没有这么多商品");
         }
-        Integer totalNumber=shopMapper.getCountByShopIsOpen(shopId);
+        Integer totalNumber=productMapper.countProductsByShopId(shopId);
         return new ProductsInspectVO(productInspectVOs,totalNumber);
     }
 }
