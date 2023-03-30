@@ -1,5 +1,6 @@
 package com.onlineshopping.service;
 
+import com.onlineshopping.model.vo.ProductAddFVO;
 import com.onlineshopping.model.vo.ProductsDisplayVO;
 import com.onlineshopping.model.vo.ProductsInfoVO;
 import com.onlineshopping.model.vo.ProductsInspectVO;
@@ -8,7 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public interface ProductService {
 
-    void addProduct(String productName, HttpServletRequest request, HttpServletResponse response);
+    void addProduct(ProductAddFVO productAddFVO, HttpServletRequest request, HttpServletResponse response);
 
     void deleteProduct(Integer productId, HttpServletRequest request, HttpServletResponse response);
 

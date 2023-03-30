@@ -38,10 +38,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void addProduct(String productName, HttpServletRequest request, HttpServletResponse response) {
+    public void addProduct(ProductAddFVO productAddFVO, HttpServletRequest request, HttpServletResponse response) {
+        String productName=productAddFVO.getProductName();
         FormatUtil.checkNotNull("productName", productName);
         Shop shop = getShop(request, response);
-        Product product = new Product(null, shop.getShopId(), productName);
+        Product product = new Product(productAddFVO);
+        product.setShopId(shop.getShopId());
         productMapper.insertProduct(product);
         shop.setShopIsOpen(ConstantUtil.SHOP_NOT_IN_INSPECTION);
         shopMapper.updateShopInfo(shop);
