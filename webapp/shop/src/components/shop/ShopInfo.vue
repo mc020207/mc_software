@@ -11,7 +11,7 @@
       <el-descriptions
         title="商店信息"
         direction="vertical"
-        :column="3"
+        :column="4"
         border>
         <el-descriptions-item label="商店名">{{
           shopInfo.shopName
@@ -85,8 +85,8 @@ export default {
       var shopId = window.sessionStorage.getItem("shopId");
       if (shopId == null) {
         // token中有对应信息
-        // var result1=await this.$http.get('/myshop/info');
-        // var result2=await this.$http.get('/myshop/product/list');
+        // var result1=await this.$http.get('/shop/info');
+        // var result2=await this.$http.get('/shop/product/list');
       } else {
         window.sessionStorage.removeItem("shopId");
         // var result=await this.$http.get('/inspect/info',shopId);

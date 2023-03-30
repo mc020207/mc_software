@@ -11,7 +11,7 @@
       <!-- 未注册时才有 -->
       <el-button type="primary" @click="addDialogVisible = true"  v-show="shopInfo.shopIsOpen==0?true:false">注册商店</el-button>
     
-       <el-descriptions title="商店信息" direction="vertical" :column="3" border  v-show="shopInfo.shopIsOpen>0?true:false">
+       <el-descriptions title="商店信息" direction="vertical" :column="4" border  v-show="shopInfo.shopIsOpen>0?true:false">
   <el-descriptions-item label="商店名">{{shopInfo.shopName}}</el-descriptions-item>
   <el-descriptions-item label="商店简介">{{shopInfo.shopIntro}}</el-descriptions-item>
    <el-descriptions-item label="商店地址">{{shopInfo.shopAddr}}</el-descriptions-item>
@@ -19,17 +19,55 @@
   <el-descriptions-item label="注册日期">{{shopInfo.shopRegisterDate}}</el-descriptions-item>
    <el-descriptions-item label="状态">{{shopInfo.shopIsOpenStr}}</el-descriptions-item>
   </el-descriptions>
-  <!-- </el-card>
-  <el-table :data="productList.object.products" border stripe>
+   
+      </el-card>
+        
+         <el-card id="el-card2">
+         <el-row  :gutter="20">
+           <el-col :span="7">
+             <el-input  placeholder="请输入商品名" v-model="productName"></el-input>
+             </el-col>
+              <!-- 添加商品按钮 -->
+            <el-col :span="2.5">
+               <el-button type="primary" @click="productAdd"  >添加商品</el-button>
+            </el-col>
+            <el-col :span="2.5">
+              <el-button type="success"  icon="el-icon-s-promotion" @click="productCommit" >提交修改</el-button>
+            </el-col>
+         </el-row>
+       
+        <el-table :data="productShopList.object.products.products" border stripe>
         <el-table-column type="index"></el-table-column>
+         <el-table-column
+          label="商品id"
+          prop="productId"
+          width="500"
+        ></el-table-column>
         <el-table-column
-          label="商店名"
-          prop="shopName"
-          width="150" ></el-table-column>
-          </el-table>
-  <el-card> -->
-    
-     </el-card>
+          label="商品名"
+          prop="productName"
+          width="500"
+        ></el-table-column>
+        <el-table-column label="审批">
+            <template slot-scope="scope">
+                <!-- 删除 -->
+                  <el-tooltip class="item" effect="dark" content="删除" placement="top" :enterable="false">
+                  <el-button type="danger" icon="el-icon-close" size='mini' @click="productDelete(scope.row.shopId)"></el-button>
+                </el-tooltip>
+               
+            </template>
+             </el-table-column>
+      </el-table>
+      </el-card>
+       <!-- 分页区域 -->
+      <el-pagination 
+       layout="total, prev, pager, next, jumper"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-size="pageSize"
+      :total="total">
+    </el-pagination>
+
     <el-dialog
       title="注册商店"
       :visible.sync="addDialogVisible"
@@ -96,6 +134,12 @@ export default {
   data() {
     return {
       addDialogVisible: false,
+      needCommit:false,
+       currentPage:1,
+      pageSize:5,     //一页的数量
+      total:100,
+      //添加的商品名
+      productName:"",
       shopRegisterForm: {
         shopName: "",
         userCard: "",
@@ -106,9 +150,7 @@ export default {
       shopInfo:{
 
       },
-      productList:{
-
-      },
+     productShopList:{},
       //这是登录表单的验证规则对象
       shopRegisterFormRules: {
         shopName: [
@@ -193,9 +235,12 @@ export default {
       // 判断从token中的逻辑，待补全
       if(false){
          this.shopInfo.shopIsOpen=0;
+          // token中有对应信息
+        
       }
       else{
-        // var result=await this.$http.get('/myshop/info');
+       // var result1=await this.$http.get('/myshop/info');
+        // var result2=await this.$http.get('/myshop/product/list');
         this.shopInfo={
         shopId: 62,
         shopName: "积斯商龙层",
@@ -204,6 +249,25 @@ export default {
         shopRegisterFund: 86791089.96111247,
         shopRegisterDate: "1977-08-19 19:38:23",
         shopIsOpen: 1
+        };
+        this.productShopList= {
+            object: {
+            products: {
+              products: [
+                  {
+                      productId: 95,
+                      productName: "际建斗数",
+                      shopId: 58
+                  },
+                  {
+                      productId: 94,
+                      productName: "省造记两参",
+                      shopId: 68
+                  }
+              ],
+            totalNumber: 31
+        }
+        }
         };
       }
       switch (this.shopInfo.shopIsOpen){
@@ -220,9 +284,41 @@ export default {
           this.shopInfo.shopIsOpenStr="开发";
           break;
       }
+    },
+    handleCurrentChange(newPage){
+       this.currentPage=newPage;
+      this.getShopInfo();
+    },
+    async productDelete(){
+       //  var result=await this.$http.get('/myshop/product/delete',shopId);
+   this.getShopInfo();
+    },
+    async productAdd(){
+          //  var result=await this.$http.post('/myshop/product/add',this.productName);
+             this.getShopInfo();
+            this.needCommit=true;
+             this.$message({
+          showClose: true,
+          message: "添加成功",
+          type: 'success'
+        });
+    },
+    async productCommit(){
+       //  var result=await this.$http.get('/myshop/commit');
+            this.getShopInfo();
+            this.needCommit=false;
+              this.$message({
+          showClose: true,
+          message: "添加提交成功",
+          type: 'success'
+        });
     }
   },
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+#el-card2 {
+    margin-top: 15px ;
+}
+</style>
