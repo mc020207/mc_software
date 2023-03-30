@@ -176,7 +176,7 @@ export default {
       });
     },
     //获得商店信息
-    getShopInfo(){
+   async getShopInfo(){
       // 判断从token中的逻辑，待补全
       if(true){
          this.shopInfo.shopIsOpen=0;

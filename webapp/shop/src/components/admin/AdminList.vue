@@ -131,8 +131,11 @@ export default {
     //待处理事件逻辑
 
     async shopInspectInfo(shopId){
-         window.sessionStorage.setItem("shopId", shop);
-         this.$router.push("/shop/info");
+         window.sessionStorage.setItem("shopId", shopId);
+         var activePath="/shop/info";
+         //这么写有点逆天，不过能跑
+         this.$parent.$parent.$parent.$parent.saveNaveState(activePath);
+         this.$router.push(activePath);
     },
    async shopInspectPass(shopId){
       // var result=await this.$http.get('/inspect/pass',shopId);
