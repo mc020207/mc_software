@@ -7,7 +7,16 @@
       <el-breadcrumb-item>我的信息</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 面包屑卡片视图 -->
-    <el-card> 123 </el-card>
+    <el-card> 
+      <el-descriptions title="个人信息" direction="vertical" :column="3" border>
+  <el-descriptions-item label="用户名">{{userInfo.userName}}</el-descriptions-item>
+  <el-descriptions-item label="手机号">{{userInfo.userPhone}}</el-descriptions-item>
+   <el-descriptions-item label="用户身份">{{userInfo.userRoleStr}}</el-descriptions-item>
+  <el-descriptions-item label="身份证号" :span="2">{{userInfo.userIdCard}}</el-descriptions-item>
+  
+  <el-descriptions-item label="邮箱">{{userInfo.userEmail}}</el-descriptions-item>
+</el-descriptions>
+    </el-card>
   </div>
 </template>
 
@@ -33,6 +42,17 @@ export default {
         userIdCard: "26179520881022153X",
         userEmail: "u.qdn@epfl.md"
       };
+      switch (this.userInfo.userRole){
+        case 0:
+          this.userInfo.userRoleStr='普通用户';
+          break;
+        case 1:
+           this.userInfo.userRoleStr='商户';
+          break;
+        case 2:
+           this.userInfo.userRoleStr='管理员';
+          break;
+      }
     },
   },
 };

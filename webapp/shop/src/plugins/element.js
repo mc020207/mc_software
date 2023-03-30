@@ -25,6 +25,8 @@ import {
   TableColumn,
   Pagination,
   Dialog,
+  Descriptions,
+  DescriptionsItem,
 } from "element-ui";
 
 Vue.use(Button);
@@ -50,4 +52,6 @@ Vue.use(Table);
 Vue.use(TableColumn);
 Vue.use(Pagination);
 Vue.use(Dialog);
+Vue.use(Descriptions);
+Vue.use(DescriptionsItem);
 Vue.prototype.$message = Message;
