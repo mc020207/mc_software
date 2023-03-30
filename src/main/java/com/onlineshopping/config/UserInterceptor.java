@@ -1,12 +1,9 @@
-package com.onlineshopping.interceptor;
+package com.onlineshopping.config;
 
 import com.onlineshopping.util.JwtUserUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.web.servlet.HandlerInterceptor;
-
-import java.io.IOException;
 
 
 public class UserInterceptor implements HandlerInterceptor {
@@ -15,16 +12,12 @@ public class UserInterceptor implements HandlerInterceptor {
      * @Author: Lin-Yanjun
      */
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws IOException {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (request.getMethod().equals("OPTIONS"))
             return true;
-        HttpSession session = request.getSession();
         try {
-            String userToken = (String) session.getAttribute("userToken");
-            JwtUserUtil.verify(userToken);
+            JwtUserUtil.verifyUser(request, null);
         } catch (Exception e) {
-            response.sendRedirect(request.getContextPath() + "/bad");
             return false;
         }
         return true;

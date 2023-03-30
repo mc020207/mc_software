@@ -1,5 +1,7 @@
 package com.onlineshopping.model.entity;
 
+import com.onlineshopping.model.vo.ProductAddFVO;
+
 import java.io.Serializable;
 
 public class Product implements Serializable {
@@ -35,4 +37,25 @@ public class Product implements Serializable {
         this.productName = productName;
     }
 
+    public Product(Integer productId, Integer shopId, String productName) {
+        this.productId = productId;
+        this.shopId = shopId;
+        this.productName = productName;
+    }
+
+    public Product(ProductAddFVO productAddFVO) {
+        this.productName = productAddFVO.getProductName();
+    }
+
+    public Product() {
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId=" + productId +
+                ", shopId=" + shopId +
+                ", productName='" + productName + '\'' +
+                '}';
+    }
 }

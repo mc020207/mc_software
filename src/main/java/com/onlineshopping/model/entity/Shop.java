@@ -1,6 +1,9 @@
 package com.onlineshopping.model.entity;
 
+import com.onlineshopping.model.dto.ShopRegisterDTO;
+
 import java.io.Serializable;
+import java.sql.Date;
 
 public class Shop implements Serializable {
 
@@ -85,4 +88,39 @@ public class Shop implements Serializable {
         this.shopIsOpen = shopIsOpen;
     }
 
+    public Shop() {
+    }
+
+    public Shop(Integer shopId, Integer userId, String shopName, String shopIntro, String shopAddr, Double shopRegisterFund, Date shopRegisterDate, Integer shopIsOpen) {
+        this.shopId = shopId;
+        this.userId = userId;
+        this.shopName = shopName;
+        this.shopIntro = shopIntro;
+        this.shopAddr = shopAddr;
+        this.shopRegisterFund = shopRegisterFund;
+        this.shopRegisterDate = shopRegisterDate;
+        this.shopIsOpen = shopIsOpen;
+    }
+
+    public Shop(ShopRegisterDTO shopRegisterDTO) {
+        this.shopName = shopRegisterDTO.getShopName();
+        this.shopIntro = shopRegisterDTO.getShopIntro();
+        this.shopAddr = shopRegisterDTO.getShopAddr();
+        this.shopRegisterFund = shopRegisterDTO.getShopRegisterFund();
+        this.shopIsOpen = 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Shop{" +
+                "shopId=" + shopId +
+                ", userId=" + userId +
+                ", shopName='" + shopName + '\'' +
+                ", shopIntro='" + shopIntro + '\'' +
+                ", shopAddr='" + shopAddr + '\'' +
+                ", shopRegisterFund=" + shopRegisterFund +
+                ", shopRegisterDate=" + shopRegisterDate +
+                ", shopIsOpen=" + shopIsOpen +
+                '}';
+    }
 }

@@ -2,24 +2,24 @@ package com.onlineshopping.model.vo;
 
 import java.util.List;
 
-public class ShopsDisplayVO {
-    List<ShopDisplayVO> shops;
+public class ProductsInfoVO {
+    private List<ProductInfoVO> products;
     private Integer totalNumber;
 
     @Override
     public String toString() {
-        return "ShopsDisplayVO{" +
-                "shops=" + shops +
+        return "ProductsInfoVO{" +
+                "products=" + products +
                 ", totalNumber=" + totalNumber +
                 '}';
     }
 
-    public List<ShopDisplayVO> getShops() {
-        return shops;
+    public List<ProductInfoVO> getProducts() {
+        return products;
     }
 
-    public void setShops(List<ShopDisplayVO> shops) {
-        this.shops = shops;
+    public void setProducts(List<ProductInfoVO> products) {
+        this.products = products;
     }
 
     public Integer getTotalNumber() {
@@ -30,11 +30,11 @@ public class ShopsDisplayVO {
         this.totalNumber = totalNumber;
     }
 
-    public ShopsDisplayVO() {
+    public ProductsInfoVO() {
     }
 
-    public ShopsDisplayVO(List<ShopDisplayVO> shops, Integer totalNumber) {
-        this.shops = shops;
+    public ProductsInfoVO(List<ProductInfoVO> products, Integer totalNumber) {
+        this.products = products;
         this.totalNumber = totalNumber;
     }
 }

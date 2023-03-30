@@ -9,4 +9,12 @@ import java.util.List;
 @Repository
 public interface ProductMapper {
     List<Product> selectProductsBySingleAttr(@Param("fieldName") String name, @Param("fieldValue") Object value);
+
+    List<Product> selectProductByRangeAndShopId(Integer startRow, Integer num, Integer shopId);
+
+    Integer countProductsByShopId(Integer shopId);
+
+    void insertProduct(Product product);
+
+    void deleteProductsByShopId(Integer shopId);
 }
