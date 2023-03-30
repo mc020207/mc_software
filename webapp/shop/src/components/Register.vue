@@ -141,6 +141,11 @@ export default {
         if (!valid) return;
         // 后端没部署，暂时注释
         // result=await this.$http.post('/register',this.registerForm);
+          this.$message({
+          showClose: true,
+          message: '已注册',
+          type: 'success'
+        });
         this.$router.push("/login");
       });
     },

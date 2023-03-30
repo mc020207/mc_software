@@ -91,7 +91,11 @@ export default {
         var result = { success: true, message: "登录成功", token: "adadad" };
 
         if (!result.success) return this.$message.error(result.message);
-        this.$message.success(result.message);
+         this.$message({
+          showClose: true,
+          message: result.message,
+          type: 'success'
+        });
         //保存token
         window.sessionStorage.setItem("token", result.token);
         this.$router.push("/home");

@@ -80,6 +80,10 @@ export default {
     logout() {
       window.sessionStorage.clear();
       this.$router.push("/login");
+     this.$message({
+          showClose: true,
+          message: '已退出',
+        });
     },
     //获取所有菜单
     getMenuList() {
