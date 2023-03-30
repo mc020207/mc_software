@@ -14,7 +14,6 @@ import com.onlineshopping.util.ListUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +29,7 @@ public class ProductServiceImpl implements ProductService {
     ShopMapper shopMapper;
 
     public Shop getShop(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession();
-        String token = (String) session.getAttribute("userToken");
+        String token = JwtUserUtil.getToken(request);
         Integer userId = Integer.parseInt(JwtUserUtil.getInfo(token, "userId"));
         List<Shop> shops = shopMapper.selectShopsBySingleAttr("userId", userId);
         ListUtil.checkSingle("shopId", shops);

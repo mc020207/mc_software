@@ -10,7 +10,7 @@ import java.util.List;
 public interface ProductMapper {
     List<Product> selectProductsBySingleAttr(@Param("fieldName") String name, @Param("fieldValue") Object value);
 
-    List<Product> selectProductByRangeAndShopId(Integer startRow,Integer num,Integer shopId);
+    List<Product> selectProductByRangeAndShopId(Integer startRow, Integer num, Integer shopId);
 
     void insertProduct(Product product);
 
