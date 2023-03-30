@@ -19,7 +19,7 @@
         <el-form-item prop="shopName">
           <el-input
             v-model="shopRegisterForm.shopName"
-            prefix-icon="el-icon-user"
+            prefix-icon="el-icon-shangdian"
           ></el-input>
         </el-form-item>
          <!-- 身份证号 -->
@@ -33,7 +33,7 @@
         <el-form-item prop="shopIntro">
           <el-input
             v-model="shopRegisterForm.shopIntro"
-              prefix-icon="el-icon-dianhua"
+              prefix-icon="el-icon-jianjie"
           ></el-input>
         </el-form-item>
        
@@ -41,14 +41,14 @@
          <el-form-item prop="shopAddr">
           <el-input
             v-model="shopRegisterForm.shopAddr"
-             prefix-icon="el-icon-youxiang"
+             prefix-icon="el-icon-location"
           ></el-input>
         </el-form-item>
         <!-- 注册资金 -->
         <el-form-item prop="shopRegisterFund">
           <el-input
             v-model.number="shopRegisterForm.shopRegisterFund"
-            prefix-icon="el-icon-password"
+            prefix-icon="el-icon-zijin"
           ></el-input>
         </el-form-item>
         <!-- 按钮 -->
@@ -148,12 +148,12 @@ export default {
 }
 .shopRegister_box {
   width: 450px;
-  height: 550px;
+  height: 480px;
   background-color: #fff;
   border-radius: 3px;
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 55%;
   transform: translate(-50%, -50%);
 
   .avatar_box {

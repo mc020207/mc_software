@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "774474",
+      "name": "商店",
+      "font_class": "shangdian",
+      "unicode": "e67a",
+      "unicode_decimal": 59002
+    },
+    {
+      "icon_id": "5387640",
+      "name": "资金",
+      "font_class": "zijin",
+      "unicode": "eb1f",
+      "unicode_decimal": 60191
+    },
+    {
+      "icon_id": "10232757",
+      "name": "简介",
+      "font_class": "jianjie",
+      "unicode": "e78b",
+      "unicode_decimal": 59275
+    },
+    {
       "icon_id": "3007689",
       "name": "身份证",
       "font_class": "shenfenzheng",
