@@ -124,11 +124,6 @@ export default {
           children:[
             { 
               
-              path:"/owner/register",
-              nextName:"注册我的商店"
-            },
-            { 
-              
               path:"/owner/info",
               nextName:"我的商店信息"
             }
