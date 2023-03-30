@@ -8,8 +8,18 @@
     </el-breadcrumb>
     <!-- 面包屑卡片视图 -->
     <el-card>
-      <el-button type="primary" @click="addDialogVisible = true">注册商店</el-button>
-    </el-card>
+      <!-- 未注册时才有 -->
+      <el-button type="primary" @click="addDialogVisible = true"  v-show="shopInfo.shopIsOpen==0?true:false">注册商店</el-button>
+    
+       <el-descriptions title="商店信息" direction="vertical" :column="3" border  v-show="shopInfo.shopIsOpen>0?true:false">
+  <el-descriptions-item label="商店名">{{shopInfo.shopName}}</el-descriptions-item>
+  <el-descriptions-item label="商店简介">{{shopInfo.shopIntro}}</el-descriptions-item>
+   <el-descriptions-item label="商店地址">{{shopInfo.shopAddr}}</el-descriptions-item>
+  <el-descriptions-item label="注册资金" :span="2">{{shopInfo.shopRegisterFund}}</el-descriptions-item>
+  <el-descriptions-item label="注册日期">{{shopInfo.shopRegisterDate}}</el-descriptions-item>
+   <el-descriptions-item label="状态">{{shopInfo.shopIsOpenStr}}</el-descriptions-item>
+  </el-descriptions>
+  </el-card>
     <el-dialog
       title="注册商店"
       :visible.sync="addDialogVisible"
@@ -67,6 +77,7 @@
         <el-button @click="addDialogVisible = false">取 消</el-button>
       </span>
     </el-dialog>
+   
   </div>
 </template>
 
@@ -74,7 +85,6 @@
 export default {
   data() {
     return {
-      addButtonVisible:true,
       addDialogVisible: false,
       shopRegisterForm: {
         shopName: "",
@@ -82,6 +92,9 @@ export default {
         shopIntro:"",
         shopAddr:"",
         shopRegisterFund:""
+      },
+      shopInfo:{
+
       },
       //这是登录表单的验证规则对象
       shopRegisterFormRules: {
@@ -133,19 +146,58 @@ export default {
       },
     };
   },
+  created(){
+    this.getShopInfo();
+  },
   methods: {
     //重置表单
     resetshopRegisterForm() {
       this.$refs.shopRegisterFormRef.resetFields();
     },
-
+    //提交表单
     shopRegister() {
       this.$refs.shopRegisterFormRef.validate(async (valid) => {
         if (!valid) return;
         // 后端没部署，暂时注释
         // result=await this.$http.post('/shopRegister',this.shopRegisterForm);
         this.addDialogVisible = false;
+        this.getShopInfo();
+        //理论上至少为1
+        this.shopInfo.shopIsOpen=this.shopInfo.shopIsOpen==0?1:this.shopInfo.shopIsOpen;
       });
+    },
+    //获得商店信息
+    getShopInfo(){
+      // 判断从token中的逻辑，待补全
+      if(false){
+         this.shopInfo.shopIsOpen=0;
+      }
+      else{
+        // var result=await this.$http.get('/myshop/info');
+        this.shopInfo={
+        shopId: 62,
+        shopName: "积斯商龙层",
+        shopIntro: "id do fugiat",
+        shopAddr: "consequat ullamco ea in",
+        shopRegisterFund: 86791089.96111247,
+        shopRegisterDate: "1977-08-19 19:38:23",
+        shopIsOpen: 1
+        };
+      }
+      switch (this.shopInfo.shopIsOpen){
+        case 0:
+          this.shopInfo.shopIsOpenStr="未提交";
+          break;
+        case 1:
+          this.shopInfo.shopIsOpenStr="待审核";
+          break;
+        case 2:
+          this.shopInfo.shopIsOpenStr="未通过";
+          break;
+        case 3:
+          this.shopInfo.shopIsOpenStr="开发";
+          break;
+      }
     }
   },
 };

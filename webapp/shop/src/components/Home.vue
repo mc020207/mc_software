@@ -137,11 +137,6 @@ export default {
               
               path:"/admin/list",
               nextName:"待审核商店信息列表"
-            },
-            { 
-             
-              path:"/admin/info",
-              nextName:"待审核商店信息"
             }
           ]
         }

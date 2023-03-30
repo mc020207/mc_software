@@ -9,7 +9,6 @@ import ShopList from '../components/shop/ShopList.vue'
 import ShopInfo from '../components/shop/ShopInfo.vue'
 import MyShopInfo from '../components/owner/OwnerInfo.vue'
 import AdminList from '../components/admin/AdminList.vue'
-import AdminInfo from '../components/admin/AdminInfo.vue'
 Vue.use(VueRouter);
 
 
@@ -33,7 +32,6 @@ const routes = [
     children:[{path:'/Welcome',component:Welcome},
     // admin_routes
     {path:'/admin/list',component:AdminList},
-    {path:'/admin/info',component:AdminInfo},
     // shop_routes
     {path:'/shop/list',component:ShopList},
     {path:'/shop/info',component:ShopInfo},
