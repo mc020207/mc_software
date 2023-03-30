@@ -164,12 +164,21 @@ export default {
         this.getShopInfo();
         //理论上至少为1
         this.shopInfo.shopIsOpen=this.shopInfo.shopIsOpen==0?1:this.shopInfo.shopIsOpen;
+
+         var result = { success: true, message: "提交成功" };
+         
+        if (!result.success) return this.$message.error(result.message);
+         this.$message({
+          showClose: true,
+          message: result.message,
+          type: 'success'
+        });
       });
     },
     //获得商店信息
     getShopInfo(){
       // 判断从token中的逻辑，待补全
-      if(false){
+      if(true){
          this.shopInfo.shopIsOpen=0;
       }
       else{
