@@ -19,12 +19,12 @@
         <el-table-column
           label="简介"
           prop="shopIntro"
-          width="450"
+          width="400"
         ></el-table-column>
         <el-table-column
           label="地址"
           prop="shopAddr"
-          width="270"
+          width="250"
         ></el-table-column>
         <el-table-column
           label="注册资金"
@@ -38,10 +38,20 @@
         ></el-table-column>
         <el-table-column label="审批">
             <template slot-scope="scope">
+                  <!-- 详情 -->
+                   <el-tooltip class="item" effect="dark" content="详细信息" placement="top" :enterable="false">
+                  <el-button type="success" icon="el-icon-s-grid" size='mini' @click="shopInspectInfo(scope.row.shopId)"></el-button>
+                </el-tooltip>
+                          
                 <!-- 同意 -->
-                <el-button type="primary" icon="el-icon-check" size='mini'></el-button>
+                  <el-tooltip class="item" effect="dark" content="同意" placement="top" :enterable="false">
+                   <el-button type="primary" icon="el-icon-check" size='mini' @click="shopInspectPass(scope.row.shopId)"></el-button>
+                </el-tooltip>
                 <!-- 拒绝 -->
-                <el-button type="danger" icon="el-icon-close" size='mini'></el-button>
+                  <el-tooltip class="item" effect="dark" content="拒绝" placement="top" :enterable="false">
+                  <el-button type="danger" icon="el-icon-close" size='mini' @click="shopInspectReject(scope.row.shopId)"></el-button>
+                </el-tooltip>
+               
             </template>
              </el-table-column>
       </el-table>
@@ -117,6 +127,20 @@ export default {
     handleCurrentChange(newPage){
        this.currentPage=newPage;
        this.getShopList();
+    },
+    //待处理事件逻辑
+
+    async shopInspectInfo(shopId){
+         window.sessionStorage.setItem("shopId", shop);
+         this.$router.push("/shop/info");
+    },
+   async shopInspectPass(shopId){
+      // var result=await this.$http.get('/inspect/pass',shopId);
+      this.getShopList();
+    },
+   async shopInspectReject(shopId){
+    //  var result=await this.$http.get('/inspect/reject',shopId);
+    this.getShopList();
     }
   },
 };

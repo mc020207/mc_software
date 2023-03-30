@@ -27,6 +27,7 @@ import {
   Dialog,
   Descriptions,
   DescriptionsItem,
+  Tooltip,
 } from "element-ui";
 
 Vue.use(Button);
@@ -54,4 +55,5 @@ Vue.use(Pagination);
 Vue.use(Dialog);
 Vue.use(Descriptions);
 Vue.use(DescriptionsItem);
+Vue.use(Tooltip);
 Vue.prototype.$message = Message;

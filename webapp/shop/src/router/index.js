@@ -29,7 +29,7 @@ const routes = [
     path: "/home",
     component: Home,
     redirect:'/welcome',
-    children:[{path:'/Welcome',component:Welcome},
+    children:[{path:'/welcome',component:Welcome},
     // admin_routes
     {path:'/admin/list',component:AdminList},
     // shop_routes
