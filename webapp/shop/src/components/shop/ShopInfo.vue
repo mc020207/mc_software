@@ -28,12 +28,9 @@
         <el-descriptions-item label="注册日期">{{
           shopInfo.shopRegisterDate
         }}</el-descriptions-item>
-        <el-descriptions-item label="状态">{{
-          shopInfo.shopIsOpenStr
-        }}</el-descriptions-item>
       </el-descriptions>
     </el-card>
-      <el-table :data="productShopList.object.products.products" border stripe>
+      <el-table :data="productShopList" border stripe>
         <el-table-column type="index"></el-table-column>
          <el-table-column
           label="商品id"
@@ -59,86 +56,104 @@
 </template>
 
 <script>
+import {apiShopInfo,apiProductInfo,apiAdminShop,apiAdminProducts} from '@/api/api'
 export default {
   data() {
     return {
-       currentPage:1,
+      currentPage:1,
       pageSize:5,     //一页的数量
       total:100,
-      shopRegisterForm: {
-        shopName: "",
-        userCard: "",
-        shopIntro: "",
-        shopAddr: "",
-        shopRegisterFund: "",
-      },
       shopInfo: {},
       productShopList:{}
     };
   },
   created() {
     this.getShopInfo();
-    
   },
   methods: {
     async getShopInfo() {
-      var shopId = window.sessionStorage.getItem("shopId");
-      if (shopId == null) {
-        // token中有对应信息
-        // var result1=await this.$http.get('/shop/info');
-        // var result2=await this.$http.get('/shop/product/list');
-      } else {
-        window.sessionStorage.removeItem("shopId");
-        // var result=await this.$http.get('/inspect/info',shopId);
-        // var result2=await this.$http.get('/inspect/product/list',shopId);
-      }      
-        this.shopInfo = {
-          shopId: 62,
-          shopName: "积斯商龙层",
-          shopIntro: "id do fugiat",
-          shopAddr: "consequat ullamco ea in",
-          shopRegisterFund: 86791089.96111247,
-          shopRegisterDate: "1977-08-19 19:38:23",
-          shopIsOpen: 1,
-        };
-        this.productShopList= {
-            object: {
-            products: {
-              products: [
-                  {
-                      productId: 95,
-                      productName: "际建斗数",
-                      shopId: 58
-                  },
-                  {
-                      productId: 94,
-                      productName: "省造记两参",
-                      shopId: 68
-                  }
-              ],
-            totalNumber: 31
-        }
-        }
-        };
-      switch (this.shopInfo.shopIsOpen) {
-        case 0:
-          this.shopInfo.shopIsOpenStr = "未提交";
-          break;
-        case 1:
-          this.shopInfo.shopIsOpenStr = "待审核";
-          break;
-        case 2:
-          this.shopInfo.shopIsOpenStr = "未通过";
-          break;
-        case 3:
-          this.shopInfo.shopIsOpenStr = "开发";
-          break;
+      var t = window.sessionStorage.getItem('token');
+      if(t!= "0" && t!="1" && t!="2"){
+        this.$router.push("/login");
+        return this.$message.error("非法访问");
+      }
+      var shopid = window.sessionStorage.getItem("shopId");
+      var normal = window.sessionStorage.getItem("normalShopInfo");
+      if (shopid == null || normal == null) {
+        // 非法访问
+        this.$router.push("/home");
+        return this.$message.error("非法访问");
+      }
+      if(normal == true){
+          apiShopInfo({shopId:shopid}).then(response =>{
+            if(!response.success){
+              this.$router.push("/home");
+              return this.$message.error(response.message);
+            }
+            this.shopInfo = response.object;
+            apiProductInfo({shopId:shopid,page:this.currentPage}).then(response =>{
+            if(!response.success){
+              this.$router.push("/home");
+              return this.$message.error(response.message);
+            }
+            this.total = response.object.totalNumber;
+            this.productShopList = response.object.products;
+          });
+        });
+      }else if(t == "2"){
+          apiAdminShop({shopId:shopid}).then(response =>{
+            if(!response.success){
+              this.$router.push("/home");
+              return this.$message.error(response.message);
+            }
+            this.shopInfo = response.object;
+            apiAdminProducts({shopId:shopid,page:this.currentPage}).then(response =>{
+            if(!response.success){
+              this.$router.push("/home");
+              return this.$message.error(response.message);
+            }
+            this.total = response.object.totalNumber;
+            this.productShopList = response.object.products;
+          });
+        });
+      }else{
+        this.$router.push("/home");
+        return this.$message.error("非法访问");
       }
     },
+
     //监听页面值改变的事件
     handleCurrentChange(newPage){
        this.currentPage=newPage;
-       this.getShopList();
+       var shopid = window.sessionStorage.getItem("shopId");
+        var normal = window.sessionStorage.getItem("normalShopInfo");
+        if (shopid == null || normal == null) {
+        // 非法访问
+          this.$router.push("/home");
+          return this.$message.error("非法访问");
+        }
+        if(normal == true){
+          apiProductInfo({shopId:shopid,page:this.currentPage}).then(response =>{
+            if(!response.success){
+              this.$router.push("/home");
+              return this.$message.error(response.message);
+            }
+            this.total = response.object.totalNumber;
+            this.productShopList = response.object.products;
+      });
+        }else if(t=="2"){
+        apiAdminProducts({shopId:shopid,page:this.currentPage}).then(response =>{
+        if(!response.success){
+          this.$router.push("/home");
+          return this.$message.error(response.message);
+        }
+        this.total = response.object.totalNumber;
+        this.productShopList = response.object.products;
+        })
+      }else{
+        this.$router.push("/home");
+        return this.$message.error("非法访问");
+      }
     },
   },
 };

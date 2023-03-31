@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import {apiLogout} from '@/api/api'
 export default {
   data() {
     return {
@@ -78,19 +79,52 @@ export default {
   },
   methods: {
     logout() {
-      window.sessionStorage.clear();
-      this.$router.push("/login");
-     this.$message({
+      apiLogout().then(response =>{
+        if(!response.success) return this.$message.error(response.message);
+        window.sessionStorage.clear();
+        this.$router.push("/login");
+        this.$message({
           showClose: true,
           message: '已退出',
         });
+      });
     },
     //获取所有菜单
     getMenuList() {
-      //根据用户信息，获得对应菜单
-      var x = 1;
-     //在path中填写对应路径
-      this.menuList=[
+    //根据用户信息，获得对应菜单
+    //解析JWT，等后端实装后再说
+    //在path中填写对应路径
+
+      switch (window.sessionStorage.getItem('token')) {
+
+        case "0":
+          this.menuList=[
+        {
+          id:"user",
+          authName: "用户界面",
+          children:[
+            { 
+             
+              path:"/user/info",
+              nextName:"我的信息"
+            }
+          ]
+        },
+        {
+          id:"shop",
+          authName: "商店界面",
+          children:[
+            { 
+    
+              path:"/shop/list",
+              nextName:"已开放商店列表"
+            }
+          ]
+        }
+      ]
+          break;
+        case "1":
+          this.menuList=[
         {
           id:"user",
           authName: "用户界面",
@@ -110,11 +144,6 @@ export default {
              
               path:"/shop/list",
               nextName:"已开放商店列表"
-            },
-            { 
-             
-              path:"/shop/info",
-              nextName:"当前商店"
             }
           ]
         },
@@ -126,6 +155,32 @@ export default {
               
               path:"/owner/info",
               nextName:"我的商店信息"
+            }
+          ]
+        }
+      ]
+          break;
+        case "2":
+          this.menuList=[
+        {
+          id:"user",
+          authName: "用户界面",
+          children:[
+            { 
+             
+              path:"/user/info",
+              nextName:"我的信息"
+            }
+          ]
+        },
+        {
+          id:"shop",
+          authName: "商店界面",
+          children:[
+            { 
+             
+              path:"/shop/list",
+              nextName:"已开放商店列表"
             }
           ]
         },
@@ -141,18 +196,10 @@ export default {
           ]
         }
       ]
-
-
-      switch (x) {
-        case 1:
-          // this.menuList=[];
           break;
-        case 2:
-          // this.menuList=[];
-          break;
-        case 3:
-          // this.menuList=[];
-          break;
+        default:
+          this.$message.error("非法访问");
+          this.$router.push("/login");
       }
     },
     //点击按钮，切换菜单的折叠与展开

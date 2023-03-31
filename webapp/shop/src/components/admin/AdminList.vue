@@ -9,7 +9,7 @@
     <!-- 面包屑卡片视图 -->
     <el-card>
       <!-- 商店列表区 -->
-      <el-table :data="inspectShopList.object.shops" border stripe>
+      <el-table :data="inspectShopList" border stripe>
         <el-table-column type="index"></el-table-column>
         <el-table-column
           label="商店名"
@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import {apiAdminList,apiAdminPass,apiAdminReject} from '@/api/api'
 export default {
   data() {
     return {
@@ -85,43 +86,16 @@ export default {
     //   var result=await this.$http.get('/user/info',{
     //     page:this.currentPage
     //   });
-      var result = { success: true, message: "获取成功" };
-      if (!result.success) return this.$message.error(result.message);
-      this.inspectShopList = {
-        success: true,
-        object: {
-          shops: [
-            {
-              shopName: "所新分等性全越",
-              userIdCard: "62",
-              shopIntro: "officia fugiat in esse",
-              shopAddr: "mollit Ut ipsum in officia",
-              shopRegisterFund: 24,
-              shopRegisterDate: "1989-06-07",
-              shopId: 77,
-            },
-            {
-              shopName: "比林合青",
-              userIdCard: "72",
-              shopIntro: "ad deserunt",
-              shopAddr: "commodo amet",
-              shopRegisterFund: 47,
-              shopRegisterDate: "1989-10-23",
-              shopId: 98,
-            },
-            {
-              shopName: "正以温养包",
-              userIdCard: "62",
-              shopIntro: "Lorem commodo culpa consectetur velit",
-              shopAddr: "tempor do velit",
-              shopRegisterFund: 4,
-              shopRegisterDate: "1980-12-29",
-              shopId: 72,
-            },
-          ],
-        },
-        message: "维矿二代题往于己无书上界。",
-      };
+      var t = window.sessionStorage.getItem('token');
+      if(t!="2"){
+        this.$router.push("/home");
+        return this.$message.error("非法访问");
+      }
+      apiAdminList({page:this.currentPage}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+        this.total = response.object.totalNumber;
+        this.inspectShopList = response.object.shops;
+      });
     },
     //监听页面值改变的事件
     handleCurrentChange(newPage){
@@ -132,6 +106,7 @@ export default {
 
     async shopInspectInfo(shopId){
          window.sessionStorage.setItem("shopId", shopId);
+         window.sessionStorage.setItem("normalShopInfo",false);
          var activePath="/shop/info";
          //这么写有点逆天，不过能跑
          this.$parent.$parent.$parent.$parent.saveNaveState(activePath);
@@ -139,11 +114,17 @@ export default {
     },
    async shopInspectPass(shopId){
       // var result=await this.$http.get('/inspect/pass',shopId);
+      apiAdminPass({shopId:shopId}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+      });
       this.getShopList();
     },
    async shopInspectReject(shopId){
-    //  var result=await this.$http.get('/inspect/reject',shopId);
-    this.getShopList();
+      //var result=await this.$http.get('/inspect/reject',shopId);
+      apiAdminReject({shopId:shopId}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+      });
+      this.getShopList();
     }
   },
 };

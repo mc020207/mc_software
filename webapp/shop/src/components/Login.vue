@@ -14,16 +14,16 @@
         class="login_form"
       >
         <!-- 用户名 -->
-        <el-form-item prop="username">
+        <el-form-item prop="userName">
           <el-input
-            v-model="loginForm.username"
+            v-model="loginForm.userName"
             prefix-icon="el-icon-user"
           ></el-input>
         </el-form-item>
         <!-- 密码 -->
-        <el-form-item prop="password">
+        <el-form-item prop="userPwd">
           <el-input
-            v-model="loginForm.password"
+            v-model="loginForm.userPwd"
             prefix-icon="el-icon-password"
             show-password
           ></el-input>
@@ -39,18 +39,23 @@
   </div>
 </template>
 
+
+
 <script>
+
+import {apiLogin} from '@/api/api'
+
 export default {
   data() {
     return {
       //这是登录表单的数据对象
       loginForm: {
-        username: "",
-        password: "",
+        userName: "",
+        userPwd: "",
       },
       //这是登录表单的验证规则对象
       loginFormRules: {
-        username: [
+        userName: [
           { required: true, message: "请输入用户名称", trigger: "blur" },
           {
             min: 3,
@@ -64,7 +69,7 @@ export default {
             trigger: "blur",
           },
         ],
-        password: [
+        userPwd: [
           { required: true, message: "请输入密码", trigger: "blur" },
           {
             min: 6,
@@ -86,19 +91,29 @@ export default {
       this.$refs.loginFormRef.validate(async (valid) => {
         if (!valid) return;
         // 后端没部署，暂时注释
-        //var result=await this.$http.post('/login',this.loginForm);
-        //提示登录信息
-        var result = { success: true, message: "登录成功", token: "adadad" };
-
-        if (!result.success) return this.$message.error(result.message);
-         this.$message({
-          showClose: true,
-          message: result.message,
-          type: 'success'
+        apiLogin(this.loginForm).then(response =>{
+          if (!response.success) return this.$message.error(response.message);
+          this.$message({
+            showClose: true,
+            message: response.message,
+            type: 'success'
+          });
+          //保存token
+          window.sessionStorage.setItem("token", response.object.token);
+          this.$router.push("/home");
         });
+        //提示登录信息
+        //var result = { success: true, message: "登录成功", token: "adadad" };
+
+        //if (!result.success) return this.$message.error(result.message);
+        //this.$message({
+        //  showClose: true,
+        //  message: result.message,
+        //  type: 'success'
+        //});
         //保存token
-        window.sessionStorage.setItem("token", result.token);
-        this.$router.push("/home");
+        //window.sessionStorage.setItem("token", result.token);
+        //this.$router.push("/home");
       });
     },
     register(){

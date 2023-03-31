@@ -23,9 +23,9 @@
           </el-radio-group>
         </el-form-item>
         <!-- 用户名 -->
-        <el-form-item prop="username">
+        <el-form-item prop="userName">
           <el-input
-            v-model="registerForm.username"
+            v-model="registerForm.userName"
             prefix-icon="el-icon-user"
           ></el-input>
         </el-form-item>
@@ -37,9 +37,9 @@
           ></el-input>
         </el-form-item>
         <!-- 身份证号 -->
-        <el-form-item prop="userCard">
+        <el-form-item prop="userIdCard">
           <el-input
-            v-model="registerForm.userCard"
+            v-model="registerForm.userIdCard"
             prefix-icon="el-icon-shenfenzheng"
           ></el-input>
         </el-form-item>
@@ -51,9 +51,9 @@
           ></el-input>
         </el-form-item>
         <!-- 密码 -->
-        <el-form-item prop="password">
+        <el-form-item prop="userPwd">
           <el-input
-            v-model="registerForm.password"
+            v-model="registerForm.userPwd"
             prefix-icon="el-icon-password"
             show-password
           ></el-input>
@@ -70,21 +70,22 @@
 </template>
 
 <script>
+import {apiRegister} from '@/api/api'
 export default {
   data() {
     return {
       //这是登录表单的数据对象
       registerForm: {
         userRole: "0",
-        username: "",
+        userName: "",
         userPhone: "",
-        userCard: "",
+        userIdCard: "",
         userEmail: "",
-        password: "",
+        userPwd: "",
       },
       //这是登录表单的验证规则对象
       registerFormRules: {
-        username: [
+        userName: [
           { required: true, message: "请输入用户名称", trigger: "blur" },
           {
             min: 3,
@@ -101,7 +102,7 @@ export default {
         userPhone:[
              { required: true, message: "请输入手机号", trigger: "blur" },
         ],
-        userCard: [
+        userIdCard: [
           { required: true, message: "请输入身份证号", trigger: "blur" },
           {
             min: 18,
@@ -118,7 +119,7 @@ export default {
             trigger: "blur",
           }
         ],
-        password: [
+        userPwd: [
           { required: true, message: "请输入密码", trigger: "blur" },
           {
             min: 6,
@@ -140,13 +141,16 @@ export default {
       this.$refs.registerFormRef.validate(async (valid) => {
         if (!valid) return;
         // 后端没部署，暂时注释
-        // result=await this.$http.post('/register',this.registerForm);
+        apiRegister(this.registerForm).then(response =>{
+          if (!response.success) return this.$message.error(response.message);
           this.$message({
-          showClose: true,
-          message: '已注册',
-          type: 'success'
+            showClose: true,
+            message: '已注册',
+            type: 'success'
+          });
+          this.$router.push("/login");
         });
-        this.$router.push("/login");
+        
       });
     },
     backLogin() {

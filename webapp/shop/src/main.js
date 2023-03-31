@@ -12,20 +12,20 @@ import axios from "axios";
 // import  VueCookies  from "vue-cookies";
 
 //配置请求的根路径  记得加上"api"
-axios.defaults.baseURL = "http://127.0.0.1:4523/api";    
+// axios.defaults.baseURL = "http://localhost:8080/api";    
 //请问均要cookie
-axios.defaults.withCredentials=true;
-axios.withCredentials=true;
+// axios.defaults.withCredentials=true;
+// axios.withCredentials=true;
+// axios.defaults.crossDomain=true;
 // Vue.use(VueCookies);
-
 //所有请问均要token
 
-axios.interceptors.request.use(config=>{
-  config.headers.Authorization=window.sessionStorage.getItem('token');
-   return config;
-});
+// axios.interceptors.request.use(config=>{
+//   config.headers.Authorization=window.sessionStorage.getItem('token');
+//   return config;
+// });
 
-Vue.prototype.$http = axios;
+// Vue.prototype.$http = axios;
 
 Vue.config.productionTip = false;
 

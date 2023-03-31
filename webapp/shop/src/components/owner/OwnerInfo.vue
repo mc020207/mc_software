@@ -9,9 +9,9 @@
     <!-- 面包屑卡片视图 -->
     <el-card>
       <!-- 未注册时才有 -->
-      <el-button type="primary" @click="addDialogVisible = true"  v-show="shopInfo.shopIsOpen==0?true:false">注册商店</el-button>
+      <el-button type="primary" @click="addDialogVisible = true"  v-show="shopInfo.shopIsOpen > -1 && shopInfo.shopIsOpen != 2 ?false:true">注册商店</el-button>
     
-       <el-descriptions title="商店信息" direction="vertical" :column="4" border  v-show="shopInfo.shopIsOpen>0?true:false">
+       <el-descriptions title="商店信息" direction="vertical" :column="4" border  v-show="shopInfo.shopIsOpen>-1?true:false">
   <el-descriptions-item label="商店名">{{shopInfo.shopName}}</el-descriptions-item>
   <el-descriptions-item label="商店简介">{{shopInfo.shopIntro}}</el-descriptions-item>
    <el-descriptions-item label="商店地址">{{shopInfo.shopAddr}}</el-descriptions-item>
@@ -22,8 +22,8 @@
    
       </el-card>
         
-         <el-card id="el-card2">
-         <el-row  :gutter="20">
+         <el-card id="el-card2" v-show="shopInfo.shopIsOpen > -1">
+         <el-row  :gutter="20" v-show="shopInfo.shopIsOpen != 2">
            <el-col :span="7">
              <el-input  placeholder="请输入商品名" v-model="productName"></el-input>
              </el-col>
@@ -36,7 +36,7 @@
             </el-col>
          </el-row>
        
-        <el-table :data="productShopList.object.products.products" border stripe>
+        <el-table :data="productShopList" border stripe>
         <el-table-column type="index"></el-table-column>
          <el-table-column
           label="商品id"
@@ -52,7 +52,7 @@
             <template slot-scope="scope">
                 <!-- 删除 -->
                   <el-tooltip class="item" effect="dark" content="删除" placement="top" :enterable="false">
-                  <el-button type="danger" icon="el-icon-close" size='mini' @click="productDelete(scope.row.shopId)"></el-button>
+                  <el-button type="danger" icon="el-icon-close" size='mini' @click="productDelete(scope.row.productId)"></el-button>
                 </el-tooltip>
                
             </template>
@@ -65,7 +65,8 @@
       @current-change="handleCurrentChange"
       :current-page="currentPage"
       :page-size="pageSize"
-      :total="total">
+      :total="total"
+      v-show="shopInfo.shopIsOpen > -1">
     </el-pagination>
 
     <el-dialog
@@ -130,12 +131,13 @@
 </template>
 
 <script>
+import {apiMyshopReg,apiMyshopInfo,apiMyshopProducts,apiMyshopAdd,apiMyshopDelete,apiMyshopCommit} from '@/api/api'
 export default {
   data() {
     return {
       addDialogVisible: false,
       needCommit:false,
-       currentPage:1,
+      currentPage:1,
       pageSize:5,     //一页的数量
       total:100,
       //添加的商品名
@@ -148,7 +150,7 @@ export default {
         shopRegisterFund:""
       },
       shopInfo:{
-
+        shopIsOpen: -1
       },
      productShopList:{},
       //这是登录表单的验证规则对象
@@ -213,105 +215,82 @@ export default {
     shopRegister() {
       this.$refs.shopRegisterFormRef.validate(async (valid) => {
         if (!valid) return;
-        // 后端没部署，暂时注释
-        // result=await this.$http.post('/shopRegister',this.shopRegisterForm);
         this.addDialogVisible = false;
         this.getShopInfo();
-        //理论上至少为1
-        this.shopInfo.shopIsOpen=this.shopInfo.shopIsOpen==0?1:this.shopInfo.shopIsOpen;
-
-         var result = { success: true, message: "提交成功" };
-         
-        if (!result.success) return this.$message.error(result.message);
-         this.$message({
-          showClose: true,
-          message: result.message,
-          type: 'success'
-        });
+        apiMyshopReg(this.shopRegisterForm).then(response =>{
+          if (!response.success) return this.$message.error(response.message);
+          this.getShopInfo();
+        })
       });
     },
     //获得商店信息
    async getShopInfo(){
-      // 判断从token中的逻辑，待补全
-      if(false){
-         this.shopInfo.shopIsOpen=0;
-          // token中有对应信息
-        
+      
+      var t = window.sessionStorage.getItem('token');
+      if(t!="1"){
+        this.$router.push("/home");
+        return this.$message.error("非法访问");
       }
-      else{
-       // var result1=await this.$http.get('/myshop/info');
-        // var result2=await this.$http.get('/myshop/product/list');
-        this.shopInfo={
-        shopId: 62,
-        shopName: "积斯商龙层",
-        shopIntro: "id do fugiat",
-        shopAddr: "consequat ullamco ea in",
-        shopRegisterFund: 86791089.96111247,
-        shopRegisterDate: "1977-08-19 19:38:23",
-        shopIsOpen: 1
-        };
-        this.productShopList= {
-            object: {
-            products: {
-              products: [
-                  {
-                      productId: 95,
-                      productName: "际建斗数",
-                      shopId: 58
-                  },
-                  {
-                      productId: 94,
-                      productName: "省造记两参",
-                      shopId: 68
-                  }
-              ],
-            totalNumber: 31
+
+      apiMyshopInfo().then(response => {
+        if(!response.success){
+          this.shopInfo.shopIsOpen = -1;
         }
+        else{
+          this.shopInfo = response.object;
+          switch(this.shopInfo.shopIsOpen){
+            case 0:this.shopInfo.shopIsOpenStr = "待提交";break;
+            case 1:this.shopInfo.shopIsOpenStr = "待审核";break;
+            case 2:this.shopInfo.shopIsOpenStr = "驳回";break;
+            case 3:this.shopInfo.shopIsOpenStr = "上线";break;
+          }
         }
-        };
-      }
-      switch (this.shopInfo.shopIsOpen){
-        case 0:
-          this.shopInfo.shopIsOpenStr="未提交";
-          break;
-        case 1:
-          this.shopInfo.shopIsOpenStr="待审核";
-          break;
-        case 2:
-          this.shopInfo.shopIsOpenStr="未通过";
-          break;
-        case 3:
-          this.shopInfo.shopIsOpenStr="开发";
-          break;
-      }
+      })
+      apiMyshopProducts({page:this.currentPage}).then(response =>{
+            if(!response.success) return this.$message.error(response.message);
+            this.productShopList = response.object.products;
+            this.total = response.object.totalNumber;
+          })
     },
     handleCurrentChange(newPage){
-       this.currentPage=newPage;
-      this.getShopInfo();
+      this.currentPage=newPage;
+      apiMyshopProducts({page:this.currentPage}).then(response =>{
+            if(!response.success) return this.$message.error(response.message);
+            this.productShopList = response.object.products;
+            this.total = response.object.totalNumber;
+          })
     },
-    async productDelete(){
-       //  var result=await this.$http.get('/myshop/product/delete',shopId);
-   this.getShopInfo();
+    async productDelete(pid){
+      //  var result=await this.$http.get('/myshop/product/delete',shopId);
+      apiMyshopDelete({productId:pid}).then(response =>{
+        if(!response.success) return this.$message.error(response.message);
+        this.$message({
+              showClose: true,
+              message: "删除成功",
+              type: 'success'
+            });
+        this.getShopInfo();
+      })
     },
     async productAdd(){
           //  var result=await this.$http.post('/myshop/product/add',this.productName);
-             this.getShopInfo();
-            this.needCommit=true;
-             this.$message({
-          showClose: true,
-          message: "添加成功",
-          type: 'success'
-        });
+          apiMyshopAdd(this.productName).then(response =>{
+              if(!response.success) return this.$message.error(response.message);
+              this.$message({
+              showClose: true,
+              message: "添加成功",
+              type: 'success'
+            });
+            this.getShopInfo();
+          });
+            
     },
     async productCommit(){
        //  var result=await this.$http.get('/myshop/commit');
+        apiMyshopCommit().then(response =>{
+            if(!response.success) return this.$message.error(response.message);
             this.getShopInfo();
-            this.needCommit=false;
-              this.$message({
-          showClose: true,
-          message: "添加提交成功",
-          type: 'success'
-        });
+          });
     }
   },
 };

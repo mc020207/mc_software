@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import {apiUserInfo} from '@/api/api'
 export default {
   data() {
     return {
@@ -33,16 +34,19 @@ export default {
   methods: {
     async getUserInfo() {
       // var result=await this.$http.get('/user/info');
-      var result = { success: true, message: "获取成功" };
-      if (!result.success) return this.$message.error(result.message);
-      this.userInfo = {
-        userRole: 0,
-        userName: "曹洋",
-        userPhone: "18182933222",
-        userIdCard: "26179520881022153X",
-        userEmail: "u.qdn@epfl.md"
-      };
-      switch (this.userInfo.userRole){
+      // var result = { success: true, message: "获取成功" };
+      var t = window.sessionStorage.getItem('token');
+      if(t!="0" && t!="1" && t!="2"){
+        this.$message.error("非法访问");
+        this.$router.push("/login");
+      }
+      apiUserInfo().then(response =>{
+        if (!response.success){
+          this.$router.push('/home');
+          return this.$message.error(response.message);
+        }
+        this.userInfo = response.object;
+        switch (this.userInfo.userRole){
         case 0:
           this.userInfo.userRoleStr='普通用户';
           break;
@@ -52,7 +56,8 @@ export default {
         case 2:
            this.userInfo.userRoleStr='管理员';
           break;
-      }
+        }
+      })
     },
   },
 };
