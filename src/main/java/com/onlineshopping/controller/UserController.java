@@ -2,7 +2,10 @@ package com.onlineshopping.controller;
 
 import com.onlineshopping.model.dto.UserLoginDTO;
 import com.onlineshopping.model.dto.UserRegisterDTO;
-import com.onlineshopping.model.vo.*;
+import com.onlineshopping.model.vo.CommonResult;
+import com.onlineshopping.model.vo.UserInfoVO;
+import com.onlineshopping.model.vo.UserLoginFVO;
+import com.onlineshopping.model.vo.UserRegisterFVO;
 import com.onlineshopping.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 public class UserController {
     @Resource
     UserService userService;
@@ -37,15 +40,13 @@ public class UserController {
                               @RequestBody UserLoginFVO userLoginFVO) {
         CommonResult cm = new CommonResult(false);
         UserLoginDTO userLoginDTO = new UserLoginDTO(userLoginFVO);
-        String token;
         try {
-            token = userService.login(request, response, userLoginDTO);
+            userService.login(request, response, userLoginDTO);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
         }
         cm.setSuccess(true);
-        cm.setObject(new LoginVO(token));
         return cm;
     }
 

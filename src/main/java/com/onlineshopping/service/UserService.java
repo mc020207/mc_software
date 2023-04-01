@@ -14,13 +14,13 @@ public interface UserService {
     void register(UserRegisterDTO user) throws RuntimeException;
 
     /**
-     * @Description: 检查用户登录的用户名和密码，若匹配则返回token
+     * @Description: 检查用户登录的用户名和密码。若不匹配，则清除session和cookie；若匹配则登录且设置session和cookie
      * @Author: Lin-Yanjun
      */
-    String login(HttpServletRequest request, HttpServletResponse response, UserLoginDTO userLoginDTO) throws RuntimeException;
+    void login(HttpServletRequest request, HttpServletResponse response, UserLoginDTO userLoginDTO) throws RuntimeException;
 
     /**
-     * @Description: 啥也不做
+     * @Description: 清除session和cookie
      * @Author: Lin-Yanjun
      */
     void logout(HttpServletRequest request, HttpServletResponse response) throws RuntimeException;

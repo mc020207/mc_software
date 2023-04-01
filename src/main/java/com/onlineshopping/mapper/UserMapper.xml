@@ -10,9 +10,9 @@
         order by userId
     </select>
 
-    <insert id="insertUser">
+    <select id="insertUser">
         insert into `user`(userRole, userName, userPhone, userIdCard, userEmail, userPwd)
         values (#{userRole}, #{userName}, #{userPhone}, #{userIdCard}, #{userEmail}, #{userPwd})
-    </insert>
+    </select>
 
 </mapper>

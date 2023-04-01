@@ -4,14 +4,9 @@ import java.util.List;
 
 public class ShopsDisplayVO {
     List<ShopDisplayVO> shops;
-    private Integer totalNumber;
 
-    @Override
-    public String toString() {
-        return "ShopsDisplayVO{" +
-                "shops=" + shops +
-                ", totalNumber=" + totalNumber +
-                '}';
+    public ShopsDisplayVO(List<ShopDisplayVO> shops) {
+        this.shops = shops;
     }
 
     public List<ShopDisplayVO> getShops() {
@@ -20,21 +15,5 @@ public class ShopsDisplayVO {
 
     public void setShops(List<ShopDisplayVO> shops) {
         this.shops = shops;
-    }
-
-    public Integer getTotalNumber() {
-        return totalNumber;
-    }
-
-    public void setTotalNumber(Integer totalNumber) {
-        this.totalNumber = totalNumber;
-    }
-
-    public ShopsDisplayVO() {
-    }
-
-    public ShopsDisplayVO(List<ShopDisplayVO> shops, Integer totalNumber) {
-        this.shops = shops;
-        this.totalNumber = totalNumber;
     }
 }

@@ -1,7 +1,3 @@
-drop database onlineshopping;
-create database onlineshopping;
-use onlineshopping;
-
 CREATE TABLE `product`  (
   `productId` int NOT NULL AUTO_INCREMENT COMMENT 'auto increment',
   `shopId` int NOT NULL,

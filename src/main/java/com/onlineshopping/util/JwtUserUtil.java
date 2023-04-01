@@ -4,8 +4,10 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.onlineshopping.exception.ServiceException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -24,10 +26,19 @@ public final class JwtUserUtil {
     private static final JWTVerifier verifier = JWT.require(algorithm).build();
 
     /**
+     * @Description: 检查token是否合法
+     * @Author: Lin-Yanjun
+     */
+    public static void verify(String token) throws RuntimeException {
+        verifier.verify(token);
+    }
+
+    /**
      * @Description: 获得token中的信息
      * @Author: Lin-Yanjun
      */
     public static String getInfo(String token, String fieldName) throws RuntimeException {
+        verify(token);
         DecodedJWT jwt = JWT.decode(token);
         return jwt.getClaim(fieldName).asString();
     }
@@ -57,55 +68,30 @@ public final class JwtUserUtil {
     }
 
     /**
-     * @Description: 从HttpRequest里获取token
+     * @Description: 加密用户id、用户名和密码后，放入名为userToken的session和cookie
      * @Author: Lin-Yanjun
      */
-    public static String getToken(HttpServletRequest request) throws ServiceException {
-        String token = request.getHeader("Authorization");
-        if (null == token || "".equals(token.trim()))
-            throw new ServiceException("token为空");
-        verifier.verify(token);
-        return token;
+    public static void setSessionAndCookie(HttpServletRequest request, HttpServletResponse response,
+                                           String userId, String userRole, String userName, String userPwd, int expiry) {
+        String token = sign(userId, userRole, userName, userPwd, expiry);
+        HttpSession session = request.getSession();
+        if (token.equals("")) { //关闭session
+            if (session != null)
+                session.invalidate();
+        } else { // 设置session
+            session.setAttribute("userToken", token);
+        }
+        Cookie cookie = new Cookie("userToken", token);
+        cookie.setMaxAge(expiry);
+        cookie.setPath(request.getContextPath());
+        response.addCookie(cookie);
     }
 
     /**
-     * @Description: 首先检查用户是否登录，然后检查用户是否有权限访问（role=null表示所有用户都可以访问）
+     * @Description: 删除session和cookie
      * @Author: Lin-Yanjun
      */
-    public static void verifyUser(HttpServletRequest request, Integer role) throws ServiceException {
-        String token = getToken(request);
-        if (role == null)
-            return;
-        Integer userRole = Integer.valueOf(JwtUserUtil.getInfo(token, "userRole"));
-        if (!userRole.equals(role))
-            throw new ServiceException("用户权限不足");
+    public static void deleteSessionAndCookie(HttpServletRequest request, HttpServletResponse response) {
+        setSessionAndCookie(request, response, "", "", "", "", 0);
     }
-
-//    /**
-//     * @Description: 加密用户id、用户名和密码后，放入名为userToken的session和cookie
-//     * @Author: Lin-Yanjun
-//     */
-//    public static void setSessionAndCookie(HttpServletRequest request, HttpServletResponse response,
-//                                           String userId, String userRole, String userName, String userPwd, int expiry) {
-//        String token = sign(userId, userRole, userName, userPwd, expiry);
-//        HttpSession session = request.getSession();
-//        if (token.equals("")) { //关闭session
-//            if (session != null)
-//                session.invalidate();
-//        } else { // 设置session
-//            session.setAttribute("userToken", token);
-//        }
-//        Cookie cookie = new Cookie("userToken", token);
-//        cookie.setMaxAge(expiry);
-//        cookie.setPath(request.getContextPath());
-//        response.addCookie(cookie);
-//    }
-//
-//    /**
-//     * @Description: 删除session和cookie
-//     * @Author: Lin-Yanjun
-//     */
-//    public static void deleteSessionAndCookie(HttpServletRequest request, HttpServletResponse response) {
-//        setSessionAndCookie(request, response, "", "", "", "", 0);
-//    }
 }

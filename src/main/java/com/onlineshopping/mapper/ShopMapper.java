@@ -8,15 +8,8 @@ import java.util.List;
 
 @Repository
 public interface ShopMapper {
-    List<Shop> selectShopsByRangeAndShopIsOpen(@Param("startRow") Integer startRow, @Param("number") Integer number, @Param("shopIsOpen") Integer shopIsOpen);
+    List<Shop> selectOpenShopsByRange(@Param("startRow") Integer startRow, @Param("number") Integer number);
 
     List<Shop> selectShopsBySingleAttr(@Param("fieldName") String name, @Param("fieldValue") Object value);
 
-    Integer getCountByShopIsOpen(Integer shopIsOpen);
-
-    void insertShop(Shop shop);
-
-    void updateShopInfo(Shop shop);
-
-    void deleteShopByShopId(Integer shopId);
 }

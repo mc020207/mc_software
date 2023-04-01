@@ -10,29 +10,4 @@
         order by productId
     </select>
 
-    <select id="selectProductByRangeAndShopId" resultType="Product">
-        select *
-        from `product`
-        where shopId = #{shopId}
-        limit #{startRow},#{num}
-    </select>
-
-    <select id="countProductsByShopId" resultType="int">
-        select count(*)
-        from `product`
-        where shopId = #{shopId}
-    </select>
-
-    <insert id="insertProduct">
-        insert into `product` (shopId, productName)
-        values (#{shopId}, #{productName})
-    </insert>
-
-    <delete id="deleteProductsByShopId">
-        delete
-        from `product`
-        where shopId = #{shopId}
-    </delete>
-
-
 </mapper>

@@ -13,6 +13,7 @@ import com.onlineshopping.util.ListUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
@@ -70,9 +71,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String login(HttpServletRequest request, HttpServletResponse response, UserLoginDTO userLoginDTO) throws RuntimeException {
-//        // 清除session和cookie
-//        JwtUserUtil.deleteSessionAndCookie(request, response);
+    public void login(HttpServletRequest request, HttpServletResponse response, UserLoginDTO userLoginDTO) throws RuntimeException {
+        // 清除session和cookie
+        JwtUserUtil.deleteSessionAndCookie(request, response);
         // 检查用户名是否唯一存在
         String userName = userLoginDTO.getUserName();
         FormatUtil.checkNotNull("用户名", userName);
@@ -84,23 +85,22 @@ public class UserServiceImpl implements UserService {
         User user = userList.get(0);
         if (!(user.getUserPwd().equals(DigestUtils.md5DigestAsHex(userPwd.getBytes()))))
             throw new ServiceException("密码错误");
+        // 设置session和cookie
         String userId = String.valueOf(user.getUserId());
         String userRole = String.valueOf(user.getUserRole());
         int expiryMS = 24 * 60 * 60 * 1000; // 1天
-//        // 设置session和cookie
-//        JwtUserUtil.setSessionAndCookie(request, response, userId, userRole, userName, userPwd, expiryMS);
-        // 设置token
-        return JwtUserUtil.sign(userId, userRole, userName, userPwd, expiryMS);
+        JwtUserUtil.setSessionAndCookie(request, response, userId, userRole, userName, userPwd, expiryMS);
     }
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
-//        JwtUserUtil.deleteSessionAndCookie(request, response);
+        JwtUserUtil.deleteSessionAndCookie(request, response);
     }
 
     @Override
     public UserInfoVO info(HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
-        String token = JwtUserUtil.getToken(request);
+        HttpSession session = request.getSession();
+        String token = (String) session.getAttribute("userToken");
         String userId = JwtUserUtil.getInfo(token, "userId");
         List<User> userList = userMapper.selectUsersBySingleAttr("userId", userId);
         ListUtil.checkSingle("用户", userList);
