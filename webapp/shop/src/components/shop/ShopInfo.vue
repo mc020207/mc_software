@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     async getShopInfo() {
-      var t = window.sessionStorage.getItem('token');
+      var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
       if(t!= "0" && t!="1" && t!="2"){
         this.$router.push("/login");
         return this.$message.error("非法访问");
@@ -84,7 +84,7 @@ export default {
         this.$router.push("/home");
         return this.$message.error("非法访问");
       }
-      if(normal == true){
+      if(normal == "true"){
           apiShopInfo({shopId:shopid}).then(response =>{
             if(!response.success){
               this.$router.push("/home");
@@ -93,7 +93,6 @@ export default {
             this.shopInfo = response.object;
             apiProductInfo({shopId:shopid,page:this.currentPage}).then(response =>{
             if(!response.success){
-              this.$router.push("/home");
               return this.$message.error(response.message);
             }
             this.total = response.object.totalNumber;
@@ -109,7 +108,6 @@ export default {
             this.shopInfo = response.object;
             apiAdminProducts({shopId:shopid,page:this.currentPage}).then(response =>{
             if(!response.success){
-              this.$router.push("/home");
               return this.$message.error(response.message);
             }
             this.total = response.object.totalNumber;
@@ -125,6 +123,7 @@ export default {
     //监听页面值改变的事件
     handleCurrentChange(newPage){
        this.currentPage=newPage;
+       var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
        var shopid = window.sessionStorage.getItem("shopId");
         var normal = window.sessionStorage.getItem("normalShopInfo");
         if (shopid == null || normal == null) {
@@ -132,10 +131,9 @@ export default {
           this.$router.push("/home");
           return this.$message.error("非法访问");
         }
-        if(normal == true){
+        if(normal == "true"){
           apiProductInfo({shopId:shopid,page:this.currentPage}).then(response =>{
             if(!response.success){
-              this.$router.push("/home");
               return this.$message.error(response.message);
             }
             this.total = response.object.totalNumber;
@@ -151,7 +149,6 @@ export default {
         this.productShopList = response.object.products;
         })
       }else{
-        this.$router.push("/home");
         return this.$message.error("非法访问");
       }
     },

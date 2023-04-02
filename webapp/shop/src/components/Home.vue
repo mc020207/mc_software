@@ -94,8 +94,8 @@ export default {
     //根据用户信息，获得对应菜单
     //解析JWT，等后端实装后再说
     //在path中填写对应路径
-
-      switch (window.sessionStorage.getItem('token')) {
+    var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
+      switch (t) {
 
         case "0":
           this.menuList=[

@@ -2,7 +2,7 @@ import axios from 'axios'
 // 创建axios实例
 const service = axios.create({
   // baseURL: baseUrl, // api 的 base_url
-  baseURL: 'http://127.0.0.1:4523/m1/2461559-0-default/api', // api 的 base_url
+  baseURL: '/front/', // api 的 base_url
   timeout: 300000, // 请求超时时间
   withCredentials: true,
 })

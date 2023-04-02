@@ -8,6 +8,8 @@ import "./assets/font/iconfont.css";
 //导入全局样式表
 import "./assets/css/global.css";
 
+import jwt_decode from "jwt-decode";
+
 import axios from "axios";
 // import  VueCookies  from "vue-cookies";
 
@@ -29,7 +31,7 @@ import axios from "axios";
 
 Vue.config.productionTip = false;
 
-
+Vue.prototype.$decoder = jwt_decode;
 
 new Vue({
   router,

@@ -76,7 +76,7 @@ export default {
   },
   methods: {
     async getShopList() {
-      var t = window.sessionStorage.getItem('token');
+      var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
       if(t!= "0" && t!="1" && t!="2"){
         
         this.$router.push("/login");

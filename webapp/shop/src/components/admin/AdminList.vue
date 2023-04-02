@@ -86,7 +86,7 @@ export default {
     //   var result=await this.$http.get('/user/info',{
     //     page:this.currentPage
     //   });
-      var t = window.sessionStorage.getItem('token');
+      var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
       if(t!="2"){
         this.$router.push("/home");
         return this.$message.error("非法访问");
@@ -100,7 +100,16 @@ export default {
     //监听页面值改变的事件
     handleCurrentChange(newPage){
        this.currentPage=newPage;
-       this.getShopList();
+       var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
+      if(t!="2"){
+        this.$router.push("/home");
+        return this.$message.error("非法访问");
+      }
+      apiAdminList({page:this.currentPage}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+        this.total = response.object.totalNumber;
+        this.inspectShopList = response.object.shops;
+      });
     },
     //待处理事件逻辑
 
@@ -117,14 +126,34 @@ export default {
       apiAdminPass({shopId:shopId}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
       });
-      this.getShopList();
+      var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
+      if(t!="2"){
+        this.$router.push("/home");
+        return this.$message.error("非法访问");
+      }
+      apiAdminList({page:this.currentPage}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+        this.total = response.object.totalNumber;
+        this.inspectShopList = response.object.shops;
+      });
+      this.$router.push('/admin/list');
     },
    async shopInspectReject(shopId){
       //var result=await this.$http.get('/inspect/reject',shopId);
       apiAdminReject({shopId:shopId}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
       });
-      this.getShopList();
+      var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
+      if(t!="2"){
+        this.$router.push("/home");
+        return this.$message.error("非法访问");
+      }
+      apiAdminList({page:this.currentPage}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+        this.total = response.object.totalNumber;
+        this.inspectShopList = response.object.shops;
+      });
+      this.$router.push('/admin/list');
     }
   },
 };

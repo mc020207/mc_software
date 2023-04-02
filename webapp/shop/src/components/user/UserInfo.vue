@@ -35,7 +35,7 @@ export default {
     async getUserInfo() {
       // var result=await this.$http.get('/user/info');
       // var result = { success: true, message: "获取成功" };
-      var t = window.sessionStorage.getItem('token');
+      var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
       if(t!="0" && t!="1" && t!="2"){
         this.$message.error("非法访问");
         this.$router.push("/login");

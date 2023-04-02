@@ -89,9 +89,9 @@
           ></el-input>
         </el-form-item>
          <!-- 身份证号 -->
-        <el-form-item prop="userCard">
+        <el-form-item prop="userIdCard">
           <el-input
-            v-model="shopRegisterForm.userCard"
+            v-model="shopRegisterForm.userIdCard"
             prefix-icon="el-icon-shenfenzheng"
           ></el-input>
         </el-form-item>
@@ -144,7 +144,7 @@ export default {
       productName:"",
       shopRegisterForm: {
         shopName: "",
-        userCard: "",
+        userIdCard: "",
         shopIntro:"",
         shopAddr:"",
         shopRegisterFund:""
@@ -164,7 +164,7 @@ export default {
             trigger: "blur",
           }
         ],
-        userCard: [
+        userIdCard: [
           { required: true, message: "请输入身份证号", trigger: "blur" },
           {
             min: 18,
@@ -226,7 +226,7 @@ export default {
     //获得商店信息
    async getShopInfo(){
       
-      var t = window.sessionStorage.getItem('token');
+      var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
       if(t!="1"){
         this.$router.push("/home");
         return this.$message.error("非法访问");
@@ -244,13 +244,15 @@ export default {
             case 2:this.shopInfo.shopIsOpenStr = "驳回";break;
             case 3:this.shopInfo.shopIsOpenStr = "上线";break;
           }
-        }
-      })
-      apiMyshopProducts({page:this.currentPage}).then(response =>{
+          apiMyshopProducts({page:this.currentPage}).then(response =>{
             if(!response.success) return this.$message.error(response.message);
             this.productShopList = response.object.products;
             this.total = response.object.totalNumber;
           })
+        }
+        
+      })
+      
     },
     handleCurrentChange(newPage){
       this.currentPage=newPage;
@@ -274,7 +276,7 @@ export default {
     },
     async productAdd(){
           //  var result=await this.$http.post('/myshop/product/add',this.productName);
-          apiMyshopAdd(this.productName).then(response =>{
+          apiMyshopAdd({productName:this.productName}).then(response =>{
               if(!response.success) return this.$message.error(response.message);
               this.$message({
               showClose: true,
