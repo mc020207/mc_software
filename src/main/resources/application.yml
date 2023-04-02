@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/onlineshopping?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
     username: root
-    password: elPSYcongroo1791
+    password: mc
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 server:

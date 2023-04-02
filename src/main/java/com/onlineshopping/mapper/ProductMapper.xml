@@ -34,5 +34,10 @@
         where shopId = #{shopId}
     </delete>
 
+    <delete id="deleteProductsByProductId">
+        delete
+        from `product`
+        where productId = #{productId}
+    </delete>
 
 </mapper>

@@ -17,4 +17,5 @@ public interface ProductMapper {
     void insertProduct(Product product);
 
     void deleteProductsByShopId(Integer shopId);
+    void deleteProductsByProductId(Integer productId);
 }

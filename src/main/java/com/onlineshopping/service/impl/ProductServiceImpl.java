@@ -60,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
         if (!Objects.equals(shop.getShopId(), product.getShopId())) {
             throw new ServiceException("不可以删除别人的商品");
         }
-        productMapper.deleteProductsByShopId(productId);
+        productMapper.deleteProductsByProductId(productId);
         shop.setShopIsOpen(ConstantUtil.SHOP_NOT_IN_INSPECTION);
         shopMapper.updateShopInfo(shop);
     }
