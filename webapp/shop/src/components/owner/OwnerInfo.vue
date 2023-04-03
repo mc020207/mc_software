@@ -193,10 +193,18 @@ export default {
         ],
         shopRegisterFund: [
           { required: true, message: "请输入注册资金", trigger: "blur" },
-          { //这里1000暂时没办法处理
+           { 
            type:'number',
-            min: 1000 , 
             message: `需要是大于1000的浮点数`,
+            trigger: "blur",
+          },
+          { 
+            validator: (rules, value, callback) => {
+              if (value<=1000) {
+                return callback(new Error("需要是大于1000的浮点数"));
+              }
+              return callback();
+            },
             trigger: "blur",
           },
         ],
