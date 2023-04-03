@@ -13,7 +13,7 @@ public final class FormatUtil {
      * @Author: Lin-Yanjun
      */
     public static void checkNotNull(String field, Object object) throws ServiceException {
-        if (object == null)
+        if (object == null || object.toString().trim().equals(""))
             throw new ServiceException(field + "不能为空");
     }
 
