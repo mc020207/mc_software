@@ -1,7 +1,7 @@
 use onlineshopping;
 insert into `user` values(1,2,'root',1579,4197,'zwd',MD5('123456'));
-insert into `user` values(2,1,'lxb',10592,25432,'hqubd',MD5('dhlsb'));
-insert into `user` values(3,1,'tsi',19863,11149,'k',MD5('dhlsb'));
+insert into `user` values(2,1,'shopper',10592,123456789123456789,'hqubd',MD5('123456'));
+insert into `user` values(3,0,'visitor',19863,11149,'k',MD5('123456'));
 insert into `user` values(4,1,'bvb',13696,32573,'q',MD5('dhlsb'));
 insert into `user` values(5,1,'i',31068,24574,'mb',MD5('dhlsb'));
 insert into `user` values(6,1,'kra',16965,4474,'vaqqv',MD5('dhlsb'));

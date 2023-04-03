@@ -65,9 +65,9 @@ import {apiShopList} from '@/api/api'
 export default {
   data() {
     return {
-      inspectShopList: {},
+      inspectShopList: [],
       currentPage:1,
-      pageSize:15,   //一页的数量
+      pageSize:9,   //一页的数量
       total:100
     };
   },

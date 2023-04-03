@@ -61,10 +61,10 @@ export default {
   data() {
     return {
       currentPage:1,
-      pageSize:5,     //一页的数量
+      pageSize:9,     //一页的数量
       total:100,
       shopInfo: {},
-      productShopList:{}
+      productShopList:[]
     };
   },
   created() {

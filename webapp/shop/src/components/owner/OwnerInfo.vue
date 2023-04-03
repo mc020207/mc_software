@@ -138,7 +138,7 @@ export default {
       addDialogVisible: false,
       needCommit:false,
       currentPage:1,
-      pageSize:5,     //一页的数量
+      pageSize:9,     //一页的数量
       total:100,
       //添加的商品名
       productName:"",
@@ -152,7 +152,7 @@ export default {
       shopInfo:{
         shopIsOpen: -1
       },
-     productShopList:{},
+     productShopList:[],
       //这是登录表单的验证规则对象
       shopRegisterFormRules: {
         shopName: [

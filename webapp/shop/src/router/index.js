@@ -53,6 +53,10 @@ router.beforeEach((to, from, next) => {
   //获取token
   const tokenStr=window.sessionStorage.getItem('token');
   if(!tokenStr) return next("/login");
-  next();
+  let valid = ["/","/login","/register","/home",'/welcome','/admin/list','/shop/list','/shop/info','/owner/info','/user/info'];
+  for(let i = 0; i < valid.length; i++) {
+    if(to.path == valid[i]) return next();
+  }
+  next("/home");
 });
 export default router;
