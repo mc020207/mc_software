@@ -65,8 +65,6 @@ public class ShopServiceImpl implements ShopService {
         FormatUtil.checkPositive("分页", page);
         // 查询shops
         List<Shop> shops = shopMapper.selectShopsByRangeAndShopIsOpen((page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE, ConstantUtil.SHOP_OPEN);
-        if (shops.size() == 0)
-            throw new ServiceException("没有这么多开放的商店");
         // 返回VO
         List<ShopDisplayVO> shopsDisplay = new ArrayList<>();
         for (Shop shop : shops)
@@ -96,8 +94,6 @@ public class ShopServiceImpl implements ShopService {
     public ShopsInspectVO inspect(Integer page) {
         FormatUtil.checkPositive("page", page);
         List<Shop> shops = shopMapper.selectShopsByRangeAndShopIsOpen((page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE, ConstantUtil.SHOP_IN_INSPECTION);
-        if (shops.size() == 0)
-            throw new ServiceException("没有这么多待审核的商店");
         List<ShopInspectVO> shopsInspects = new ArrayList<>();
         for (Shop shop : shops) {
             ShopInspectVO shopInspectVO = new ShopInspectVO(shop);
