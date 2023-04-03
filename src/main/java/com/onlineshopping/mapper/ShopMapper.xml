@@ -18,9 +18,15 @@
         order by shopId
     </select>
 
+    <select id="getCountByShopIsOpen" resultType="int">
+        select count(*)
+        from `shop`
+        where shopIsOpen = #{shopIsOpen}
+    </select>
+
     <insert id="insertShop">
-        insert into `shop` (userid,shopName,shopIntro,shopAddr,shopRegisterFund,shopRegisterDate,shopIsOpen)
-        values (#{userId},#{shopName},#{shopIntro},#{shopAddr},#{shopRegisterFund},CURRENT_DATE,0)
+        insert into `shop` (userid, shopName, shopIntro, shopAddr, shopRegisterFund, shopRegisterDate, shopIsOpen)
+        values (#{userId}, #{shopName}, #{shopIntro}, #{shopAddr}, #{shopRegisterFund}, CURRENT_DATE, 0)
     </insert>
 
     <update id="updateShopInfo">
@@ -53,13 +59,15 @@
     </update>
 
     <update id="changeShopOpen">
-        update `shop` set shopIsOpen=#{isApprove}
-        where shopId=#{shopId}
+        update `shop`
+        set shopIsOpen=#{isApprove}
+        where shopId = #{shopId}
     </update>
 
     <delete id="deleteShopByShopId">
-        delete from `shop`
-        where shopId=#{shopId}
+        delete
+        from `shop`
+        where shopId = #{shopId}
     </delete>
 
 </mapper>

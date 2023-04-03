@@ -1,11 +1,8 @@
 package com.onlineshopping.model.vo;
 
-import com.onlineshopping.model.entity.Product;
 import com.onlineshopping.model.entity.Shop;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class ShopDisplayVO {
     Integer shopId;

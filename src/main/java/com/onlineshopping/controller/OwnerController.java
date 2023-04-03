@@ -1,10 +1,7 @@
 package com.onlineshopping.controller;
 
 import com.onlineshopping.model.dto.ShopRegisterDTO;
-import com.onlineshopping.model.vo.CommonResult;
-import com.onlineshopping.model.vo.ProductsInfoVO;
-import com.onlineshopping.model.vo.ShopInfoVO;
-import com.onlineshopping.model.vo.ShopRegisterFVO;
+import com.onlineshopping.model.vo.*;
 import com.onlineshopping.service.ProductService;
 import com.onlineshopping.service.ShopService;
 import jakarta.annotation.Resource;
@@ -16,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/myshop")
+@RequestMapping("/api/myshop")
 public class OwnerController {
     @Resource
     ShopService shopService;
@@ -66,11 +63,11 @@ public class OwnerController {
         return cm;
     }
 
-    @RequestMapping(value = "/product/add", method = RequestMethod.GET)
-    public CommonResult addShopProducts(String productName, HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/product/add", method = RequestMethod.POST)
+    public CommonResult addShopProducts(@RequestBody ProductAddFVO productAddFVO, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            productService.addProduct(productName, request, response);
+            productService.addProduct(productAddFVO, request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

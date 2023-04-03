@@ -14,7 +14,6 @@ import com.onlineshopping.util.ListUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,9 +28,8 @@ public class ProductServiceImpl implements ProductService {
     @Resource
     ShopMapper shopMapper;
 
-    public Shop getShop(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession();
-        String token = (String) session.getAttribute("userToken");
+    public Shop getShop(HttpServletRequest request) {
+        String token = JwtUserUtil.getToken(request);
         Integer userId = Integer.parseInt(JwtUserUtil.getInfo(token, "userId"));
         List<Shop> shops = shopMapper.selectShopsBySingleAttr("userId", userId);
         ListUtil.checkSingle("shopId", shops);
@@ -40,10 +38,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void addProduct(String productName, HttpServletRequest request, HttpServletResponse response) {
+    public void addProduct(ProductAddFVO productAddFVO, HttpServletRequest request, HttpServletResponse response) {
+        String productName=productAddFVO.getProductName();
         FormatUtil.checkNotNull("productName", productName);
-        Shop shop = getShop(request, response);
-        Product product = new Product(null, shop.getShopId(), productName);
+        Shop shop = getShop(request);
+        Product product = new Product(productAddFVO);
+        product.setShopId(shop.getShopId());
         productMapper.insertProduct(product);
         shop.setShopIsOpen(ConstantUtil.SHOP_NOT_IN_INSPECTION);
         shopMapper.updateShopInfo(shop);
@@ -53,14 +53,14 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void deleteProduct(Integer productId, HttpServletRequest request, HttpServletResponse response) {
         FormatUtil.checkPositive("productId", productId);
-        Shop shop = getShop(request, response);
+        Shop shop = getShop(request);
         List<Product> products = productMapper.selectProductsBySingleAttr("productId", productId);
         ListUtil.checkSingle("productId", products);
         Product product = products.get(0);
         if (!Objects.equals(shop.getShopId(), product.getShopId())) {
             throw new ServiceException("不可以删除别人的商品");
         }
-        productMapper.deleteProductsByShopId(productId);
+        productMapper.deleteProductsByProductId(productId);
         shop.setShopIsOpen(ConstantUtil.SHOP_NOT_IN_INSPECTION);
         shopMapper.updateShopInfo(shop);
     }
@@ -84,14 +84,15 @@ public class ProductServiceImpl implements ProductService {
         if (products.size() == 0) {
             throw new ServiceException("没有这么多商品");
         }
-        return new ProductsDisplayVO(productDisplayVOs);
+        Integer totalNumber=productMapper.countProductsByShopId(shopId);
+        return new ProductsDisplayVO(productDisplayVOs,totalNumber);
     }
 
     @Override
     @Transactional
     public ProductsInfoVO getProductsInfo(Integer page, HttpServletRequest request, HttpServletResponse response) {
         FormatUtil.checkPositive("page", page);
-        Shop shop = getShop(request, response);
+        Shop shop = getShop(request);
         List<Product> products = productMapper.selectProductByRangeAndShopId((page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE, shop.getShopId());
         List<ProductInfoVO> productInfoVOList = new ArrayList<>();
         for (Product product : products) {
@@ -100,7 +101,8 @@ public class ProductServiceImpl implements ProductService {
         if (productInfoVOList.size() == 0) {
             throw new ServiceException("没有这么多商品");
         }
-        return new ProductsInfoVO(productInfoVOList);
+        Integer totalNumber=productMapper.countProductsByShopId(shop.getShopId());
+        return new ProductsInfoVO(productInfoVOList,totalNumber);
     }
 
     @Override
@@ -122,6 +124,7 @@ public class ProductServiceImpl implements ProductService {
         if (products.size() == 0) {
             throw new ServiceException("没有这么多商品");
         }
-        return new ProductsInspectVO(productInspectVOs);
+        Integer totalNumber=productMapper.countProductsByShopId(shopId);
+        return new ProductsInspectVO(productInspectVOs,totalNumber);
     }
 }
