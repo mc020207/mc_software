@@ -25,7 +25,15 @@
          <el-card id="el-card2" v-show="shopInfo.shopIsOpen > -1">
          <el-row  :gutter="20" v-show="shopInfo.shopIsOpen != 2">
            <el-col :span="7">
-             <el-input  placeholder="请输入商品名" v-model="productName"></el-input>
+              <el-form
+                  ref="productAddRef"
+                  :model="productNameS"
+                  :rules="productNameRules"
+                  label-width="0px"
+                > <el-form-item prop="productName">
+                <el-input  placeholder="请输入商品名" v-model="productNameS.productName" ></el-input>
+                 </el-form-item>
+              </el-form>
              </el-col>
               <!-- 添加商品按钮 -->
             <el-col :span="2.5">
@@ -141,7 +149,9 @@ export default {
       pageSize:9,     //一页的数量
       total:100,
       //添加的商品名
-      productName:"",
+      productNameS:{
+         productName:"",
+      },
       shopRegisterForm: {
         shopName: "",
         userIdCard: "",
@@ -174,7 +184,7 @@ export default {
           },
         ],
         shopIntro:[
-             { required: true, message: "请输入商品简介", trigger: "blur" },
+             { required: true, message: "请输入商店简介", trigger: "blur" },
              {
                 min: 1,
                 max: 128,
@@ -209,6 +219,10 @@ export default {
           },
         ],
       },
+      //添加商店表单的验证规则
+      productNameRules:{
+        productName:[  { required: true, message: "请输入商品名称", trigger: "blur" }]
+      }
     };
   },
   created(){
@@ -284,7 +298,11 @@ export default {
     },
     async productAdd(){
           //  var result=await this.$http.post('/myshop/product/add',this.productName);
-          apiMyshopAdd({productName:this.productName}).then(response =>{
+          this.$refs.productAddRef.validate(async (valid) => {
+          
+          if (!valid) return;
+       
+          apiMyshopAdd({productName:this.productNameS.productName}).then(response =>{
               if(!response.success) return this.$message.error(response.message);
               this.$message({
               showClose: true,
@@ -293,7 +311,7 @@ export default {
             });
             this.getShopInfo();
           });
-            
+          });
     },
     async productCommit(){
        //  var result=await this.$http.get('/myshop/commit');
