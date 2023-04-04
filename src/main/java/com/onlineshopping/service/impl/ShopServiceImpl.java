@@ -69,8 +69,8 @@ public class ShopServiceImpl implements ShopService {
         List<ShopDisplayVO> shopsDisplay = new ArrayList<>();
         for (Shop shop : shops)
             shopsDisplay.add(new ShopDisplayVO(shop));
-        Integer totalNumber=shopMapper.getCountByShopIsOpen(ConstantUtil.SHOP_OPEN);
-        return new ShopsDisplayVO(shopsDisplay,totalNumber);
+        Integer totalNumber = shopMapper.getCountByShopIsOpen(ConstantUtil.SHOP_OPEN);
+        return new ShopsDisplayVO(shopsDisplay, totalNumber);
     }
 
     @Override
@@ -97,11 +97,11 @@ public class ShopServiceImpl implements ShopService {
         List<ShopInspectVO> shopsInspects = new ArrayList<>();
         for (Shop shop : shops) {
             ShopInspectVO shopInspectVO = new ShopInspectVO(shop);
-            shopInspectVO.setUserIdCard(userMapper.selectUsersBySingleAttr("userId",shop.getUserId()).get(0).getUserIdCard());
+            shopInspectVO.setUserIdCard(userMapper.selectUsersBySingleAttr("userId", shop.getUserId()).get(0).getUserIdCard());
             shopsInspects.add(shopInspectVO);
         }
-        Integer totalNumber=shopMapper.getCountByShopIsOpen(ConstantUtil.SHOP_IN_INSPECTION);
-        return new ShopsInspectVO(shopsInspects,totalNumber);
+        Integer totalNumber = shopMapper.getCountByShopIsOpen(ConstantUtil.SHOP_IN_INSPECTION);
+        return new ShopsInspectVO(shopsInspects, totalNumber);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class ShopServiceImpl implements ShopService {
     public ShopInspectVO inspectDetail(Integer shopId) {
         Shop shop = getShopByShopIsOpen(shopId, ConstantUtil.SHOP_IN_INSPECTION);
         ShopInspectVO shopInspectVO = new ShopInspectVO(shop);
-        shopInspectVO.setUserIdCard(userMapper.selectUsersBySingleAttr("userId",shop.getUserId()).get(0).getUserIdCard());
+        shopInspectVO.setUserIdCard(userMapper.selectUsersBySingleAttr("userId", shop.getUserId()).get(0).getUserIdCard());
         return shopInspectVO;
     }
 
