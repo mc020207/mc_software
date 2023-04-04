@@ -65,14 +65,12 @@ public class ShopServiceImpl implements ShopService {
         FormatUtil.checkPositive("分页", page);
         // 查询shops
         List<Shop> shops = shopMapper.selectShopsByRangeAndShopIsOpen((page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE, ConstantUtil.SHOP_OPEN);
-        if (shops.size() == 0)
-            throw new ServiceException("没有这么多开放的商店");
         // 返回VO
         List<ShopDisplayVO> shopsDisplay = new ArrayList<>();
         for (Shop shop : shops)
             shopsDisplay.add(new ShopDisplayVO(shop));
-        Integer totalNumber=shopMapper.getCountByShopIsOpen(ConstantUtil.SHOP_OPEN);
-        return new ShopsDisplayVO(shopsDisplay,totalNumber);
+        Integer totalNumber = shopMapper.getCountByShopIsOpen(ConstantUtil.SHOP_OPEN);
+        return new ShopsDisplayVO(shopsDisplay, totalNumber);
     }
 
     @Override
@@ -96,16 +94,14 @@ public class ShopServiceImpl implements ShopService {
     public ShopsInspectVO inspect(Integer page) {
         FormatUtil.checkPositive("page", page);
         List<Shop> shops = shopMapper.selectShopsByRangeAndShopIsOpen((page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE, ConstantUtil.SHOP_IN_INSPECTION);
-        if (shops.size() == 0)
-            throw new ServiceException("没有这么多待审核的商店");
         List<ShopInspectVO> shopsInspects = new ArrayList<>();
         for (Shop shop : shops) {
             ShopInspectVO shopInspectVO = new ShopInspectVO(shop);
-            shopInspectVO.setUserIdCard(userMapper.selectUsersBySingleAttr("userId",shop.getUserId()).get(0).getUserIdCard());
+            shopInspectVO.setUserIdCard(userMapper.selectUsersBySingleAttr("userId", shop.getUserId()).get(0).getUserIdCard());
             shopsInspects.add(shopInspectVO);
         }
-        Integer totalNumber=shopMapper.getCountByShopIsOpen(ConstantUtil.SHOP_IN_INSPECTION);
-        return new ShopsInspectVO(shopsInspects,totalNumber);
+        Integer totalNumber = shopMapper.getCountByShopIsOpen(ConstantUtil.SHOP_IN_INSPECTION);
+        return new ShopsInspectVO(shopsInspects, totalNumber);
     }
 
     @Override
@@ -113,7 +109,7 @@ public class ShopServiceImpl implements ShopService {
     public ShopInspectVO inspectDetail(Integer shopId) {
         Shop shop = getShopByShopIsOpen(shopId, ConstantUtil.SHOP_IN_INSPECTION);
         ShopInspectVO shopInspectVO = new ShopInspectVO(shop);
-        shopInspectVO.setUserIdCard(userMapper.selectUsersBySingleAttr("userId",shop.getUserId()).get(0).getUserIdCard());
+        shopInspectVO.setUserIdCard(userMapper.selectUsersBySingleAttr("userId", shop.getUserId()).get(0).getUserIdCard());
         return shopInspectVO;
     }
 

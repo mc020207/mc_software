@@ -2,18 +2,25 @@ package com.onlineshopping.util;
 
 import com.onlineshopping.exception.ServiceException;
 
+import java.util.regex.Pattern;
+
 /**
  * @Description: 检查字段是否符合规范
  * @Author: Lin-Yanjun
  */
 public final class FormatUtil {
 
+    private static final Pattern userNamePattern = Pattern.compile("^\\w{3,10}$");
+    private static final Pattern userPhonePattern = Pattern.compile("^1[3-9]\\d{9}$");
+    private static final Pattern userEmailPattern = Pattern.compile("^[-a-zA-Z\\d._%+]+@[-a-zA-Z\\d.]+\\.[a-zA-Z]{2,}$");
+    private static final Pattern userPwdPattern = Pattern.compile("^(?!^(\\d+|[a-zA-Z]+|[-_]+)$)[\\da-zA-Z-_]{6,32}$");
+
     /**
      * @Description: 检查字段是否不为空
      * @Author: Lin-Yanjun
      */
     public static void checkNotNull(String field, Object object) throws ServiceException {
-        if (object == null)
+        if (object == null || object.toString().trim().equals(""))
             throw new ServiceException(field + "不能为空");
     }
 
@@ -33,7 +40,7 @@ public final class FormatUtil {
      */
     public static void checkUserName(String userName) throws ServiceException {
         checkNotNull("用户名", userName);
-        if (!userName.matches("^\\w{3,10}$"))
+        if (!userNamePattern.matcher(userName).matches())
             throw new ServiceException("用户名应满足：仅能出现英文字符、数字与下划线，长度为3-10个字符");
     }
 
@@ -43,7 +50,7 @@ public final class FormatUtil {
      */
     public static void checkUserPhone(String userPhone) throws ServiceException {
         checkNotNull("手机号", userPhone);
-        if (!userPhone.matches("^1[3-9]\\d{9}$"))
+        if (!userPhonePattern.matcher(userPhone).matches())
             throw new ServiceException("手机号应满足：大陆手机号标准格式");
     }
 
@@ -63,7 +70,7 @@ public final class FormatUtil {
      */
     public static void checkUserEmail(String userEmail) {
         checkNotNull("邮箱", userEmail);
-        if (!userEmail.matches("^[-a-zA-Z\\d._%+]+@[-a-zA-Z\\d.]+\\.[a-zA-Z]{2,}$"))
+        if (!userEmailPattern.matcher(userEmail).matches())
             throw new ServiceException("邮箱应满足：用户标识符@域名");
     }
 
@@ -73,7 +80,7 @@ public final class FormatUtil {
      */
     public static void checkUserPwd(String userPwd) throws ServiceException {
         checkNotNull("密码", userPwd);
-        if (!userPwd.matches("^(?!^(\\d+|[a-zA-Z]+|[-_]+)$)[\\da-zA-Z-_]{6,32}$"))
+        if (!userPwdPattern.matcher(userPwd).matches())
             throw new ServiceException("密码应满足：长度为6-32个字符，而且字母，数字或者特殊字符（-_）至少包含两种");
     }
 

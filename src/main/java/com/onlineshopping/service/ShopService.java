@@ -11,13 +11,13 @@ public interface ShopService {
      * @Description: 分页查询已开放商店的简略信息，page从1开始
      * @Author: Lin-Yanjun
      */
-    ShopsDisplayVO display(Integer page) throws ServiceException;
+    ShopsDisplayVO display(Integer page);
 
     /**
      * @Description: 用户查询shopId所对应的以开放商店的详细信息
      * @Author: Lin-Yanjun
      */
-    ShopDisplayVO displayDetail(Integer shopId) throws ServiceException;
+    ShopDisplayVO displayDetail(Integer shopId);
 
     /**
      * @Description: 商家查询自身店铺情况

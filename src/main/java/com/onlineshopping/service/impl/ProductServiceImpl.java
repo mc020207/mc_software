@@ -39,7 +39,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void addProduct(ProductAddFVO productAddFVO, HttpServletRequest request, HttpServletResponse response) {
-        String productName=productAddFVO.getProductName();
+        String productName = productAddFVO.getProductName();
         FormatUtil.checkNotNull("productName", productName);
         Shop shop = getShop(request);
         Product product = new Product(productAddFVO);
@@ -81,11 +81,8 @@ public class ProductServiceImpl implements ProductService {
         for (Product product : products) {
             productDisplayVOs.add(new ProductDisplayVO(product));
         }
-        if (products.size() == 0) {
-            throw new ServiceException("没有这么多商品");
-        }
-        Integer totalNumber=productMapper.countProductsByShopId(shopId);
-        return new ProductsDisplayVO(productDisplayVOs,totalNumber);
+        Integer totalNumber = productMapper.countProductsByShopId(shopId);
+        return new ProductsDisplayVO(productDisplayVOs, totalNumber);
     }
 
     @Override
@@ -98,11 +95,8 @@ public class ProductServiceImpl implements ProductService {
         for (Product product : products) {
             productInfoVOList.add(new ProductInfoVO(product));
         }
-        if (productInfoVOList.size() == 0) {
-            throw new ServiceException("没有这么多商品");
-        }
-        Integer totalNumber=productMapper.countProductsByShopId(shop.getShopId());
-        return new ProductsInfoVO(productInfoVOList,totalNumber);
+        Integer totalNumber = productMapper.countProductsByShopId(shop.getShopId());
+        return new ProductsInfoVO(productInfoVOList, totalNumber);
     }
 
     @Override
@@ -121,10 +115,7 @@ public class ProductServiceImpl implements ProductService {
         for (Product product : products) {
             productInspectVOs.add(new ProductInspectVO(product));
         }
-        if (products.size() == 0) {
-            throw new ServiceException("没有这么多商品");
-        }
-        Integer totalNumber=productMapper.countProductsByShopId(shopId);
-        return new ProductsInspectVO(productInspectVOs,totalNumber);
+        Integer totalNumber = productMapper.countProductsByShopId(shopId);
+        return new ProductsInspectVO(productInspectVOs, totalNumber);
     }
 }

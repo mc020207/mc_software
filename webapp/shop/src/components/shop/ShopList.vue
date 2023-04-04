@@ -68,7 +68,7 @@ export default {
       inspectShopList: [],
       currentPage:1,
       pageSize:9,   //一页的数量
-      total:100
+      total:0
     };
   },
   created() {
