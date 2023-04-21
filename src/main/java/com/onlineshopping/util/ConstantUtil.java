@@ -5,15 +5,31 @@ package com.onlineshopping.util;
  * @Author: Lin-Yanjun
  */
 public final class ConstantUtil {
-    // shopIsOpen
-    public static final Integer SHOP_OPEN = 3;
-    public static final Integer SHOP_REJECTED = 2;
-    public static final Integer SHOP_IN_INSPECTION = 1;
-    public static final Integer SHOP_NOT_IN_INSPECTION = 0;
+    // shopState
+    public static final Integer SHOP_DELETE = 4;
+
+    public static final Integer SHOP_IN_DELETE_INSPECTION = 3;
+    public static final Integer SHOP_OPEN = 2;
+    public static final Integer SHOP_REJECTED = 1;
+    public static final Integer SHOP_IN_INSPECTION = 0;
     // userRole
     public static final Integer USER_ADMIN = 2;
     public static final Integer USER_OWNER = 1;
     public static final Integer USER_NORMAL = 0;
+    // productState
+    public static final Integer PRODUCT_DELETE = 4;
+    public static final Integer PRODUCT_OFF_SHELF = 3;
+    public static final Integer PRODUCT_ON_SHELF = 2;
+    public static final Integer PRODUCT_REJECTED = 1;
+    public static final Integer PRODUCT_IN_INSPECTION = 0;
+    // orderState
+    public static final Integer ORDER_NOT_VALID = 3;
+    public static final Integer ORDER_RECEIVE = 2;
+    public static final Integer ORDER_NOT_RECEIVE = 1;
+    public static final Integer ORDER_NOT_PAY = 0;
+    // RecordState
+    public static final Integer RECORD_SOLVE=1;
+    public static final Integer RECORD_NOT_SOLVE=0;
     // 分页信息
     public static final Integer PAGE_SIZE = 9;
     // 最低商户启动资金
