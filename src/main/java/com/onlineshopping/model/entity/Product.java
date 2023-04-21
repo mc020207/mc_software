@@ -9,7 +9,21 @@ public class Product implements Serializable {
     private Integer productId;
     private Integer shopId;
     private String productName;
+    private Integer productState;
+    private String productIntro;
 
+    private Double productPrice;
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId=" + productId +
+                ", shopId=" + shopId +
+                ", productName='" + productName + '\'' +
+                ", productState=" + productState +
+                ", productIntro='" + productIntro + '\'' +
+                ", productPrice=" + productPrice +
+                '}';
+    }
 
     public Integer getProductId() {
         return productId;
@@ -19,7 +33,6 @@ public class Product implements Serializable {
         this.productId = productId;
     }
 
-
     public Integer getShopId() {
         return shopId;
     }
@@ -27,7 +40,6 @@ public class Product implements Serializable {
     public void setShopId(Integer shopId) {
         this.shopId = shopId;
     }
-
 
     public String getProductName() {
         return productName;
@@ -37,25 +49,41 @@ public class Product implements Serializable {
         this.productName = productName;
     }
 
-    public Product(Integer productId, Integer shopId, String productName) {
-        this.productId = productId;
-        this.shopId = shopId;
-        this.productName = productName;
+    public Integer getProductState() {
+        return productState;
     }
 
-    public Product(ProductAddFVO productAddFVO) {
-        this.productName = productAddFVO.getProductName();
+    public void setProductState(Integer productState) {
+        this.productState = productState;
     }
+
+    public String getProductIntro() {
+        return productIntro;
+    }
+
+    public void setProductIntro(String productIntro) {
+        this.productIntro = productIntro;
+    }
+
+    public Double getProductPrice() {
+        return productPrice;
+    }
+
+    public void setProductPrice(Double productPrice) {
+        this.productPrice = productPrice;
+    }
+
+
 
     public Product() {
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "productId=" + productId +
-                ", shopId=" + shopId +
-                ", productName='" + productName + '\'' +
-                '}';
+    public Product(Integer productId, Integer shopId, String productName, Integer productState, String productIntro, Double productPrice) {
+        this.productId = productId;
+        this.shopId = shopId;
+        this.productName = productName;
+        this.productState = productState;
+        this.productIntro = productIntro;
+        this.productPrice = productPrice;
     }
 }
