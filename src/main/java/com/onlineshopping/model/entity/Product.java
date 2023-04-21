@@ -11,7 +11,6 @@ public class Product implements Serializable {
     private String productName;
     private Integer productState;
     private String productIntro;
-
     private Double productPrice;
     @Override
     public String toString() {

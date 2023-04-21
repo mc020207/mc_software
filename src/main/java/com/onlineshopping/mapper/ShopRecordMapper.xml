@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.onlineshopping.mapper.ShopRecordMapper">
+    <select id="selectShopRecords" resultType="ShopRecord">
+        select *
+        from shoprecord
+        <where>
+            <if test="shopRecordId!=null">
+                shopRecordId=#{shopRecordId}
+            </if>
+            <if test="shopId!=null">
+                and shopId=#{shopId}
+            </if>
+            <if test="shopRecordDate!=null">
+                and shopRecordDate=#{shopRecordDate}
+            </if>
+            <if test="shopRecordComment!=null">
+                and shopRecordComment=#{shopRecordComment}
+            </if>
+            <if test="shopRecordState!=null">
+                and shopRecordState=#{shopRecordState}
+            </if>
+        </where>
+        <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
+            limit #{startRow},#{num}
+        </if>
+    </select>
+
+    <select id="countShopRecords" resultType="int">
+        select count(*)
+        from shoprecord
+        <where>
+            <if test="shopRecordId!=null">
+                shopRecordId=#{shopRecordId}
+            </if>
+            <if test="shopId!=null">
+                and shopId=#{shopId}
+            </if>
+            <if test="shopRecordDate!=null">
+                and shopRecordDate=#{shopRecordDate}
+            </if>
+            <if test="shopRecordComment!=null">
+                and shopRecordComment=#{shopRecordComment}
+            </if>
+            <if test="shopRecordState!=null">
+                and shopRecordState=#{shopRecordState}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertShopRecord">
+        insert into shoprecord (shopId, shopRecordDate, shopRecordComment, shopRecordState)
+        values (#{shopId}, #{shopRecordDate}, #{shopRecordComment}, #{shopRecordState})
+    </insert>
+
+    <update id="updateShopRecordState">
+        update shoprecord
+        set shopRecordState=#{newState}
+        <where>
+            <if test="shopRecordId!=null">
+                shopRecordId=#{shopRecordId}
+            </if>
+            <if test="shopId!=null">
+                and shopId=#{shopId}
+            </if>
+            <if test="shopRecordDate!=null">
+                and shopRecordDate=#{shopRecordDate}
+            </if>
+            <if test="shopRecordComment!=null">
+                and shopRecordComment=#{shopRecordComment}
+            </if>
+            <if test="shopRecordState!=null">
+                and shopRecordState=#{shopRecordState}
+            </if>
+        </where>
+    </update>
+
+    <update id="updateShopById">
+        update shoprecord
+        <set>
+            <if test="shopId!=null">
+                and shopId=#{shopId}
+            </if>
+            <if test="shopRecordDate!=null">
+                and shopRecordDate=#{shopRecordDate}
+            </if>
+            <if test="shopRecordComment!=null">
+                and shopRecordComment=#{shopRecordComment}
+            </if>
+            <if test="shopRecordState!=null">
+                and shopRecordState=#{shopRecordState}
+            </if>
+        </set>
+        where shopRecordId=#{shopRecordId}
+    </update>
+
+</mapper>

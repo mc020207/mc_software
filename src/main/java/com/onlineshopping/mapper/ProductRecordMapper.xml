@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.onlineshopping.mapper.ProductRecordMapper">
+    <select id="selectProductRecords" resultType="ProductRecord">
+        select *
+        from productrecord
+        <where>
+            <if test="productRecordId!=null">
+                productRecordId=#{productRecordId}
+            </if>
+            <if test="productId!=null">
+                and productId=#{productId}
+            </if>
+            <if test="productRecordDate!=null">
+                and productRecordDate=#{productRecordDate}
+            </if>
+            <if test="productRecordComment!=null">
+                and productRecordComment=#{productRecordComment}
+            </if>
+            <if test="productRecordState!=null">
+                and productRecordState=#{productRecordState}
+            </if>
+        </where>
+        <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
+            limit #{startRow},#{num}
+        </if>
+    </select>
+
+    <select id="countProductRecords" resultType="int">
+        select count(*)
+        from productrecord
+        <where>
+            <if test="productRecordId!=null">
+                productRecordId=#{productRecordId}
+            </if>
+            <if test="productId!=null">
+                and productId=#{productId}
+            </if>
+            <if test="productRecordDate!=null">
+                and productRecordDate=#{productRecordDate}
+            </if>
+            <if test="productRecordComment!=null">
+                and productRecordComment=#{productRecordComment}
+            </if>
+            <if test="productRecordState!=null">
+                and productRecordState=#{productRecordState}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertProductRecord">
+        insert into productrecord (productId, productRecordDate, productRecordComment, productRecordState)
+        values (#{productId}, #{productRecordDate}, #{productRecordComment}, #{productRecordState})
+    </insert>
+
+    <update id="updateProductRecordState">
+        update productrecord
+        set productRecordState=#{newState}
+        <where>
+            <if test="productRecordId!=null">
+                productRecordId=#{productRecordId}
+            </if>
+            <if test="productId!=null">
+                and productId=#{productId}
+            </if>
+            <if test="productRecordDate!=null">
+                and productRecordDate=#{productRecordDate}
+            </if>
+            <if test="productRecordComment!=null">
+                and productRecordComment=#{productRecordComment}
+            </if>
+            <if test="productRecordState!=null">
+                and productRecordState=#{productRecordState}
+            </if>
+        </where>
+    </update>
+
+    <update id="updateProductById">
+        update productrecord
+        <set>
+            <if test="productId!=null">
+                and productId=#{productId}
+            </if>
+            <if test="productRecordDate!=null">
+                and productRecordDate=#{productRecordDate}
+            </if>
+            <if test="productRecordComment!=null">
+                and productRecordComment=#{productRecordComment}
+            </if>
+            <if test="productRecordState!=null">
+                and productRecordState=#{productRecordState}
+            </if>
+        </set>
+        where productRecordId=#{productRecordId}
+    </update>
+
+</mapper>

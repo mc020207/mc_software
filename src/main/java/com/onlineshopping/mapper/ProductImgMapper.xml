@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.onlineshopping.mapper.ProductImgMapper">
+    <insert id="insertProductImg">
+        insert into `productImg` (productId, productImgAddr)
+        values (#{productId}, #{productImgAddr})
+    </insert>
+    <select id="selectProductImgByProductId" resultType="ProductImg">
+        select *
+        from `productimg`
+        where productId=#{productId}
+    </select>
+    <delete id="deleteProductImgByProductImgId">
+        delete from productimg
+        where productId=#{productId}
+    </delete>
+</mapper>

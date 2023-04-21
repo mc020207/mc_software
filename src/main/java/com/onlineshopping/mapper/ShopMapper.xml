@@ -3,29 +3,73 @@
 
 <mapper namespace="com.onlineshopping.mapper.ShopMapper">
 
-    <select id="selectShopsByRangeAndShopIsOpen" resultType="Shop">
+    <select id="selectShops" resultType="Shop">
         select *
         from `shop`
-        where shopIsOpen = #{shopIsOpen}
-        order by shopId
-        limit ${startRow}, ${number}
+        <where>
+            <if test="shopId">
+                shopId=#{shopId}
+            </if>
+            <if test="userId">
+                and userId=#{userId}
+            </if>
+            <if test="shopName">
+                and shopName=#{shopName}
+            </if>
+            <if test="shopIntro">
+                and shopIntro=#{shopIntro}
+            </if>
+            <if test="shopAddr">
+                and shopAddr=#{shopAddr}
+            </if>
+            <if test="shopRegisterFund">
+                and shopRegisterFund=#{shopRegisterFund}
+            </if>
+            <if test="shopRegisterDate">
+                and shopRegisterDate=#{shopRegisterDate}
+            </if>
+            <if test="shopState!=null">
+                shopState=#{shopState}
+            </if>
+        </where>
+        <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
+            limit #{startRow},#{num}
+        </if>
     </select>
 
-    <select id="selectShopsBySingleAttr" resultType="Shop">
-        select *
-        from `shop`
-        where ${fieldName} = #{fieldValue}
-        order by shopId
-    </select>
-
-    <select id="getCountByShopIsOpen" resultType="int">
+    <select id="countShops" resultType="int">
         select count(*)
         from `shop`
-        where shopIsOpen = #{shopIsOpen}
+        <where>
+            <if test="shopId">
+                shopId=#{shopId}
+            </if>
+            <if test="userId">
+                and userId=#{userId}
+            </if>
+            <if test="shopName">
+                and shopName=#{shopName}
+            </if>
+            <if test="shopIntro">
+                and shopIntro=#{shopIntro}
+            </if>
+            <if test="shopAddr">
+                and shopAddr=#{shopAddr}
+            </if>
+            <if test="shopRegisterFund">
+                and shopRegisterFund=#{shopRegisterFund}
+            </if>
+            <if test="shopRegisterDate">
+                and shopRegisterDate=#{shopRegisterDate}
+            </if>
+            <if test="shopState!=null">
+                shopState=#{shopState}
+            </if>
+        </where>
     </select>
 
     <insert id="insertShop">
-        insert into `shop` (userid, shopName, shopIntro, shopAddr, shopRegisterFund, shopRegisterDate, shopIsOpen)
+        insert into `shop` (userid, shopName, shopIntro, shopAddr, shopRegisterFund, shopRegisterDate, shopState)
         values (#{userId}, #{shopName}, #{shopIntro}, #{shopAddr}, #{shopRegisterFund}, CURRENT_DATE, 0)
     </insert>
 
@@ -44,8 +88,8 @@
             <if test="shopRegisterFund!=null">
                 shopRegisterFund = #{shopRegisterFund},
             </if>
-            <if test="shopIsOpen!=null">
-                shopIsOpen=#{shopIsOpen}
+            <if test="shopState!=null">
+                shopState=#{shopState}
             </if>
         </set>
         <where>
@@ -58,16 +102,16 @@
         </where>
     </update>
 
-    <update id="changeShopOpen">
-        update `shop`
-        set shopIsOpen=#{isApprove}
-        where shopId = #{shopId}
-    </update>
+<!--    <update id="changeShopOpen">-->
+<!--        update `shop`-->
+<!--        set shopState=#{isApprove}-->
+<!--        where shopId = #{shopId}-->
+<!--    </update>-->
 
-    <delete id="deleteShopByShopId">
-        delete
-        from `shop`
-        where shopId = #{shopId}
-    </delete>
+<!--    <delete id="deleteShopByShopId">-->
+<!--        delete-->
+<!--        from `shop`-->
+<!--        where shopId = #{shopId}-->
+<!--    </delete>-->
 
 </mapper>

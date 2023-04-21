@@ -8,15 +8,16 @@ import java.util.List;
 
 @Repository
 public interface ProductMapper {
-    List<Product> selectProductsBySingleAttr(@Param("fieldName") String name, @Param("fieldValue") Object value);
-
-    List<Product> selectProductByRangeAndShopId(Integer startRow, Integer num, Integer shopId);
-
-    Integer countProductsByShopId(Integer shopId);
+    List<Product> selectProducts(Product product,Integer startRow,Integer num);
+    Integer countProducts(Product product);
 
     void insertProduct(Product product);
 
-    void deleteProductsByShopId(Integer shopId);
+    void updateProductInfo(Product product);
 
-    void deleteProductsByProductId(Integer productId);
+    void updateProductState(Product product,Integer newState);
+
+//    void deleteProductsByShopId(Integer shopId);
+//
+//    void deleteProductsByProductId(Integer productId);
 }

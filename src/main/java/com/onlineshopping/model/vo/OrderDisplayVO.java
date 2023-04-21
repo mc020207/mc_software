@@ -6,6 +6,7 @@ public class OrderDisplayVO {
     private Double orderMoney;
     private Integer productId;
     private String productName;
+    private Integer productState;
 
     @Override
     public String toString() {
@@ -15,6 +16,7 @@ public class OrderDisplayVO {
                 ", orderMoney=" + orderMoney +
                 ", productId=" + productId +
                 ", productName='" + productName + '\'' +
+                ", productState=" + productState +
                 '}';
     }
 
@@ -58,14 +60,23 @@ public class OrderDisplayVO {
         this.productName = productName;
     }
 
+    public Integer getProductState() {
+        return productState;
+    }
+
+    public void setProductState(Integer productState) {
+        this.productState = productState;
+    }
+
     public OrderDisplayVO() {
     }
 
-    public OrderDisplayVO(String orderDate, Integer orderId, Double orderMoney, Integer productId, String productName) {
+    public OrderDisplayVO(String orderDate, Integer orderId, Double orderMoney, Integer productId, String productName, Integer productState) {
         this.orderDate = orderDate;
         this.orderId = orderId;
         this.orderMoney = orderMoney;
         this.productId = productId;
         this.productName = productName;
+        this.productState = productState;
     }
 }

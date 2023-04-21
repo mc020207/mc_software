@@ -3,41 +3,103 @@
 
 <mapper namespace="com.onlineshopping.mapper.ProductMapper">
 
-    <select id="selectProductsBySingleAttr" resultType="Product">
+    <select id="selectProducts" resultType="Product">
         select *
         from `product`
-        where ${fieldName} = #{fieldValue}
-        order by productId
+        <where>
+            <if test="productId!=null">
+                productId=#{productId}
+            </if>
+            <if test="shopId!=null">
+                and shopId=#{shopId}
+            </if>
+            <if test="productName!=null">
+                and productName=#{productName}
+            </if>
+            <if test="productState!=null">
+                and productState=#{productState}
+            </if>
+            <if test="productIntro!=null">
+                and productIntro=#{productIntro}
+            </if>
+        </where>
+        <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
+            limit #{startRow},#{num}
+        </if>
     </select>
 
-    <select id="selectProductByRangeAndShopId" resultType="Product">
-        select *
-        from `product`
-        where shopId = #{shopId}
-        limit #{startRow},#{num}
-    </select>
-
-    <select id="countProductsByShopId" resultType="int">
+    <select id="countProducts" resultType="int">
         select count(*)
         from `product`
-        where shopId = #{shopId}
+        <where>
+            <if test="productId!=null">
+                productId=#{productId}
+            </if>
+            <if test="shopId!=null">
+                and shopId=#{shopId}
+            </if>
+            <if test="productName!=null">
+                and productName=#{productName}
+            </if>
+            <if test="productState!=null">
+                and productState=#{productState}
+            </if>
+            <if test="productIntro!=null">
+                and productIntro=#{productIntro}
+            </if>
+        </where>
     </select>
 
     <insert id="insertProduct">
-        insert into `product` (shopId, productName)
-        values (#{shopId}, #{productName})
+        insert into `product` (shopId, productName,productState,productIntro,productPrice)
+        values (#{shopId}, #{productName},#{productState},#{productIntro},#{productPrice})
     </insert>
 
-    <delete id="deleteProductsByShopId">
-        delete
-        from `product`
-        where shopId = #{shopId}
-    </delete>
+    <update id="updateProductInfo">
+        update `product`
+        <set>
+            <if test="productName!=null">
+                and productName=#{productName}
+            </if>
+            <if test="productIntro!=null">
+                and productIntro=#{productIntro}
+            </if>
+        </set>
+        where productId=#{productId}
+    </update>
 
-    <delete id="deleteProductsByProductId">
-        delete
-        from `product`
-        where productId = #{productId}
-    </delete>
+    <update id="updateProductState">
+        update `product`
+        set productState=#{newState}
+        <where>
+            <if test="productId!=null">
+                productId=#{productId}
+            </if>
+            <if test="shopId!=null">
+                and shopId=#{shopId}
+            </if>
+            <if test="productName!=null">
+                and productName=#{productName}
+            </if>
+            <if test="productState!=null">
+                and productState=#{productState}
+            </if>
+            <if test="productIntro!=null">
+                and productIntro=#{productIntro}
+            </if>
+        </where>
+    </update>
+
+<!--    <delete id="deleteProductsByShopId">-->
+<!--        delete-->
+<!--        from `product`-->
+<!--        where shopId = #{shopId}-->
+<!--    </delete>-->
+
+<!--    <delete id="deleteProductsByProductId">-->
+<!--        delete-->
+<!--        from `product`-->
+<!--        where productId = #{productId}-->
+<!--    </delete>-->
 
 </mapper>
