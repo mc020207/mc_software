@@ -1,7 +1,4 @@
 package com.onlineshopping.model.entity;
-
-import com.onlineshopping.model.dto.ShopRegisterDTO;
-
 import java.io.Serializable;
 import java.sql.Date;
 

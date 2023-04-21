@@ -1,13 +1,25 @@
 package com.onlineshopping.model.vo;
 
 public class ProductAddFVO {
+    private String productIntro;
     private String productName;
+    private double productPrice;
 
     @Override
     public String toString() {
         return "ProductAddFVO{" +
-                "productName='" + productName + '\'' +
+                "productIntro='" + productIntro + '\'' +
+                ", productName='" + productName + '\'' +
+                ", productPrice=" + productPrice +
                 '}';
+    }
+
+    public String getProductIntro() {
+        return productIntro;
+    }
+
+    public void setProductIntro(String productIntro) {
+        this.productIntro = productIntro;
     }
 
     public String getProductName() {
@@ -18,10 +30,17 @@ public class ProductAddFVO {
         this.productName = productName;
     }
 
-    public ProductAddFVO() {
+    public double getProductPrice() {
+        return productPrice;
     }
 
-    public ProductAddFVO(String productName) {
+    public void setProductPrice(double productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public ProductAddFVO(String productIntro, String productName, double productPrice) {
+        this.productIntro = productIntro;
         this.productName = productName;
+        this.productPrice = productPrice;
     }
 }
