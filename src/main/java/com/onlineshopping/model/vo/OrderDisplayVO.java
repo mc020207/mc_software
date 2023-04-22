@@ -1,7 +1,14 @@
 package com.onlineshopping.model.vo;
 
+import com.onlineshopping.model.entity.Product;
+import com.onlineshopping.model.entity.Order;
+import com.onlineshopping.util.ConstantUtil;
+
+import java.sql.Date;
+import java.util.Objects;
+
 public class OrderDisplayVO {
-    private String orderDate;
+    private Date orderDate;
     private Integer orderId;
     private Double orderMoney;
     private Integer productId;
@@ -11,7 +18,7 @@ public class OrderDisplayVO {
     @Override
     public String toString() {
         return "OrderDisplayVO{" +
-                "orderDate='" + orderDate + '\'' +
+                "orderDate=" + orderDate +
                 ", orderId=" + orderId +
                 ", orderMoney=" + orderMoney +
                 ", productId=" + productId +
@@ -20,11 +27,11 @@ public class OrderDisplayVO {
                 '}';
     }
 
-    public String getOrderDate() {
+    public Date getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(String orderDate) {
+    public void setOrderDate(Date orderDate) {
         this.orderDate = orderDate;
     }
 
@@ -71,12 +78,25 @@ public class OrderDisplayVO {
     public OrderDisplayVO() {
     }
 
-    public OrderDisplayVO(String orderDate, Integer orderId, Double orderMoney, Integer productId, String productName, Integer productState) {
+    public OrderDisplayVO(Date orderDate, Integer orderId, Double orderMoney, Integer productId, String productName, Integer productState) {
         this.orderDate = orderDate;
         this.orderId = orderId;
         this.orderMoney = orderMoney;
         this.productId = productId;
         this.productName = productName;
         this.productState = productState;
+    }
+
+    public OrderDisplayVO(Order order, Product product) {
+        this.orderDate = order.getOrderDate();
+        this.orderId = order.getOrderId();
+        if (Objects.equals(order.getOrderState(), ConstantUtil.ORDER_NOT_PAY)){
+            this.orderMoney = product.getProductPrice();
+        }else{
+            this.orderMoney=order.getOrderMoney();
+        }
+        this.productId = product.getProductId();
+        this.productName = product.getProductName();
+        this.productState = product.getProductState();
     }
 }

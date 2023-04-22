@@ -179,6 +179,7 @@ public class ShopServiceImpl implements ShopService {
         shopRecord.setShopRecordState(ConstantUtil.RECORD_SOLVE);
         shopRecordMapper.updateShopById(shopRecord);
         // 此处需要一个转账的接口：中间账户 --注册资金--> 利润账户
+        // 此处需要给商店开一个账户
     }
 
     @Override

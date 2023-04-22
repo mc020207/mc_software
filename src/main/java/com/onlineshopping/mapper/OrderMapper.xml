@@ -30,6 +30,36 @@
         </if>
     </select>
 
+    <select id="selectOrdersByShopId" resultType="Order">
+        select orderId, `order`.userId as userId, `order`.productId as productId, orderState, orderDate, orderMoney
+        from `order`,product,shop
+        <where>
+            `order`.productId=product.productId
+            and product.shopId=shop.shopId
+            <if test="orderId!=null">
+                and orderId=#{orderId}
+            </if>
+            <if test="userId!=null">
+                and userId=#{userId}
+            </if>
+            <if test="productId!=null">
+                and `order`.productId=#{productId}
+            </if>
+            <if test="orderState!=null">
+                and orderState=#{orderState}
+            </if>
+            <if test="orderDate!=null">
+                and orderDate=#{orderDate}
+            </if>
+            <if test="orderMoney!=null">
+                and orderMoney=#{orderMoney}
+            </if>
+        </where>
+        <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
+            limit #{startRow},#{num}
+        </if>
+    </select>
+
     <select id="selectOrderById" resultType="Order">
         select * from `order`
         where orderId=#{orderId}
@@ -60,10 +90,61 @@
         </where>
     </select>
 
+    <select id="selectOrdersByShopId" resultType="int">
+        select count(*) from `order`,product,shop
+        <where>
+            `order`.productId=product.productId
+            and product.shopId=shop.shopId
+            <if test="orderId!=null">
+                and orderId=#{orderId}
+            </if>
+            <if test="userId!=null">
+                and userId=#{userId}
+            </if>
+            <if test="productId!=null">
+                and `order`.productId=#{productId}
+            </if>
+            <if test="orderState!=null">
+                and orderState=#{orderState}
+            </if>
+            <if test="orderDate!=null">
+                and orderDate=#{orderDate}
+            </if>
+            <if test="orderMoney!=null">
+                and orderMoney=#{orderMoney}
+            </if>
+        </where>
+        <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
+            limit #{startRow},#{num}
+        </if>
+    </select>
+
     <insert id="insertOrder">
         insert into `order` (userId, productId, orderState, orderDate, orderMoney)
         values (#{userId}, #{productId}, #{orderState}, #{orderDate}, #{orderMoney})
     </insert>
+
+    <update id="updateOrderInfo">
+        update `order`
+        <set>
+            <if test="userId!=null">
+                userId=#{userId}
+            </if>
+            <if test="productId!=null">
+                and productId=#{productId}
+            </if>
+            <if test="orderState!=null">
+                and orderState=#{orderState}
+            </if>
+            <if test="orderDate!=null">
+                and orderDate=#{orderDate}
+            </if>
+            <if test="orderMoney!=null">
+                and orderMoney=#{orderMoney}
+            </if>
+        </set>
+        where orderId=#{orderId}
+    </update>
 
     <update id="updateOrderState">
         update `order`
