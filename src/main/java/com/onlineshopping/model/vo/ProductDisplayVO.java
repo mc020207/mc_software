@@ -8,6 +8,9 @@ public class ProductDisplayVO {
     private Integer productId;
     private String productName;
     private Integer shopId;
+    private Double productPrice;
+    private String productIntro;
+    private Integer productState
     private List<ProductImgVO> images;
 
     @Override
@@ -16,6 +19,9 @@ public class ProductDisplayVO {
                 "productId=" + productId +
                 ", productName='" + productName + '\'' +
                 ", shopId=" + shopId +
+                ", productPrice=" + productPrice +
+                ", productIntro='" + productIntro + '\'' +
+                ", productState=" + productState +
                 ", images=" + images +
                 '}';
     }
@@ -44,6 +50,30 @@ public class ProductDisplayVO {
         this.shopId = shopId;
     }
 
+    public Double getProductPrice() {
+        return productPrice;
+    }
+
+    public void setProductPrice(Double productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public String getProductIntro() {
+        return productIntro;
+    }
+
+    public void setProductIntro(String productIntro) {
+        this.productIntro = productIntro;
+    }
+
+    public Integer getProductState() {
+        return productState;
+    }
+
+    public void setProductState(Integer productState) {
+        this.productState = productState;
+    }
+
     public List<ProductImgVO> getImages() {
         return images;
     }
@@ -55,10 +85,22 @@ public class ProductDisplayVO {
     public ProductDisplayVO() {
     }
 
-    public ProductDisplayVO(Integer productId, String productName, Integer shopId, List<ProductImgVO> images) {
+    public ProductDisplayVO(Integer productId, String productName, Integer shopId, Double productPrice, String productIntro, Integer productState, List<ProductImgVO> images) {
         this.productId = productId;
         this.productName = productName;
         this.shopId = shopId;
+        this.productPrice = productPrice;
+        this.productIntro = productIntro;
+        this.productState = productState;
         this.images = images;
+    }
+
+    public ProductDisplayVO(Product product){
+        this.productId = product.getProductId();
+        this.productName = product.getProductName();
+        this.shopId = product.getShopId();
+        this.productPrice = product.getProductPrice();
+        this.productIntro = product.getProductIntro();
+        this.productState = product.getProductState();
     }
 }

@@ -9,6 +9,8 @@ import java.util.List;
 
 @Repository
 public interface ShopMapper {
+    Shop selectShopByShopId(Integer shopId);
+    Shop selectShopByUserId(Integer userId);
     List<Shop> selectShops(Shop shop, Integer startRow, Integer num);
     Integer countShops(Shop shop);
 

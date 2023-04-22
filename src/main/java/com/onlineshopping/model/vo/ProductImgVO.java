@@ -1,5 +1,7 @@
 package com.onlineshopping.model.vo;
 
+import com.onlineshopping.model.entity.ProductImg;
+
 public class ProductImgVO {
     private Integer productImgId;
     private String productImgAddr;
@@ -34,5 +36,9 @@ public class ProductImgVO {
     public ProductImgVO(Integer productImgId, String productImgAddr) {
         this.productImgId = productImgId;
         this.productImgAddr = productImgAddr;
+    }
+    public ProductImgVO(ProductImg productImg) {
+        this.productImgId = productImg.getProductImgId();
+        this.productImgAddr = productImg.getProductImgAddr();
     }
 }

@@ -11,6 +11,11 @@
         from `productimg`
         where productId=#{productId}
     </select>
+    <select id="selectProductImgByProductImgId" resultType="ProductImg">
+        select *
+        from `productimg`
+        where productImgId=#{productImgId}
+    </select>
     <delete id="deleteProductImgByProductImgId">
         delete from productimg
         where productId=#{productId}

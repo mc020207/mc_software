@@ -9,5 +9,6 @@ import java.util.List;
 public interface ProductImgMapper {
     void insertProductImg(ProductImg productImg);
     List<ProductImg> selectProductImgByProductId(Integer productId);
+    ProductImg selectProductImgByProductImgId(Integer productImgId);
     void deleteProductImgByProductImgId(Integer productImgId);
 }

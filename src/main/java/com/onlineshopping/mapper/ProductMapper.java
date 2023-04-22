@@ -8,6 +8,8 @@ import java.util.List;
 
 @Repository
 public interface ProductMapper {
+
+    Product selectProductById(Integer productId);
     List<Product> selectProducts(Product product,Integer startRow,Integer num);
     Integer countProducts(Product product);
 

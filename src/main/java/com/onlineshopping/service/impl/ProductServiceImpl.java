@@ -1,9 +1,14 @@
 package com.onlineshopping.service.impl;
 
 import com.onlineshopping.exception.ServiceException;
+import com.onlineshopping.mapper.OrderMapper;
+import com.onlineshopping.mapper.ProductImgMapper;
 import com.onlineshopping.mapper.ProductMapper;
 import com.onlineshopping.mapper.ShopMapper;
+import com.onlineshopping.model.dto.ProductDTO;
+import com.onlineshopping.model.entity.Order;
 import com.onlineshopping.model.entity.Product;
+import com.onlineshopping.model.entity.ProductImg;
 import com.onlineshopping.model.entity.Shop;
 import com.onlineshopping.model.vo.*;
 import com.onlineshopping.service.ProductService;
@@ -16,106 +21,254 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
+// 注意！！！！！！！！！！！！！！！！
+// 还没有考虑审核记录，后续需要加上
 @Service
 public class ProductServiceImpl implements ProductService {
     @Resource
     ProductMapper productMapper;
     @Resource
     ShopMapper shopMapper;
-
+    @Resource
+    OrderMapper orderMapper;
+    @Resource
+    ProductImgMapper productImgMapper;
     public Shop getShop(HttpServletRequest request) {
         String token = JwtUserUtil.getToken(request);
         Integer userId = Integer.parseInt(JwtUserUtil.getInfo(token, "userId"));
-        List<Shop> shops = shopMapper.selectShopsBySingleAttr("userId", userId);
-        ListUtil.checkSingle("shopId", shops);
-        return shops.get(0);
+        Shop shop = shopMapper.selectShopByUserId(userId);
+        if (shop==null){
+            throw new ServiceException("该用户没有开店");
+        }
+        return shop;
+    }
+
+    public boolean productCanDelete(Integer productId){
+        Order order = new Order();
+        order.setProductId(productId);
+        order.setOrderState(ConstantUtil.ORDER_NOT_RECEIVE);
+        return orderMapper.countOrders(order)==0;
+    }
+
+    public boolean isMyProduct(Integer productId,HttpServletRequest request){
+        Shop shop = getShop(request);
+        Product product = productMapper.selectProductById(productId);
+        if (product==null){
+            throw new ServiceException("没有这个商品");
+        }
+        return Objects.equals(shop.getShopId(), product.getShopId());
+    }
+
+    public ProductDisplayVO getProductDisplay(Product product){
+        ProductDisplayVO productDisplayVO = new ProductDisplayVO(product);
+        List<ProductImg> productImgs = productImgMapper.selectProductImgByProductId(product.getProductId());
+        List<ProductImgVO> productImgVOList=new ArrayList<>();
+        for (ProductImg productImg : productImgs){
+            productImgVOList.add(new ProductImgVO(productImg));
+        }
+        productDisplayVO.setImages(productImgVOList);
+    }
+
+    public ProductsDisplayVO getProductDisplayList(Product condition,Integer startRow,Integer num){
+        Integer totalNum=productMapper.countProducts(condition);
+        List<Product> products = productMapper.selectProducts(condition, startRow, num);
+        List<ProductDisplayVO> productDisplayVOList=new ArrayList<>();
+        for (Product product : products){
+            productDisplayVOList.add(getProductDisplay(product));
+        }
+        return new ProductsDisplayVO(productDisplayVOList,totalNum);
     }
 
     @Override
     @Transactional
-    public void addProduct(ProductAddFVO productAddFVO, HttpServletRequest request, HttpServletResponse response) {
-        String productName = productAddFVO.getProductName();
+    public void addProduct(ProductDTO productDTO, HttpServletRequest request, HttpServletResponse response) {
+        String productName = productDTO.getProductName();
         FormatUtil.checkNotNull("productName", productName);
         Shop shop = getShop(request);
-        Product product = new Product(productAddFVO);
+        if (!Objects.equals(shop.getShopState(), ConstantUtil.SHOP_OPEN)){
+            throw new ServiceException("商店为开店状态时候才可以添加商品")
+        }
+        Product product = productDTO.changeToProduct();
         product.setShopId(shop.getShopId());
         productMapper.insertProduct(product);
-        shop.setShopIsOpen(ConstantUtil.SHOP_NOT_IN_INSPECTION);
-        shopMapper.updateShopInfo(shop);
     }
 
     @Override
     @Transactional
     public void deleteProduct(Integer productId, HttpServletRequest request, HttpServletResponse response) {
         FormatUtil.checkPositive("productId", productId);
-        Shop shop = getShop(request);
-        List<Product> products = productMapper.selectProductsBySingleAttr("productId", productId);
-        ListUtil.checkSingle("productId", products);
-        Product product = products.get(0);
-        if (!Objects.equals(shop.getShopId(), product.getShopId())) {
+        Product product = productMapper.selectProductById(productId);
+        if (product==null){
+            throw new ServiceException("没有这个商品");
+        }
+        if (!isMyProduct(productId,request)) {
             throw new ServiceException("不可以删除别人的商品");
         }
-        productMapper.deleteProductsByProductId(productId);
-        shop.setShopIsOpen(ConstantUtil.SHOP_NOT_IN_INSPECTION);
-        shopMapper.updateShopInfo(shop);
+        if (!productCanDelete(productId)) {
+            throw new ServiceException("还有未发货的订单");
+        }
+        productMapper.updateProductState(product,ConstantUtil.PRODUCT_DELETE);
     }
 
     @Override
     @Transactional
-    public ProductsDisplayVO displayProducts(Integer page, Integer shopId) {
+    public void updateProductInfo(ProductDTO productDTO, HttpServletRequest request, HttpServletResponse response) {
+        Shop shop = getShop(request);
+        if (!isMyProduct(productDTO.getProductId(),request)){
+            throw new ServiceException("不得修改他人的商品");
+        }
+        Product product=productDTO.changeToProduct();
+        product.setShopId(shop.getShopId());
+        productMapper.updateProductInfo(product);
+    }
+
+    @Override
+    @Transactional
+    public void addProductImage(Integer productId, MultipartFile image, HttpServletRequest request, HttpServletResponse response) {
+        FormatUtil.checkNotNull("image",image);
+        if (!isMyProduct(productId,request)){
+            throw new ServiceException("不得修改他人的商品");
+        }
+        //获取文件的后缀名
+        int lastIndexOf = Objects.requireNonNull(image.getOriginalFilename()).lastIndexOf(".");
+        String suffix = image.getOriginalFilename().substring(lastIndexOf);
+        //根据时间戳创建新的文件名，这样即便是第二次上传相同名称的文件，也不会把第一次的文件覆盖了
+        String fileName = System.currentTimeMillis() + suffix;
+        //获取当前项目的真实路径，然后拼接前面的文件
+        String destFileName = request.getServletContext().getRealPath("") + "static\\productImage" + File.separator + fileName;
+        //第一次运行的时候，这个文件所在的目录往往是不存在的，这里需要创建一下目录（创建到了webapp下static/user_source文件夹下）
+        File destFile = new File(destFileName);
+        if (!destFile.getParentFile().exists()) {
+            destFile.getParentFile().mkdirs();
+        }
+        //把浏览器上传的文件复制到希望的位置
+        try {
+            image.transferTo(destFile);
+        } catch ( IOException e) {
+            throw new ServiceException("添加图片失败");
+        }
+        String imagePath = "/static/article_image/" + fileName;
+        productImgMapper.insertProductImg(new ProductImg(null,productId,imagePath));
+    }
+
+    @Override
+    @Transactional
+    public void deleteProductImage(Integer imageId, HttpServletRequest request, HttpServletResponse response) {
+        ProductImg productImg = productImgMapper.selectProductImgByProductImgId(imageId);
+        if (productImg==null){
+            throw new ServiceException("没有这张图片");
+        }
+        if(!isMyProduct(productImg.getProductId(),request)){
+            throw new ServiceException("不得修改他人的图片");
+        }
+        productImgMapper.deleteProductImgByProductImgId(imageId);
+    }
+
+    @Override
+    @Transactional
+    public ProductsDisplayVO displayAllProductsOnShelf(Integer page) {
+        Product product = new Product();
+        product.setProductState(ConstantUtil.PRODUCT_ON_SHELF);
+        return getProductDisplayList(product,(page-1)*ConstantUtil.PAGE_SIZE,ConstantUtil.PAGE_SIZE);
+    }
+
+    @Override
+    @Transactional
+    public ProductsDisplayVO displayProductsByShopId(Integer page, Integer shopId) {
         FormatUtil.checkPositive("shopId", shopId);
         FormatUtil.checkPositive("page", page);
-        List<Shop> shops = shopMapper.selectShopsBySingleAttr("shopId", shopId);
-        ListUtil.checkSingle("shopId", shops);
-        Shop shop = shops.get(0);
-        if (!Objects.equals(shop.getShopIsOpen(), ConstantUtil.SHOP_OPEN)) {
+        Shop shop = shopMapper.selectShopByShopId(shopId);
+        if (shop==null){
+            throw new ServiceException("没有这个商店");
+        }
+        if (!Objects.equals(shop.getShopState(), ConstantUtil.SHOP_OPEN)) {
             throw new ServiceException("该商店未开放");
         }
-        List<Product> products = productMapper.selectProductByRangeAndShopId((page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE, shopId);
-        List<ProductDisplayVO> productDisplayVOs = new ArrayList<>();
-        for (Product product : products) {
-            productDisplayVOs.add(new ProductDisplayVO(product));
-        }
-        Integer totalNumber = productMapper.countProductsByShopId(shopId);
-        return new ProductsDisplayVO(productDisplayVOs, totalNumber);
+        Product product = new Product();
+        product.setShopId(shopId);
+        product.setProductState(ConstantUtil.PRODUCT_ON_SHELF);
+        return getProductDisplayList(product,(page-1)*ConstantUtil.PAGE_SIZE,ConstantUtil.PAGE_SIZE);
     }
 
     @Override
     @Transactional
-    public ProductsInfoVO getProductsInfo(Integer page, HttpServletRequest request, HttpServletResponse response) {
+    public ProductDisplayVO displayProductInfo(Integer productId) {
+        Product product = productMapper.selectProductById(productId);
+        if (product==null){
+            throw new ServiceException("没有这个商品");
+        }
+        if (!Objects.equals(product.getProductState(), ConstantUtil.PRODUCT_ON_SHELF)){
+            throw new ServiceException("该商品没有上架");
+        }
+        return getProductDisplay(product);
+    }
+
+    @Override
+    @Transactional
+    public ProductsDisplayVO getMyProducts(Integer page, HttpServletRequest request, HttpServletResponse response) {
         FormatUtil.checkPositive("page", page);
         Shop shop = getShop(request);
-        List<Product> products = productMapper.selectProductByRangeAndShopId((page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE, shop.getShopId());
-        List<ProductInfoVO> productInfoVOList = new ArrayList<>();
-        for (Product product : products) {
-            productInfoVOList.add(new ProductInfoVO(product));
-        }
-        Integer totalNumber = productMapper.countProductsByShopId(shop.getShopId());
-        return new ProductsInfoVO(productInfoVOList, totalNumber);
+        Product product = new Product();
+        product.setShopId(shop.getShopId());
+        return getProductDisplayList(product,(page-1)*ConstantUtil.PAGE_SIZE,ConstantUtil.PAGE_SIZE);
     }
 
     @Override
     @Transactional
-    public ProductsInspectVO inspectProducts(Integer page, Integer shopId) {
-        FormatUtil.checkPositive("shopId", shopId);
+    public ProductDisplayVO getMyProductInfo(Integer productId, HttpServletRequest request, HttpServletResponse response) {
+        if (!isMyProduct(productId,request)){
+            throw new ServiceException("不得查看他人商品");
+        }
+        Product product = productMapper.selectProductById(productId);
+        return getProductDisplay(product);
+    }
+
+    @Override
+    @Transactional
+    public ProductsDisplayVO InspectAllProducts(Integer page) {
         FormatUtil.checkPositive("page", page);
-        List<Shop> shops = shopMapper.selectShopsBySingleAttr("shopId", shopId);
-        ListUtil.checkSingle("shopId", shops);
-        Shop shop = shops.get(0);
-        if (!Objects.equals(shop.getShopIsOpen(), ConstantUtil.SHOP_IN_INSPECTION)) {
-            throw new ServiceException("该商店没有请求审核");
+        Product product = new Product();
+        product.setProductState(ConstantUtil.PRODUCT_IN_INSPECTION);
+        return getProductDisplayList(product,(page-1)*ConstantUtil.PAGE_SIZE,ConstantUtil.PAGE_SIZE);
+    }
+
+    @Override
+    @Transactional
+    public ProductDisplayVO inspectProductInfo(Integer productId) {
+        Product product = productMapper.selectProductById(productId);
+        if (product==null){
+            throw new ServiceException("没有这个商品");
         }
-        List<Product> products = productMapper.selectProductByRangeAndShopId((page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE, shopId);
-        List<ProductInspectVO> productInspectVOs = new ArrayList<>();
-        for (Product product : products) {
-            productInspectVOs.add(new ProductInspectVO(product));
+        if (!Objects.equals(product.getProductState(), ConstantUtil.PRODUCT_IN_INSPECTION)){
+            throw new ServiceException("该商品不是正在审核的商品");
         }
-        Integer totalNumber = productMapper.countProductsByShopId(shopId);
-        return new ProductsInspectVO(productInspectVOs, totalNumber);
+        return getProductDisplay(product);
+    }
+
+    @Override
+    @Transactional
+    public void PassProduct(Integer productId) {
+        Product product = productMapper.selectProductById(productId);
+        if (product==null){
+            throw new ServiceException("没有这个商品");
+        }
+        if (!Objects.equals(product.getProductState(), ConstantUtil.PRODUCT_IN_INSPECTION)){
+            throw new ServiceException("该商品不是正在审核的商品");
+        }
+        product.setProductState(ConstantUtil.PRODUCT_ON_SHELF);
+        productMapper.updateProductInfo(product);
+    }
+
+    @Override
+    @Transactional
+    public void RejectProduct(Integer productId) {
+
     }
 }

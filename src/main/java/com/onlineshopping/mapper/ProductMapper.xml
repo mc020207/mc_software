@@ -3,6 +3,11 @@
 
 <mapper namespace="com.onlineshopping.mapper.ProductMapper">
 
+    <select id="selectProductById" resultType="Product">
+        select * from product
+        where productId=#{productId}
+    </select>
+
     <select id="selectProducts" resultType="Product">
         select *
         from `product`

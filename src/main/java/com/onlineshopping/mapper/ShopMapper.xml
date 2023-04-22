@@ -3,6 +3,15 @@
 
 <mapper namespace="com.onlineshopping.mapper.ShopMapper">
 
+    <select id="selectShopByShopId" resultType="Shop">
+        select * from shop
+        where shopId=#{shopId}
+    </select>
+    <select id="selectShopByUserId" resultType="Shop">
+        select * from shop
+        where userId=#{userId}
+    </select>
+
     <select id="selectShops" resultType="Shop">
         select *
         from `shop`
