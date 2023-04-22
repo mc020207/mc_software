@@ -12,20 +12,20 @@
         select *
         from `product`
         <where>
-            <if test="productId!=null">
-                productId=#{productId}
+            <if test="product.productId!=null">
+                productId=#{product.productId}
             </if>
-            <if test="shopId!=null">
-                and shopId=#{shopId}
+            <if test="product.shopId!=null">
+                and shopId=#{product.shopId}
             </if>
-            <if test="productName!=null">
-                and productName=#{productName}
+            <if test="product.productName!=null">
+                and productName=#{product.productName}
             </if>
-            <if test="productState!=null">
-                and productState=#{productState}
+            <if test="product.productState!=null">
+                and productState=#{product.productState}
             </if>
-            <if test="productIntro!=null">
-                and productIntro=#{productIntro}
+            <if test="product.productIntro!=null">
+                and productIntro=#{product.productIntro}
             </if>
         </where>
         <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
@@ -63,11 +63,11 @@
     <update id="updateProductInfo">
         update `product`
         <set>
-            <if test="productName!=null">
-                productName=#{productName}
+            <if test="product.productName!=null">
+                productName=#{product.productName}
             </if>
-            <if test="productIntro!=null">
-                ,productIntro=#{productIntro}
+            <if test="product.productIntro!=null">
+                ,productIntro=#{product.productIntro}
             </if>
         </set>
         where productId=#{productId}
@@ -77,20 +77,20 @@
         update `product`
         set productState=#{newState}
         <where>
-            <if test="productId!=null">
-                productId=#{productId}
+            <if test="product.productId!=null">
+                productId=#{product.productId}
             </if>
-            <if test="shopId!=null">
-                and shopId=#{shopId}
+            <if test="product.shopId!=null">
+                and shopId=#{product.shopId}
             </if>
-            <if test="productName!=null">
-                and productName=#{productName}
+            <if test="product.productName!=null">
+                and productName=#{product.productName}
             </if>
-            <if test="productState!=null">
-                and productState=#{productState}
+            <if test="product.productState!=null">
+                and productState=#{product.productState}
             </if>
-            <if test="productIntro!=null">
-                and productIntro=#{productIntro}
+            <if test="product.productIntro!=null">
+                and productIntro=#{product.productIntro}
             </if>
         </where>
     </update>

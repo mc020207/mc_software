@@ -16,29 +16,29 @@
         select *
         from `shop`
         <where>
-            <if test="shopId">
-                shopId=#{shopId}
+            <if test="shop.shopId">
+                shopId=#{shop.shopId}
             </if>
-            <if test="userId">
-                and userId=#{userId}
+            <if test="shop.userId">
+                and userId=#{shop.userId}
             </if>
-            <if test="shopName">
-                and shopName=#{shopName}
+            <if test="shop.shopName">
+                and shopName=#{shop.shopName}
             </if>
-            <if test="shopIntro">
-                and shopIntro=#{shopIntro}
+            <if test="shop.shopIntro">
+                and shopIntro=#{shop.shopIntro}
             </if>
-            <if test="shopAddr">
-                and shopAddr=#{shopAddr}
+            <if test="shop.shopAddr">
+                and shopAddr=#{shop.shopAddr}
             </if>
-            <if test="shopRegisterFund">
-                and shopRegisterFund=#{shopRegisterFund}
+            <if test="shop.shopRegisterFund">
+                and shopRegisterFund=#{shop.shopRegisterFund}
             </if>
-            <if test="shopRegisterDate">
-                and shopRegisterDate=#{shopRegisterDate}
+            <if test="shop.shopRegisterDate">
+                and shopRegisterDate=#{shop.shopRegisterDate}
             </if>
-            <if test="shopState!=null">
-                shopState=#{shopState}
+            <if test="shop.shopState!=null">
+                shopState=#{shop.shopState}
             </if>
         </where>
         <if test="startRow!=null and startRow>=0 and num!=null and num>=0">

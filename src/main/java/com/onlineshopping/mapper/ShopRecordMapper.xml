@@ -6,20 +6,20 @@
         select *
         from shopRecord
         <where>
-            <if test="shopRecordId!=null">
-                shopRecordId=#{shopRecordId}
+            <if test="shopRecord.shopRecordId!=null">
+                shopRecordId=#{shopRecord.shopRecordId}
             </if>
-            <if test="shopId!=null">
-                and shopId=#{shopId}
+            <if test="shopRecord.shopId!=null">
+                and shopId=#{shopRecord.shopId}
             </if>
-            <if test="shopRecordDate!=null">
-                and shopRecordDate=#{shopRecordDate}
+            <if test="shopRecord.shopRecordDate!=null">
+                and shopRecordDate=#{shopRecord.shopRecordDate}
             </if>
-            <if test="shopRecordComment!=null">
-                and shopRecordComment=#{shopRecordComment}
+            <if test="shopRecord.shopRecordComment!=null">
+                and shopRecordComment=#{shopRecord.shopRecordComment}
             </if>
-            <if test="shopRecordState!=null">
-                and shopRecordState=#{shopRecordState}
+            <if test="shopRecord.shopRecordState!=null">
+                and shopRecordState=#{shopRecord.shopRecordState}
             </if>
         </where>
         <if test="startRow!=null and startRow>=0 and num!=null and num>=0">

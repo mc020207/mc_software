@@ -6,23 +6,23 @@
         select *
         from `order`
         <where>
-            <if test="orderId!=null">
-                orderId=#{orderId}
+            <if test="order.orderId!=null">
+                orderId=#{order.orderId}
             </if>
-            <if test="userId!=null">
-                and userId=#{userId}
+            <if test="order.userId!=null">
+                and userId=#{order.userId}
             </if>
-            <if test="productId!=null">
-                and productId=#{productId}
+            <if test="order.productId!=null">
+                and productId=#{order.productId}
             </if>
-            <if test="orderState!=null">
-                and orderState=#{orderState}
+            <if test="order.orderState!=null">
+                and orderState=#{order.orderState}
             </if>
-            <if test="orderDate!=null">
-                and orderDate=#{orderDate}
+            <if test="order.orderDate!=null">
+                and orderDate=#{order.orderDate}
             </if>
-            <if test="orderMoney!=null">
-                and orderMoney=#{orderMoney}
+            <if test="order.orderMoney!=null">
+                and orderMoney=#{order.orderMoney}
             </if>
         </where>
         <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
@@ -36,23 +36,23 @@
         <where>
             `order`.productId=product.productId
             and product.shopId=shop.shopId
-            <if test="orderId!=null">
-                and orderId=#{orderId}
+            <if test="order.orderId!=null">
+                and orderId=#{order.orderId}
             </if>
-            <if test="userId!=null">
-                and userId=#{userId}
+            <if test="order.userId!=null">
+                and userId=#{order.userId}
             </if>
-            <if test="productId!=null">
-                and `order`.productId=#{productId}
+            <if test="order.productId!=null">
+                and `order`.productId=#{order.productId}
             </if>
-            <if test="orderState!=null">
-                and orderState=#{orderState}
+            <if test="order.orderState!=null">
+                and orderState=#{order.orderState}
             </if>
-            <if test="orderDate!=null">
-                and orderDate=#{orderDate}
+            <if test="order.orderDate!=null">
+                and orderDate=#{order.orderDate}
             </if>
-            <if test="orderMoney!=null">
-                and orderMoney=#{orderMoney}
+            <if test="order.orderMoney!=null">
+                and orderMoney=#{order.orderMoney}
             </if>
         </where>
         <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
@@ -95,23 +95,23 @@
         <where>
             `order`.productId=product.productId
             and product.shopId=shop.shopId
-            <if test="orderId!=null">
-                and orderId=#{orderId}
+            <if test="order.orderId!=null">
+                and orderId=#{order.orderId}
             </if>
-            <if test="userId!=null">
-                and userId=#{userId}
+            <if test="order.userId!=null">
+                and userId=#{order.userId}
             </if>
-            <if test="productId!=null">
-                and `order`.productId=#{productId}
+            <if test="order.productId!=null">
+                and `order`.productId=#{order.productId}
             </if>
-            <if test="orderState!=null">
-                and orderState=#{orderState}
+            <if test="order.orderState!=null">
+                and orderState=#{order.orderState}
             </if>
-            <if test="orderDate!=null">
-                and orderDate=#{orderDate}
+            <if test="order.orderDate!=null">
+                and orderDate=#{order.orderDate}
             </if>
-            <if test="orderMoney!=null">
-                and orderMoney=#{orderMoney}
+            <if test="order.orderMoney!=null">
+                and orderMoney=#{order.orderMoney}
             </if>
         </where>
     </select>
@@ -147,23 +147,23 @@
         update `order`
         set orderState=#{newState}
         <where>
-            <if test="orderId!=null">
-                orderId=#{orderId}
+            <if test="order.orderId!=null">
+                orderId=#{order.orderId}
             </if>
-            <if test="userId!=null">
-                and userId=#{userId}
+            <if test="order.userId!=null">
+                and userId=#{order.userId}
             </if>
-            <if test="productId!=null">
-                and productId=#{productId}
+            <if test="order.productId!=null">
+                and productId=#{order.productId}
             </if>
-            <if test="orderState!=null">
-                and orderState=#{orderState}
+            <if test="order.orderState!=null">
+                and orderState=#{order.orderState}
             </if>
-            <if test="orderDate!=null">
-                and orderDate=#{orderDate}
+            <if test="order.orderDate!=null">
+                and orderDate=#{order.orderDate}
             </if>
-            <if test="orderMoney!=null">
-                and orderMoney=#{orderMoney}
+            <if test="order.orderMoney!=null">
+                and orderMoney=#{order.orderMoney}
             </if>
         </where>
     </update>
