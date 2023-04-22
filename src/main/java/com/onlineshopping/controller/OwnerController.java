@@ -1,5 +1,6 @@
 package com.onlineshopping.controller;
 
+import com.onlineshopping.model.dto.ProductDTO;
 import com.onlineshopping.model.dto.ShopRegisterDTO;
 import com.onlineshopping.model.vo.*;
 import com.onlineshopping.service.ProductService;
@@ -24,7 +25,7 @@ public class OwnerController {
     public CommonResult shopRegister(@RequestBody ShopRegisterFVO shopRegisterFVO, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            shopService.shopRegister(new ShopRegisterDTO(shopRegisterFVO), request, response);
+            shopService.shopRegisterOrUpdate(new ShopRegisterDTO(shopRegisterFVO), request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
@@ -36,38 +37,87 @@ public class OwnerController {
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public CommonResult getShopInfo(HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
-        ShopInfoVO shopInfoVO;
         try {
-            shopInfoVO = shopService.getInfo(request, response);
+            cm.setObject(shopService.myShopInfo(request,response));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
         }
         cm.setSuccess(true);
-        cm.setObject(shopInfoVO);
         return cm;
     }
 
     @RequestMapping(value = "/product/list", method = RequestMethod.GET)
     public CommonResult getShopProducts(Integer page, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
-        ProductsInfoVO productsInfoVO;
         try {
-            productsInfoVO = productService.getProductsInfo(page, request, response);
+            cm.setObject(productService.getMyProducts(page, request, response));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
         }
         cm.setSuccess(true);
-        cm.setObject(productsInfoVO);
         return cm;
     }
 
     @RequestMapping(value = "/product/add", method = RequestMethod.POST)
-    public CommonResult addShopProducts(@RequestBody ProductAddFVO productAddFVO, HttpServletRequest request, HttpServletResponse response) {
+    public CommonResult addProduct(@RequestBody ProductAddFVO productAddFVO,HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            productService.addProduct(productAddFVO, request, response);
+            productService.addProduct(new ProductDTO(productAddFVO),request,response);
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
+        return cm;
+    }
+
+    @RequestMapping(value = "/product/info", method = RequestMethod.GET)
+    public CommonResult getShopProductInfo(Integer productId, HttpServletRequest request, HttpServletResponse response) {
+        CommonResult cm = new CommonResult(false);
+        try {
+            cm.setObject(productService.getMyProductInfo(productId, request, response));
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
+        return cm;
+    }
+
+    @RequestMapping(value = "/product/info/edit", method = RequestMethod.POST)
+    public CommonResult editProductInfo(@RequestBody ProductAddFVO productAddFVO,HttpServletRequest request, HttpServletResponse response) {
+        CommonResult cm = new CommonResult(false);
+        try {
+            productService.updateProductInfo(new ProductDTO(productAddFVO),request,response);
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
+        return cm;
+    }
+
+    @RequestMapping(value = "/product/image/add", method = RequestMethod.POST)
+    public CommonResult addProductImage(@RequestBody ImgAddFVO imgAddFVO, HttpServletRequest request, HttpServletResponse response) {
+        CommonResult cm = new CommonResult(false);
+        try {
+            productService.addProductImage(imgAddFVO.getProductId(), imgAddFVO.getImage(),request,response);
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
+        cm.setObject(null);
+        return cm;
+    }
+
+    @RequestMapping(value = "/product/image/delete", method = RequestMethod.GET)
+    public CommonResult deleteProductImage(Integer imageId, HttpServletRequest request, HttpServletResponse response) {
+        CommonResult cm = new CommonResult(false);
+        try {
+            productService.deleteProductImage(imageId, request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
@@ -78,7 +128,7 @@ public class OwnerController {
     }
 
     @RequestMapping(value = "/product/delete", method = RequestMethod.GET)
-    public CommonResult deleteShopProducts(Integer productId, HttpServletRequest request, HttpServletResponse response) {
+    public CommonResult deleteProduct(Integer productId, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
             productService.deleteProduct(productId, request, response);
@@ -91,11 +141,11 @@ public class OwnerController {
         return cm;
     }
 
-    @RequestMapping(value = "/commit", method = RequestMethod.GET)
-    public CommonResult submitMyShop(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public CommonResult deleteShop(HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            shopService.shopSubmit(request, response);
+            shopService.deleteMyShop(request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

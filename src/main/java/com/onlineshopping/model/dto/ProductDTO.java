@@ -1,6 +1,7 @@
 package com.onlineshopping.model.dto;
 
 import com.onlineshopping.model.entity.Product;
+import com.onlineshopping.model.vo.ProductAddFVO;
 import com.onlineshopping.util.ConstantUtil;
 
 public class ProductDTO {
@@ -61,7 +62,14 @@ public class ProductDTO {
         this.productPrice = productPrice;
     }
 
-    public Product changeToProduct(){
-        return new Product(this.productId,null,this.productName, ConstantUtil.PRODUCT_IN_INSPECTION,this.productIntro,this.productPrice);
+    public ProductDTO(ProductAddFVO productAddFVO) {
+        this.productId = productAddFVO.getProductId();
+        this.productIntro = productAddFVO.getProductIntro();
+        this.productName = productAddFVO.getProductName();
+        this.productPrice = productAddFVO.getProductPrice();
+    }
+
+    public Product changeToProduct() {
+        return new Product(this.productId, null, this.productName, ConstantUtil.PRODUCT_IN_INSPECTION, this.productIntro, this.productPrice);
     }
 }
