@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface UserMapper {
     List<User> selectUsersBySingleAttr(@Param("fieldName") String name, @Param("fieldValue") Object value);
-
     void insertUser(User user);
+    void updateUserInfo(User user);
 }

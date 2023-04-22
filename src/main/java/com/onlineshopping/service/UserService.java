@@ -1,6 +1,8 @@
 package com.onlineshopping.service;
 
+import com.onlineshopping.model.dto.UserInfoEditDTO;
 import com.onlineshopping.model.dto.UserLoginDTO;
+import com.onlineshopping.model.dto.UserPwdEditDTO;
 import com.onlineshopping.model.dto.UserRegisterDTO;
 import com.onlineshopping.model.vo.UserInfoVO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,4 +32,16 @@ public interface UserService {
      * @Author: Lin-Yanjun
      */
     UserInfoVO info(HttpServletRequest request, HttpServletResponse response);
+
+    /**
+     * @Description: 修改用户信息。若都检查通过则若都有效将用户信息更新，并返回一个新token。
+     * @Author: Lin-Yanjun
+     */
+    String infoEdit(HttpServletRequest request, HttpServletResponse response, UserInfoEditDTO userInfoEditDTO);
+
+    /**
+     * @Description: 修改用户密码。若都检查通过则若都有效将用户信息更新，并返回一个新token。
+     * @Author: Lin-Yanjun
+     */
+    String pwdEdit(HttpServletRequest request, HttpServletResponse response, UserPwdEditDTO userPwdEditDTO);
 }
