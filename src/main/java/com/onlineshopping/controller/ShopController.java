@@ -12,55 +12,62 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/shop")
+@RequestMapping("/api/visit")
 public class ShopController {
     @Resource
     ShopService shopService;
     @Resource
     ProductService productService;
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/product/list", method = RequestMethod.GET)
     public CommonResult display(Integer page) {
         CommonResult cm = new CommonResult(false);
-        ShopsDisplayVO shopsDisplayVO;
         try {
-            shopsDisplayVO = shopService.display(page);
+            cm.setObject(productService.displayAllProductsOnShelf(page));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
         }
         cm.setSuccess(true);
-        cm.setObject(shopsDisplayVO);
         return cm;
     }
 
-    @RequestMapping(value = "/info", method = RequestMethod.GET)
-    public CommonResult detail(Integer shopId) {
+    @RequestMapping(value = "/product/info", method = RequestMethod.GET)
+    public CommonResult detail(Integer productId) {
         CommonResult cm = new CommonResult(false);
-        ShopDisplayVO shopDisplayVO;
         try {
-            shopDisplayVO = shopService.displayDetail(shopId);
+            cm.setObject(productService.displayProductInfo(productId));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
         }
         cm.setSuccess(true);
-        cm.setObject(shopDisplayVO);
         return cm;
     }
 
-    @RequestMapping(value = "/product/list", method = RequestMethod.GET)
-    public CommonResult displayProduct(Integer page, Integer shopId) {
+    @RequestMapping(value = "/shop/info", method = RequestMethod.GET)
+    public CommonResult displayProduct(Integer shopId) {
         CommonResult cm = new CommonResult(false);
-        ProductsDisplayVO productsDisplayVO;
         try {
-            productsDisplayVO = productService.displayProducts(page, shopId);
+            cm.setObject(shopService.displayShopInfo(shopId));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
         }
         cm.setSuccess(true);
-        cm.setObject(productsDisplayVO);
+        return cm;
+    }
+
+    @RequestMapping(value = "/shop/product/list", method = RequestMethod.GET)
+    public CommonResult displayShopProducts(Integer shopId,Integer page) {
+        CommonResult cm = new CommonResult(false);
+        try {
+            cm.setObject(productService.displayProductsByShopId(page,shopId));
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
         return cm;
     }
 }

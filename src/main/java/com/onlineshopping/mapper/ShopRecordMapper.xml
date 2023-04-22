@@ -4,7 +4,7 @@
 <mapper namespace="com.onlineshopping.mapper.ShopRecordMapper">
     <select id="selectShopRecords" resultType="ShopRecord">
         select *
-        from shoprecord
+        from shopRecord
         <where>
             <if test="shopRecordId!=null">
                 shopRecordId=#{shopRecordId}
@@ -29,7 +29,7 @@
 
     <select id="countShopRecords" resultType="int">
         select count(*)
-        from shoprecord
+        from shopRecord
         <where>
             <if test="shopRecordId!=null">
                 shopRecordId=#{shopRecordId}
@@ -55,7 +55,7 @@
     </insert>
 
     <update id="updateShopRecordState">
-        update shoprecord
+        update shopRecord
         set shopRecordState=#{newState}
         <where>
             <if test="shopRecordId!=null">
@@ -77,7 +77,7 @@
     </update>
 
     <update id="updateShopRecordById">
-        update shoprecord
+        update shopRecord
         <set>
             <if test="shopId!=null">
                 shopId=#{shopId}

@@ -4,7 +4,7 @@
 <mapper namespace="com.onlineshopping.mapper.ProductRecordMapper">
     <select id="selectProductRecords" resultType="ProductRecord">
         select *
-        from productrecord
+        from productRecord
         <where>
             <if test="productRecordId!=null">
                 productRecordId=#{productRecordId}
@@ -29,7 +29,7 @@
 
     <select id="countProductRecords" resultType="int">
         select count(*)
-        from productrecord
+        from productRecord
         <where>
             <if test="productRecordId!=null">
                 productRecordId=#{productRecordId}
@@ -50,12 +50,12 @@
     </select>
 
     <insert id="insertProductRecord">
-        insert into productrecord (productId, productRecordDate, productRecordComment, productRecordState)
+        insert into productRecord (productId, productRecordDate, productRecordComment, productRecordState)
         values (#{productId}, #{productRecordDate}, #{productRecordComment}, #{productRecordState})
     </insert>
 
     <update id="updateProductRecordState">
-        update productrecord
+        update productRecord
         set productRecordState=#{newState}
         <where>
             <if test="productRecordId!=null">
@@ -77,7 +77,7 @@
     </update>
 
     <update id="updateProductRecordById">
-        update productrecord
+        update productRecord
         <set>
             <if test="productId!=null">
                 productId=#{productId}
