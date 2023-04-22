@@ -80,16 +80,16 @@
         update shoprecord
         <set>
             <if test="shopId!=null">
-                and shopId=#{shopId}
+                shopId=#{shopId}
             </if>
             <if test="shopRecordDate!=null">
-                and shopRecordDate=#{shopRecordDate}
+                ,shopRecordDate=#{shopRecordDate}
             </if>
             <if test="shopRecordComment!=null">
-                and shopRecordComment=#{shopRecordComment}
+                , shopRecordComment=#{shopRecordComment}
             </if>
             <if test="shopRecordState!=null">
-                and shopRecordState=#{shopRecordState}
+                , shopRecordState=#{shopRecordState}
             </if>
         </set>
         where shopRecordId=#{shopRecordId}

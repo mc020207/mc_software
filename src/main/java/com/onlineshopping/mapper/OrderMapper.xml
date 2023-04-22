@@ -131,16 +131,16 @@
                 userId=#{userId}
             </if>
             <if test="productId!=null">
-                and productId=#{productId}
+                , productId=#{productId}
             </if>
             <if test="orderState!=null">
-                and orderState=#{orderState}
+                , orderState=#{orderState}
             </if>
             <if test="orderDate!=null">
-                and orderDate=#{orderDate}
+                , orderDate=#{orderDate}
             </if>
             <if test="orderMoney!=null">
-                and orderMoney=#{orderMoney}
+                , orderMoney=#{orderMoney}
             </if>
         </set>
         where orderId=#{orderId}

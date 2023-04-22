@@ -89,16 +89,16 @@
                 shopName = #{shopName},
             </if>
             <if test="shopIntro!=null">
-                shopIntro = #{shopIntro},
+                ,shopIntro = #{shopIntro},
             </if>
             <if test="shopAddr!=null">
-                shopAddr = #{shopAddr},
+                ,shopAddr = #{shopAddr},
             </if>
             <if test="shopRegisterFund!=null">
-                shopRegisterFund = #{shopRegisterFund},
+                ,shopRegisterFund = #{shopRegisterFund},
             </if>
             <if test="shopState!=null">
-                shopState=#{shopState}
+                ,shopState=#{shopState}
             </if>
         </set>
         <where>

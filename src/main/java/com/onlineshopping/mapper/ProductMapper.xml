@@ -64,10 +64,10 @@
         update `product`
         <set>
             <if test="productName!=null">
-                and productName=#{productName}
+                productName=#{productName}
             </if>
             <if test="productIntro!=null">
-                and productIntro=#{productIntro}
+                ,productIntro=#{productIntro}
             </if>
         </set>
         where productId=#{productId}

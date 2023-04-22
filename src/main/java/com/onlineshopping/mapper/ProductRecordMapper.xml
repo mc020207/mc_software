@@ -80,16 +80,16 @@
         update productrecord
         <set>
             <if test="productId!=null">
-                and productId=#{productId}
+                productId=#{productId}
             </if>
             <if test="productRecordDate!=null">
-                and productRecordDate=#{productRecordDate}
+                ,productRecordDate=#{productRecordDate}
             </if>
             <if test="productRecordComment!=null">
-                and productRecordComment=#{productRecordComment}
+                ,productRecordComment=#{productRecordComment}
             </if>
             <if test="productRecordState!=null">
-                and productRecordState=#{productRecordState}
+                ,productRecordState=#{productRecordState}
             </if>
         </set>
         where productRecordId=#{productRecordId}
