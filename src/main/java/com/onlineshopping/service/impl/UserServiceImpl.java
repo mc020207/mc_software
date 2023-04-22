@@ -5,6 +5,7 @@ import com.onlineshopping.mapper.AccountMapper;
 import com.onlineshopping.mapper.UserMapper;
 import com.onlineshopping.model.dto.UserInfoEditDTO;
 import com.onlineshopping.model.dto.UserLoginDTO;
+import com.onlineshopping.model.dto.UserPwdEditDTO;
 import com.onlineshopping.model.dto.UserRegisterDTO;
 import com.onlineshopping.model.entity.Account;
 import com.onlineshopping.model.entity.User;
@@ -165,5 +166,31 @@ public class UserServiceImpl implements UserService {
         String userPwd = JwtUserUtil.getInfo(token, "userPwd");
         int expiryMS = 24 * 60 * 60 * 1000; // 1天
         return JwtUserUtil.sign(String.valueOf(userId), userRole, userName, userPwd, expiryMS);
+    }
+
+    @Override
+    public String pwdEdit(HttpServletRequest request, HttpServletResponse response, UserPwdEditDTO userPwdEditDTO) {
+        // 获取token
+        String token = JwtUserUtil.getToken(request);
+        // 获取字段
+        String userOldPwd = userPwdEditDTO.getUserOldPwd();
+        String userNewPwd = userPwdEditDTO.getUserNewPwd();
+        // 检查原密码
+        String userPwd = JwtUserUtil.getInfo(token, "userPwd");
+        if (!userPwd.equals(userOldPwd))
+            throw new ServiceException("原密码输入错误");
+        // 检查新密码
+        FormatUtil.checkUserPwd(userNewPwd);
+        // 修改User
+        Integer userId = Integer.valueOf(JwtUserUtil.getInfo(token, "userId"));
+        User user = new User();
+        user.setUserId(userId);
+        user.setUserPwd(userNewPwd);
+        userMapper.updateUserInfo(user);
+        // 返回token
+        String userRole = JwtUserUtil.getInfo(token, "userRole");
+        String userName = JwtUserUtil.getInfo(token, "userName");
+        int expiryMS = 24 * 60 * 60 * 1000; // 1天
+        return JwtUserUtil.sign(String.valueOf(userId), userRole, userName, userNewPwd, expiryMS);
     }
 }

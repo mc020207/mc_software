@@ -17,9 +17,20 @@
 
     <update id="updateUserInfo">
         update `user`
-        set userName = #{userName}
-            and userPhone = #{userPhone}
-            and userEmail = #{userEmail}
+        <set>
+            <if test="userName!=null">
+                userName = #{userName},
+            </if>
+            <if test="userPhone!=null">
+                userPhone = #{userPhone},
+            </if>
+            <if test="userEmail!=null">
+                userEmail = #{userEmail},
+            </if>
+            <if test="userPwd!=null">
+                userPwd = #{userPwd}
+            </if>
+        </set>
         where userId = #{userId}
     </update>
 
