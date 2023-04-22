@@ -11,5 +11,5 @@ public interface ProductRecordMapper {
     Integer countProductRecords(ProductRecord productRecord);
     void insertProductRecord(ProductRecord productRecord);
     void updateProductRecordState(ProductRecord productRecord,Integer newState);
-    void updateProductById(ProductRecord productRecord);
+    void updateProductRecordById(ProductRecord productRecord);
 }

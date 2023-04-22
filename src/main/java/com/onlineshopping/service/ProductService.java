@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ProductService {
 
+
+    public boolean productCanDelete(Integer productId);
     /**
      * @Description: 商户向自己已注册的商店添加商品
      * @Author: mc
@@ -56,6 +58,6 @@ public interface ProductService {
 
     void PassProduct(Integer productId);
 
-    void RejectProduct(Integer productId);
+    void RejectProduct(Integer productId,String reason);
 
 }

@@ -12,6 +12,21 @@ public class ShopDisplayVO {
     Double shopRegisterFund;
     Date shopRegisterDate;
 
+    @Override
+    public String toString() {
+        return "ShopDisplayVO{" +
+                "shopId=" + shopId +
+                ", shopName='" + shopName + '\'' +
+                ", shopIntro='" + shopIntro + '\'' +
+                ", shopAddr='" + shopAddr + '\'' +
+                ", shopRegisterFund=" + shopRegisterFund +
+                ", shopRegisterDate=" + shopRegisterDate +
+                '}';
+    }
+
+    public ShopDisplayVO() {
+    }
+
     public ShopDisplayVO(Shop shop) {
         this.shopId = shop.getShopId();
         this.shopName = shop.getShopName();

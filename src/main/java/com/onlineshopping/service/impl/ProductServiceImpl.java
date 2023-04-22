@@ -1,21 +1,14 @@
 package com.onlineshopping.service.impl;
 
 import com.onlineshopping.exception.ServiceException;
-import com.onlineshopping.mapper.OrderMapper;
-import com.onlineshopping.mapper.ProductImgMapper;
-import com.onlineshopping.mapper.ProductMapper;
-import com.onlineshopping.mapper.ShopMapper;
+import com.onlineshopping.mapper.*;
 import com.onlineshopping.model.dto.ProductDTO;
-import com.onlineshopping.model.entity.Order;
-import com.onlineshopping.model.entity.Product;
-import com.onlineshopping.model.entity.ProductImg;
-import com.onlineshopping.model.entity.Shop;
+import com.onlineshopping.model.entity.*;
 import com.onlineshopping.model.vo.*;
 import com.onlineshopping.service.ProductService;
 import com.onlineshopping.util.ConstantUtil;
 import com.onlineshopping.util.FormatUtil;
 import com.onlineshopping.util.JwtUserUtil;
-import com.onlineshopping.util.ListUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,6 +34,8 @@ public class ProductServiceImpl implements ProductService {
     OrderMapper orderMapper;
     @Resource
     ProductImgMapper productImgMapper;
+    @Resource
+    ProductRecordMapper productRecordMapper;
     public Shop getShop(HttpServletRequest request) {
         String token = JwtUserUtil.getToken(request);
         Integer userId = Integer.parseInt(JwtUserUtil.getInfo(token, "userId"));
@@ -66,6 +62,21 @@ public class ProductServiceImpl implements ProductService {
         return Objects.equals(shop.getShopId(), product.getShopId());
     }
 
+    public void addProductRecord(Integer productId){
+        ProductRecord condition=new ProductRecord();
+        condition.setProductId(productId);
+        condition.setProductRecordState(ConstantUtil.RECORD_NOT_SOLVE);
+        List<ProductRecord> productRecords = productRecordMapper.selectProductRecords(condition, 0, ConstantUtil.PAGE_SIZE);
+        if (productRecords==null || productRecords.size()==0){
+            ProductRecord productRecord = new ProductRecord(null,productId,new Date(System.currentTimeMillis()),null,ConstantUtil.RECORD_NOT_SOLVE);
+            productRecordMapper.insertProductRecord(productRecord);
+        }else{
+            ProductRecord productRecord = productRecords.get(0);
+            productRecord.setProductRecordDate(new Date(System.currentTimeMillis()));
+            productRecordMapper.updateProductRecordById(productRecord);
+        }
+    }
+
     public ProductDisplayVO getProductDisplay(Product product){
         ProductDisplayVO productDisplayVO = new ProductDisplayVO(product);
         List<ProductImg> productImgs = productImgMapper.selectProductImgByProductId(product.getProductId());
@@ -74,6 +85,7 @@ public class ProductServiceImpl implements ProductService {
             productImgVOList.add(new ProductImgVO(productImg));
         }
         productDisplayVO.setImages(productImgVOList);
+        return productDisplayVO;
     }
 
     public ProductsDisplayVO getProductDisplayList(Product condition,Integer startRow,Integer num){
@@ -93,7 +105,7 @@ public class ProductServiceImpl implements ProductService {
         FormatUtil.checkNotNull("productName", productName);
         Shop shop = getShop(request);
         if (!Objects.equals(shop.getShopState(), ConstantUtil.SHOP_OPEN)){
-            throw new ServiceException("商店为开店状态时候才可以添加商品")
+            throw new ServiceException("商店为开店状态时候才可以添加商品");
         }
         Product product = productDTO.changeToProduct();
         product.setShopId(shop.getShopId());
@@ -127,6 +139,7 @@ public class ProductServiceImpl implements ProductService {
         Product product=productDTO.changeToProduct();
         product.setShopId(shop.getShopId());
         productMapper.updateProductInfo(product);
+        addProductRecord(product.getProductId());
     }
 
     @Override
@@ -156,6 +169,7 @@ public class ProductServiceImpl implements ProductService {
         }
         String imagePath = "/static/article_image/" + fileName;
         productImgMapper.insertProductImg(new ProductImg(null,productId,imagePath));
+        addProductRecord(productId);
     }
 
     @Override
@@ -169,6 +183,7 @@ public class ProductServiceImpl implements ProductService {
             throw new ServiceException("不得修改他人的图片");
         }
         productImgMapper.deleteProductImgByProductImgId(imageId);
+        addProductRecord(productImg.getProductId());
     }
 
     @Override
@@ -264,11 +279,32 @@ public class ProductServiceImpl implements ProductService {
         }
         product.setProductState(ConstantUtil.PRODUCT_ON_SHELF);
         productMapper.updateProductInfo(product);
+        ProductRecord productRecord = new ProductRecord();
+        productRecord.setProductRecordState(ConstantUtil.RECORD_SOLVE);
+        productRecord.setProductRecordDate(new Date(System.currentTimeMillis()));
+        productRecord.setProductId(productId);
+        productRecord.setProductRecordComment("同意");
+        productRecordMapper.updateProductRecordById(productRecord);
     }
 
     @Override
     @Transactional
-    public void RejectProduct(Integer productId) {
-
+    public void RejectProduct(Integer productId,String reason) {
+        Product product = productMapper.selectProductById(productId);
+        FormatUtil.checkNotNull("reason",reason);
+        if (product==null){
+            throw new ServiceException("没有这个商品");
+        }
+        if (!Objects.equals(product.getProductState(), ConstantUtil.PRODUCT_IN_INSPECTION)){
+            throw new ServiceException("该商品不是正在审核的商品");
+        }
+        product.setProductState(ConstantUtil.PRODUCT_REJECTED);
+        productMapper.updateProductInfo(product);
+        ProductRecord productRecord = new ProductRecord();
+        productRecord.setProductRecordComment("拒绝:"+reason);
+        productRecord.setProductRecordState(ConstantUtil.RECORD_SOLVE);
+        productRecord.setProductRecordDate(new Date(System.currentTimeMillis()));
+        productRecord.setProductId(productId);
+        productRecordMapper.updateProductRecordById(productRecord);
     }
 }

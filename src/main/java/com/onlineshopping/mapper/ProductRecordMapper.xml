@@ -76,7 +76,7 @@
         </where>
     </update>
 
-    <update id="updateProductById">
+    <update id="updateProductRecordById">
         update productrecord
         <set>
             <if test="productId!=null">

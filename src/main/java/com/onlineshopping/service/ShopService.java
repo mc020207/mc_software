@@ -7,35 +7,34 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface ShopService {
-    /**
-     * @Description: 分页查询已开放商店的简略信息，page从1开始
-     * @Author: Lin-Yanjun
-     */
-    ShopsDisplayVO display(Integer page);
 
     /**
      * @Description: 用户查询shopId所对应的以开放商店的详细信息
      * @Author: Lin-Yanjun
      */
-    ShopDisplayVO displayDetail(Integer shopId);
+    ShopDisplayVO displayShopInfo(Integer shopId);
+
+    void shopRegisterOrUpdate(ShopRegisterDTO shopRegisterDTO, HttpServletRequest request, HttpServletResponse response);
 
     /**
      * @Description: 商家查询自身店铺情况
      * @Author: mc
      */
-    ShopInfoVO getInfo(HttpServletRequest request, HttpServletResponse response);
+    ShopDisplayVO myShopInfo(HttpServletRequest request, HttpServletResponse response);
+
+    void deleteMyShop(HttpServletRequest request, HttpServletResponse response);
 
     /**
      * @Description: 管理员查看待审核商店名单
      * @Author: mc
      */
-    ShopsInspectVO inspect(Integer page);
+    ShopsDisplayVO inspectShopsRegister(Integer page);
 
     /**
      * @Description: 管理员查看某待审核商店详情
      * @Author: mc
      */
-    ShopInspectVO inspectDetail(Integer shopId);
+    ShopDisplayVO inspectShopDetail(Integer shopId);
 
     /**
      * @Description: 管理员同意某商店的申请
@@ -47,17 +46,20 @@ public interface ShopService {
      * @Description: 管理员拒绝某商店的申请
      * @Author: mc
      */
-    void rejectShopRegister(Integer shopId);
+    void rejectShopRegister(Integer shopId,String reason);
+
+    ShopsDisplayVO inspectShopsDelete(Integer page);
 
     /**
-     * @Description: 商户注册一个商店
+     * @Description: 管理员同意某商店的申请
      * @Author: mc
      */
-    void shopRegister(ShopRegisterDTO shopRegisterDTO, HttpServletRequest request, HttpServletResponse response);
+    void approveShopDelete(Integer shopId);
 
     /**
-     * @Description: 商户提交审核
+     * @Description: 管理员拒绝某商店的申请
      * @Author: mc
      */
-    void shopSubmit(HttpServletRequest request, HttpServletResponse response);
+    void rejectShopDelete(Integer shopId,String reason);
+
 }

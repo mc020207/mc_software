@@ -30,6 +30,11 @@
         </if>
     </select>
 
+    <select id="selectOrderById" resultType="Order">
+        select * from `order`
+        where orderId=#{orderId}
+    </select>
+
     <select id="countOrders" resultType="int">
         select count(*)
         from `order`
@@ -85,5 +90,10 @@
         </where>
     </update>
 
+    <delete id="deleteOrderById">
+        delete
+        from `order`
+        where orderId=#{orderId};
+    </delete>
 
 </mapper>
