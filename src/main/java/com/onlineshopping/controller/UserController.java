@@ -1,5 +1,6 @@
 package com.onlineshopping.controller;
 
+import com.onlineshopping.model.dto.UserInfoEditDTO;
 import com.onlineshopping.model.dto.UserLoginDTO;
 import com.onlineshopping.model.dto.UserRegisterDTO;
 import com.onlineshopping.model.vo.*;
@@ -74,6 +75,23 @@ public class UserController {
         }
         cm.setSuccess(true);
         cm.setObject(userInfoVO);
+        return cm;
+    }
+
+    @RequestMapping(value = "/info/edit", method = RequestMethod.POST)
+    public CommonResult infoEdit(HttpServletRequest request, HttpServletResponse response,
+                                 @RequestBody UserInfoEditFVO userInfoEditFVO) {
+        CommonResult cm = new CommonResult(false);
+        UserInfoEditDTO userInfoEditDTO = new UserInfoEditDTO(userInfoEditFVO);
+        String token;
+        try {
+            token = userService.infoEdit(request, response, userInfoEditDTO);
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
+        cm.setObject(token);
         return cm;
     }
 }

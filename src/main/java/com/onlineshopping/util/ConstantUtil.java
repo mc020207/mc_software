@@ -5,9 +5,22 @@ package com.onlineshopping.util;
  * @Author: Lin-Yanjun
  */
 public final class ConstantUtil {
+    // special accountId
+    public static final Integer ACCOUNT_DUMMY_ID = 0;
+    public static final Integer ACCOUNT_MIDDLE_ID = 1;
+    public static final Integer ACCOUNT_PROFIT_ID = 2;
+    // accountState
+    public static final Integer ACCOUNT_IS_VALID = 0;
+    public static final Integer ACCOUNT_IS_DELETED = 1;
+    // accountType
+    public static final Integer ACCOUNT_USER = 0;
+    public static final Integer ACCOUNT_SHOP = 1;
+    public static final Integer ACCOUNT_PROFIT = 2;
+    public static final Integer ACCOUNT_MIDDLE = 3;
+    public static final Integer ACCOUNT_DUMMY = 4;
+
     // shopState
     public static final Integer SHOP_DELETE = 4;
-
     public static final Integer SHOP_IN_DELETE_INSPECTION = 3;
     public static final Integer SHOP_OPEN = 2;
     public static final Integer SHOP_REJECTED = 1;

@@ -15,4 +15,12 @@
         values (#{userRole}, #{userName}, #{userPhone}, #{userIdCard}, #{userEmail}, #{userPwd})
     </insert>
 
+    <update id="updateUserInfo">
+        update `user`
+        set userName = #{userName}
+            and userPhone = #{userPhone}
+            and userEmail = #{userEmail}
+        where userId = #{userId}
+    </update>
+
 </mapper>
