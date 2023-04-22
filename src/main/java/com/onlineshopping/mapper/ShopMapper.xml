@@ -9,7 +9,7 @@
     </select>
     <select id="selectShopByUserId" resultType="Shop">
         select * from shop
-        where userId=#{userId}
+        where userId=#{userId} and shopState!=4
     </select>
 
     <select id="selectShops" resultType="Shop">
@@ -86,16 +86,16 @@
         update `shop`
         <set>
             <if test="shopName!=null">
-                shopName = #{shopName},
+                shopName = #{shopName}
             </if>
             <if test="shopIntro!=null">
-                ,shopIntro = #{shopIntro},
+                ,shopIntro = #{shopIntro}
             </if>
             <if test="shopAddr!=null">
-                ,shopAddr = #{shopAddr},
+                ,shopAddr = #{shopAddr}
             </if>
             <if test="shopRegisterFund!=null">
-                ,shopRegisterFund = #{shopRegisterFund},
+                ,shopRegisterFund = #{shopRegisterFund}
             </if>
             <if test="shopState!=null">
                 ,shopState=#{shopState}

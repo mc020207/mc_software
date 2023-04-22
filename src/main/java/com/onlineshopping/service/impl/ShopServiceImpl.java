@@ -70,11 +70,11 @@ public class ShopServiceImpl implements ShopService {
         return shop;
     }
 
-    private Shop getMyShop(HttpServletRequest request) {
+    private Shop getMyShop(HttpServletRequest request,boolean canNull) {
         String token = JwtUserUtil.getToken(request);
         Integer userId = Integer.valueOf(JwtUserUtil.getInfo(token, "userId"));
         Shop shop = shopMapper.selectShopByUserId(userId);
-        if (shop == null) {
+        if (!canNull&&shop == null) {
             throw new ServiceException("该用户没有商店");
         }
         return shop;
@@ -99,21 +99,26 @@ public class ShopServiceImpl implements ShopService {
     @Override
     @Transactional
     public void shopRegisterOrUpdate(ShopRegisterDTO shopRegisterDTO, HttpServletRequest request, HttpServletResponse response) {
-        String token = JwtUserUtil.getToken(request);
-        Integer userId = Integer.valueOf(JwtUserUtil.getInfo(token, "userId"));
-        Shop shop = shopMapper.selectShopByUserId(userId);
+        Shop shop=getMyShop(request,true);
         if (shop != null && !Objects.equals(shop.getShopState(), ConstantUtil.SHOP_REJECTED)) {
             throw new ServiceException("申请中或已开放的商店不允许修改");
         }
         if (shopRegisterDTO.getShopRegisterFund() < ConstantUtil.MIN_SHOP_REGISTER_FUND) {
             throw new ServiceException("启动资金不足");
         }
+        String token = JwtUserUtil.getToken(request);
+        Integer userId = Integer.valueOf(JwtUserUtil.getInfo(token, "userId"));
         if (shop == null) {
             shop = new Shop();
+            shop.changeByShopDTO(shopRegisterDTO);
+            shop.setUserId(userId);
+            shopMapper.insertShop(shop);
+            shop = shopMapper.selectShopByUserId(userId);
+        }else{
+            shop.changeByShopDTO(shopRegisterDTO);
+            shop.setUserId(userId);
+            shopMapper.updateShopInfo(shop);
         }
-        shop.changeByShopDTO(shopRegisterDTO);
-        shop.setUserId(userId);
-        shopMapper.updateShopInfo(shop);
         ShopRecord shopRecord = new ShopRecord(null, shop.getShopId(), new Date(System.currentTimeMillis()), "请求开店", ConstantUtil.RECORD_NOT_SOLVE);
         shopRecordMapper.insertShopRecord(shopRecord);
         // 此处需要一个转账的接口：虚拟账户 --注册资金--> 中间账户
@@ -122,13 +127,13 @@ public class ShopServiceImpl implements ShopService {
     @Override
     @Transactional
     public ShopDisplayVO myShopInfo(HttpServletRequest request, HttpServletResponse response) {
-        Shop myShop = getMyShop(request);
+        Shop myShop = getMyShop(request,false);
         return new ShopDisplayVO(myShop);
     }
 
     @Override
     public void deleteMyShop(HttpServletRequest request, HttpServletResponse response) {
-        Shop myShop = getMyShop(request);
+        Shop myShop = getMyShop(request,false);
         Product condition = new Product();
         condition.setShopId(myShop.getShopId());
         List<Product> products = productMapper.selectProducts(condition, null, null);
