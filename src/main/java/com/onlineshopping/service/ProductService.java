@@ -52,12 +52,12 @@ public interface ProductService {
      * @Description: 给管理员查看待审核的某个商店中的所有商品
      * @Author: mc
      */
-    ProductsDisplayVO InspectAllProducts(Integer page);
+    ProductsDisplayVO inspectAllProducts(Integer page);
 
     ProductDisplayVO inspectProductInfo(Integer productId);
 
-    void PassProduct(Integer productId);
+    void passProduct(Integer productId);
 
-    void RejectProduct(Integer productId,String reason);
+    void rejectProduct(Integer productId,String reason);
 
 }

@@ -17,13 +17,14 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.web.servlet.filter.OrderedHiddenHttpMethodFilter;
+import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.zip.CheckedOutputStream;
-
+@Service
 public class OrderServiceImpl implements OrderService {
     @Resource
     ProductMapper productMapper;
@@ -138,7 +139,7 @@ public class OrderServiceImpl implements OrderService {
         Order condition = new Order();
         condition.setOrderState(ConstantUtil.ORDER_NOT_RECEIVE);
         List<Order> orders = orderMapper.selectOrdersByShopId(condition, shop.getShopId(), (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
-        Integer totalNumber = orderMapper.countOrders(condition);
+        Integer totalNumber = orderMapper.countOrdersByShopId(condition, shop.getShopId());
         return new OrdersDisplayVO(getOrderDisplayVOList(orders),totalNumber);
     }
 

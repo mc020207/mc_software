@@ -10,7 +10,7 @@ public class ProductDisplayVO {
     private Integer shopId;
     private Double productPrice;
     private String productIntro;
-    private Integer productState
+    private Integer productState;
     private List<ProductImgVO> images;
 
     @Override

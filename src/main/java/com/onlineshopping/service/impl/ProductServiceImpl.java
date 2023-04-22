@@ -247,7 +247,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public ProductsDisplayVO InspectAllProducts(Integer page) {
+    public ProductsDisplayVO inspectAllProducts(Integer page) {
         FormatUtil.checkPositive("page", page);
         Product product = new Product();
         product.setProductState(ConstantUtil.PRODUCT_IN_INSPECTION);
@@ -269,7 +269,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void PassProduct(Integer productId) {
+    public void passProduct(Integer productId) {
         Product product = productMapper.selectProductById(productId);
         if (product==null){
             throw new ServiceException("没有这个商品");
@@ -289,7 +289,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void RejectProduct(Integer productId,String reason) {
+    public void rejectProduct(Integer productId,String reason) {
         Product product = productMapper.selectProductById(productId);
         FormatUtil.checkNotNull("reason",reason);
         if (product==null){

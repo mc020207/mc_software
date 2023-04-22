@@ -90,7 +90,7 @@
         </where>
     </select>
 
-    <select id="selectOrdersByShopId" resultType="int">
+    <select id="countOrdersByShopId" resultType="int">
         select count(*) from `order`,product,shop
         <where>
             `order`.productId=product.productId
@@ -114,9 +114,6 @@
                 and orderMoney=#{orderMoney}
             </if>
         </where>
-        <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
-            limit #{startRow},#{num}
-        </if>
     </select>
 
     <insert id="insertOrder">

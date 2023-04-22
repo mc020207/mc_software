@@ -11,7 +11,7 @@ public interface OrderMapper {
     List<Order> selectOrdersByShopId(Order order, Integer shopId ,Integer startRow, Integer num);
     Order selectOrderById(Integer orderId);
     Integer countOrders(Order order);
-    Integer countOrdersByShopId(Order order, Integer shopId ,Integer startRow, Integer num);
+    Integer countOrdersByShopId(Order order, Integer shopId);
 
     void insertOrder(Order order);
     void updateOrderInfo(Order order);
