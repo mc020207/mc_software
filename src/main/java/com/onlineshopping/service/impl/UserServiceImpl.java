@@ -112,7 +112,8 @@ public class UserServiceImpl implements UserService {
         String userPwd = userLoginDTO.getUserPwd();
         FormatUtil.checkNotNull("密码", userPwd);
         User user = userList.get(0);
-        if (!(user.getUserPwd().equals(DigestUtils.md5DigestAsHex(userPwd.getBytes()))))
+//        if (!(user.getUserPwd().equals(DigestUtils.md5DigestAsHex(userPwd.getBytes()))))
+        if (!(user.getUserPwd().equals(userPwd)))
             throw new ServiceException("密码错误");
         String userId = String.valueOf(user.getUserId());
         String userRole = String.valueOf(user.getUserRole());
