@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -156,9 +157,12 @@ public class ShopServiceImpl implements ShopService {
             } else if (Objects.equals(product.getProductState(), ConstantUtil.PRODUCT_IN_INSPECTION)) {
                 product.setProductState(ConstantUtil.PRODUCT_REJECTED);
                 ProductRecord productRecordCondition = new ProductRecord();
+                productRecordCondition.setProductId(product.getProductId());
+                productRecordCondition.setProductRecordState(ConstantUtil.PRODUCT_RECORD_NOT_SOLVE);
                 ProductRecord productRecord = productRecordMapper.selectProductRecords(productRecordCondition, 0, ConstantUtil.PAGE_SIZE).get(0);
                 productRecord.setProductRecordComment("商家申请删除商店");
                 productRecord.setProductRecordState(ConstantUtil.PRODUCT_RECORD_REJECT);
+                productRecord.setProductRecordDate(new Timestamp(System.currentTimeMillis()));
                 productRecordMapper.updateProductRecordById(productRecord);
                 productMapper.updateProductInfo(product);
             }
@@ -191,10 +195,12 @@ public class ShopServiceImpl implements ShopService {
         shopMapper.updateShopInfo(shop);
         ShopRecord condition = new ShopRecord();
         condition.setShopId(shopId);
+        condition.setShopRecordState(ConstantUtil.SHOP_RECORD_REGISTER_NOT_SOLVE);
         ShopRecord shopRecord = shopRecordMapper.selectShopRecords(condition, 0, ConstantUtil.PAGE_SIZE).get(0);
         shopRecord.setShopRecordComment("同意开张");
         shopRecord.setShopRecordState(ConstantUtil.SHOP_RECORD_REGISTER_PASS);
-        shopRecordMapper.updateShopById(shopRecord);
+        shopRecord.setShopRecordDate(new Timestamp(System.currentTimeMillis()));
+        shopRecordMapper.updateShopRecordById(shopRecord);
         // 此处需要一个转账的接口：中间账户 --注册资金--> 利润账户
         accountService.transfer(ConstantUtil.ACCOUNT_MIDDLE_ID, ConstantUtil.ACCOUNT_PROFIT_ID, shop.getShopRegisterFund());
         // 此处需要给商店开一个账户
@@ -214,10 +220,12 @@ public class ShopServiceImpl implements ShopService {
         shopMapper.updateShopInfo(shop);
         ShopRecord condition = new ShopRecord();
         condition.setShopId(shopId);
+        condition.setShopRecordState(ConstantUtil.SHOP_RECORD_REGISTER_NOT_SOLVE);
         ShopRecord shopRecord = shopRecordMapper.selectShopRecords(condition, 0, ConstantUtil.PAGE_SIZE).get(0);
         shopRecord.setShopRecordComment("拒绝开张:" + reason);
         shopRecord.setShopRecordState(ConstantUtil.SHOP_RECORD_REGISTER_REJECT);
-        shopRecordMapper.updateShopById(shopRecord);
+        shopRecord.setShopRecordDate(new Timestamp(System.currentTimeMillis()));
+        shopRecordMapper.updateShopRecordById(shopRecord);
         // 此处需要一个转账的接口：中间账户 --注册资金--> 虚拟账户
         accountService.transfer(ConstantUtil.ACCOUNT_MIDDLE_ID, ConstantUtil.ACCOUNT_DUMMY_ID, shop.getShopRegisterFund());
     }
@@ -238,10 +246,12 @@ public class ShopServiceImpl implements ShopService {
         shopMapper.updateShopInfo(shop);
         ShopRecord condition = new ShopRecord();
         condition.setShopId(shopId);
+        condition.setShopRecordState(ConstantUtil.SHOP_RECORD_DELETE_NOT_SOLVE);
         ShopRecord shopRecord = shopRecordMapper.selectShopRecords(condition, 0, ConstantUtil.PAGE_SIZE).get(0);
         shopRecord.setShopRecordComment("同意删除");
         shopRecord.setShopRecordState(ConstantUtil.SHOP_RECORD_DELETE_PASS);
-        shopRecordMapper.updateShopById(shopRecord);
+        shopRecord.setShopRecordDate(new Timestamp(System.currentTimeMillis()));
+        shopRecordMapper.updateShopRecordById(shopRecord);
         Product productCondition = new Product();
         productCondition.setShopId(shopId);
         productMapper.updateProductState(productCondition, ConstantUtil.PRODUCT_DELETE);
@@ -249,11 +259,12 @@ public class ShopServiceImpl implements ShopService {
         Account accountCondition = new Account();
         accountCondition.setUserId(shop.getUserId());
         accountCondition.setAccountType(ConstantUtil.ACCOUNT_SHOP);
-        accountCondition.setAccountType(ConstantUtil.ACCOUNT_IS_VALID);
+        accountCondition.setAccountState(ConstantUtil.ACCOUNT_IS_VALID);
         Account shopAccount = accountMapper.selectAccount(accountCondition).get(0);
         accountService.transfer(shopAccount.getAccountId(), ConstantUtil.ACCOUNT_DUMMY_ID, shopAccount.getAccountMoney());
         // 删除商户账户
-        shopAccount.setAccountType(ConstantUtil.ACCOUNT_IS_DELETED);
+        shopAccount.setAccountMoney(0.0);
+        shopAccount.setAccountState(ConstantUtil.ACCOUNT_IS_DELETED);
         accountMapper.updateAccount(shopAccount);
     }
 
@@ -265,10 +276,12 @@ public class ShopServiceImpl implements ShopService {
         shopMapper.updateShopInfo(shop);
         ShopRecord condition = new ShopRecord();
         condition.setShopId(shopId);
+        condition.setShopRecordState(ConstantUtil.SHOP_RECORD_DELETE_NOT_SOLVE);
         ShopRecord shopRecord = shopRecordMapper.selectShopRecords(condition, 0, ConstantUtil.PAGE_SIZE).get(0);
         shopRecord.setShopRecordComment("拒绝删除:" + reason);
         shopRecord.setShopRecordState(ConstantUtil.SHOP_RECORD_DELETE_REJECT);
-        shopRecordMapper.updateShopById(shopRecord);
+        shopRecord.setShopRecordDate(new Timestamp(System.currentTimeMillis()));
+        shopRecordMapper.updateShopRecordById(shopRecord);
         Product productCondition = new Product();
         productCondition.setShopId(shopId);
         productCondition.setProductState(ConstantUtil.PRODUCT_OFF_SHELF);

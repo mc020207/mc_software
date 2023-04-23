@@ -72,7 +72,7 @@ public class AdminController {
     public CommonResult inspectShopDelete(Integer page) {
         CommonResult cm = new CommonResult(false);
         try {
-            shopService.inspectShopsDelete(page);
+            cm.setObject(shopService.inspectShopsDelete(page));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

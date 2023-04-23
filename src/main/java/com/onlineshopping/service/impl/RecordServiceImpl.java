@@ -67,7 +67,7 @@ public class RecordServiceImpl implements RecordService {
         ProductRecord condition=new ProductRecord();
         Integer shopId = getConditionShopId(request);
         List<ProductRecord> productRecords = productRecordMapper.selectProductRecordsByShopId(condition, shopId,(page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
-        Integer totalNumber = productRecordMapper.countProductRecords(condition);
+        Integer totalNumber = productRecordMapper.countProductRecordsByShopId(condition,shopId);
         List<ProductRecordDisplayVO> productRecordDisplayVOS=new ArrayList<>();
         for (ProductRecord productRecord : productRecords){
             productRecordDisplayVOS.add(new ProductRecordDisplayVO(productRecord));

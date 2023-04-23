@@ -5,7 +5,7 @@
 
     <select id="selectShopByShopId" resultType="Shop">
         select * from shop
-        where shopId=#{shopId}
+        where shopId=#{shopId} and shopState!=4
     </select>
     <select id="selectShopByUserId" resultType="Shop">
         select * from shop
@@ -16,8 +16,9 @@
         select *
         from `shop`
         <where>
+            shopState!=4
             <if test="shop.shopId">
-                shopId=#{shop.shopId}
+                and shopId=#{shop.shopId}
             </if>
             <if test="shop.userId">
                 and userId=#{shop.userId}
@@ -50,8 +51,9 @@
         select count(*)
         from `shop`
         <where>
+            shopState!=4
             <if test="shopId">
-                shopId=#{shopId}
+                and shopId=#{shopId}
             </if>
             <if test="userId">
                 and userId=#{userId}

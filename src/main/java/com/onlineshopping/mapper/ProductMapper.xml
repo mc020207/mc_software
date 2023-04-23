@@ -5,15 +5,16 @@
 
     <select id="selectProductById" resultType="Product">
         select * from product
-        where productId=#{productId}
+        where productId=#{productId} and productState!=4
     </select>
 
     <select id="selectProducts" resultType="Product">
         select *
         from `product`
         <where>
+            productState!=4
             <if test="product.productId!=null">
-                productId=#{product.productId}
+                and productId=#{product.productId}
             </if>
             <if test="product.shopId!=null">
                 and shopId=#{product.shopId}
@@ -37,8 +38,9 @@
         select count(*)
         from `product`
         <where>
+            productState!=4
             <if test="productId!=null">
-                productId=#{productId}
+                and =#{productId}
             </if>
             <if test="shopId!=null">
                 and shopId=#{shopId}

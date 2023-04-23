@@ -154,6 +154,9 @@ public class OrderServiceImpl implements OrderService {
         Integer userId = getUserId(request);
         Shop shop = shopMapper.selectShopByUserId(userId);
         Order order = orderMapper.selectOrderById(orderId);
+        if (order==null){
+            throw new ServiceException("没有这个订单");
+        }
         Product product = productMapper.selectProductById(order.getProductId());
         if (!Objects.equals(product.getShopId(), shop.getShopId())) {
             throw new ServiceException("不得发货其他商家的订单");

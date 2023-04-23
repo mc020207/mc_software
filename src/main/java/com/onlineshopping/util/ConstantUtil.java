@@ -37,8 +37,8 @@ public final class ConstantUtil {
     public static final Integer ORDER_NOT_RECEIVE = 1;
     public static final Integer ORDER_NOT_PAY = 0;
     // ProductRecordState
-    public static final Integer PRODUCT_RECORD_REJECT=2;
-    public static final Integer PRODUCT_RECORD_PASS=1;
+    public static final Integer PRODUCT_RECORD_PASS=2;
+    public static final Integer PRODUCT_RECORD_REJECT=1;
     public static final Integer PRODUCT_RECORD_NOT_SOLVE=0;
 
     // ShopRecordState

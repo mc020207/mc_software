@@ -33,7 +33,7 @@
         <where>
             productRecord.productId=product.productId
             <if test="shopId!=null">
-                and product.shopId=shopId
+                and product.shopId=#{shopId}
             </if>
             <if test="productRecord.productRecordId!=null">
                 and productRecord.productRecordId=#{productRecord.productRecordId}
@@ -74,6 +74,32 @@
             </if>
             <if test="productRecordState!=null">
                 and productRecordState=#{productRecordState}
+            </if>
+        </where>
+    </select>
+
+    <select id="countProductRecordsByShopId" resultType="int">
+        select count(*)
+        from productRecord,product
+        <where>
+            productRecord.productId=product.productId
+            <if test="shopId!=null">
+                and product.shopId=#{shopId}
+            </if>
+            <if test="productRecord.productRecordId!=null">
+                and productRecord.productRecordId=#{productRecord.productRecordId}
+            </if>
+            <if test="productRecord.productId!=null">
+                and productRecord.productId=#{productRecord.productId}
+            </if>
+            <if test="productRecord.productRecordDate!=null">
+                and productRecord.productRecordDate=#{productRecord.productRecordDate}
+            </if>
+            <if test="productRecord.productRecordComment!=null">
+                and productRecord.productRecordComment=#{productRecord.productRecordComment}
+            </if>
+            <if test="productRecord.productRecordState!=null">
+                and productRecord.productRecordState=#{productRecord.productRecordState}
             </if>
         </where>
     </select>

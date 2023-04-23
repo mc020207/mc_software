@@ -11,5 +11,5 @@ public interface ShopRecordMapper {
     Integer countShopRecords(ShopRecord shopRecord);
     void insertShopRecord(ShopRecord shopRecord);
     void updateShopRecordState(ShopRecord shopRecord,Integer newState);
-    void updateShopById(ShopRecord shopRecord);
+    void updateShopRecordById(ShopRecord shopRecord);
 }

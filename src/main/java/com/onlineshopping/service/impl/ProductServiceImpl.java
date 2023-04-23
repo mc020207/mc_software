@@ -69,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
         condition.setProductRecordState(ConstantUtil.PRODUCT_RECORD_NOT_SOLVE);
         List<ProductRecord> productRecords = productRecordMapper.selectProductRecords(condition, 0, ConstantUtil.PAGE_SIZE);
         if (productRecords==null || productRecords.size()==0){
-            ProductRecord productRecord = new ProductRecord(null,productId,new Timestamp(System.currentTimeMillis()),null,ConstantUtil.PRODUCT_RECORD_NOT_SOLVE);
+            ProductRecord productRecord = new ProductRecord(null,productId,new Timestamp(System.currentTimeMillis()),"",ConstantUtil.PRODUCT_RECORD_NOT_SOLVE);
             productRecordMapper.insertProductRecord(productRecord);
         }else{
             ProductRecord productRecord = productRecords.get(0);
@@ -97,6 +97,15 @@ public class ProductServiceImpl implements ProductService {
         return new ProductsDisplayVO(productDisplayVOList,totalNum);
     }
 
+    private void changeProductState(Integer productId,Integer newState){
+        Product product = productMapper.selectProductById(productId);
+        if (product==null){
+            throw new ServiceException("没有这个商品");
+        }
+        product.setProductState(newState);
+        productMapper.updateProductInfo(product);
+    }
+
     @Override
     @Transactional
     public void addProduct(ProductDTO productDTO, HttpServletRequest request, HttpServletResponse response) {
@@ -109,6 +118,8 @@ public class ProductServiceImpl implements ProductService {
         Product product = productDTO.changeToProduct();
         product.setShopId(shop.getShopId());
         productMapper.insertProduct(product);
+        Integer productId = productMapper.selectProducts(product, 0, 1).get(0).getProductId();
+        addProductRecord(productId);
     }
 
     @Override
@@ -125,7 +136,7 @@ public class ProductServiceImpl implements ProductService {
         if (!productCanDelete(productId)) {
             throw new ServiceException("还有未发货的订单");
         }
-        productMapper.updateProductState(product,ConstantUtil.PRODUCT_DELETE);
+        changeProductState(productId,ConstantUtil.PRODUCT_DELETE);
     }
 
     @Override
@@ -139,6 +150,7 @@ public class ProductServiceImpl implements ProductService {
         product.setShopId(shop.getShopId());
         productMapper.updateProductInfo(product);
         addProductRecord(product.getProductId());
+        changeProductState(product.getProductId(), ConstantUtil.PRODUCT_IN_INSPECTION);
     }
 
     @Override
@@ -169,6 +181,7 @@ public class ProductServiceImpl implements ProductService {
         String imagePath = "/static/article_image/" + fileName;
         productImgMapper.insertProductImg(new ProductImg(null,productId,imagePath));
         addProductRecord(productId);
+        changeProductState(productId, ConstantUtil.PRODUCT_IN_INSPECTION);
     }
 
     @Override
@@ -183,6 +196,7 @@ public class ProductServiceImpl implements ProductService {
         }
         productImgMapper.deleteProductImgByProductImgId(imageId);
         addProductRecord(productImg.getProductId());
+        changeProductState(productImg.getProductId(), ConstantUtil.PRODUCT_IN_INSPECTION);
     }
 
     @Override
@@ -278,7 +292,10 @@ public class ProductServiceImpl implements ProductService {
         }
         product.setProductState(ConstantUtil.PRODUCT_ON_SHELF);
         productMapper.updateProductInfo(product);
-        ProductRecord productRecord = new ProductRecord();
+        ProductRecord condition = new ProductRecord();
+        condition.setProductId(productId);
+        condition.setProductRecordState(ConstantUtil.PRODUCT_RECORD_NOT_SOLVE);
+        ProductRecord productRecord = productRecordMapper.selectProductRecords(condition, 0, ConstantUtil.PAGE_SIZE).get(0);
         productRecord.setProductRecordState(ConstantUtil.PRODUCT_RECORD_PASS);
         productRecord.setProductRecordDate(new Timestamp(System.currentTimeMillis()));
         productRecord.setProductId(productId);
@@ -299,7 +316,10 @@ public class ProductServiceImpl implements ProductService {
         }
         product.setProductState(ConstantUtil.PRODUCT_REJECTED);
         productMapper.updateProductInfo(product);
-        ProductRecord productRecord = new ProductRecord();
+        ProductRecord condition = new ProductRecord();
+        condition.setProductId(productId);
+        condition.setProductRecordState(ConstantUtil.PRODUCT_RECORD_NOT_SOLVE);
+        ProductRecord productRecord = productRecordMapper.selectProductRecords(condition, 0, ConstantUtil.PAGE_SIZE).get(0);
         productRecord.setProductRecordComment("拒绝:"+reason);
         productRecord.setProductRecordState(ConstantUtil.PRODUCT_RECORD_REJECT);
         productRecord.setProductRecordDate(new Timestamp(System.currentTimeMillis()));
