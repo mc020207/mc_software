@@ -124,11 +124,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void logout(HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
 //        JwtUserUtil.deleteSessionAndCookie(request, response);
     }
 
     @Override
+    @Transactional
     public UserInfoVO info(HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
         String token = JwtUserUtil.getToken(request);
         String userId = JwtUserUtil.getInfo(token, "userId");
@@ -138,6 +140,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public String infoEdit(HttpServletRequest request, HttpServletResponse response, UserInfoEditDTO userInfoEditDTO) {
         // 获取token
         String token = JwtUserUtil.getToken(request);
@@ -169,6 +172,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public String pwdEdit(HttpServletRequest request, HttpServletResponse response, UserPwdEditDTO userPwdEditDTO) {
         // 获取token
         String token = JwtUserUtil.getToken(request);

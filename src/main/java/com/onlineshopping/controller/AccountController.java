@@ -17,7 +17,7 @@ public class AccountController {
     AccountService accountService;
 
     @RequestMapping(value = "/info", method = RequestMethod.GET)
-    public CommonResult logout(HttpServletRequest request, Integer accountType) {
+    public CommonResult info(HttpServletRequest request, Integer accountType) {
         CommonResult cm = new CommonResult(false);
         AccountInfoVO accountInfoVO;
         try {
@@ -28,6 +28,32 @@ public class AccountController {
         }
         cm.setSuccess(true);
         cm.setObject(accountInfoVO);
+        return cm;
+    }
+
+    @RequestMapping(value = "/withdraw", method = RequestMethod.GET)
+    public CommonResult withdraw(HttpServletRequest request, Integer accountType, Double money) {
+        CommonResult cm = new CommonResult(false);
+        try {
+            accountService.withdraw(request, accountType, money);
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
+        return cm;
+    }
+
+    @RequestMapping(value = "/recharge", method = RequestMethod.GET)
+    public CommonResult recharge(HttpServletRequest request, Integer accountType, Double money) {
+        CommonResult cm = new CommonResult(false);
+        try {
+            accountService.recharge(request, accountType, money);
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
         return cm;
     }
 }

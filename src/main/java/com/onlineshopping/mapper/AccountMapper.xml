@@ -28,4 +28,17 @@
             </if>
         </where>
     </select>
+
+    <update id="updateAccount">
+        update `account`
+        <set>
+            <if test="accountMoney!=null">
+                accountMoney = #{accountMoney},
+            </if>
+            <if test="accountState!=null">
+                accountState = #{accountState},
+            </if>
+        </set>
+        where accountId = #{accountId}
+    </update>
 </mapper>
