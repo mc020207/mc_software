@@ -6,9 +6,9 @@ package com.onlineshopping.util;
  */
 public final class ConstantUtil {
     // special accountId
-    public static final Integer ACCOUNT_DUMMY_ID = 0;
-    public static final Integer ACCOUNT_MIDDLE_ID = 1;
-    public static final Integer ACCOUNT_PROFIT_ID = 2;
+    public static final Integer ACCOUNT_DUMMY_ID = 1;
+    public static final Integer ACCOUNT_MIDDLE_ID = 2;
+    public static final Integer ACCOUNT_PROFIT_ID = 3;
     // accountState
     public static final Integer ACCOUNT_IS_VALID = 0;
     public static final Integer ACCOUNT_IS_DELETED = 1;
@@ -46,8 +46,8 @@ public final class ConstantUtil {
     public static final Integer USER_OWNER = 1;
     public static final Integer USER_NORMAL = 0;
     // userId
-    public static final Integer USER_ADMIN_ID = 0;
     public static final Integer USER_WALLET_ID = 1;
+    public static final Integer USER_ADMIN_ID = 2;
 
     // 分页信息
     public static final Integer PAGE_SIZE = 9;
