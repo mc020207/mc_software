@@ -22,15 +22,15 @@
         limit #{startRow}, #{num}
     </select>
 
-    <select id="countFlowByAccountId" resultType="Integer">
+    <select id="countFlowByAccountId" resultType="java.lang.Integer">
         select count(*)
         from `flow`
         <where>
-            <if test="flow.accountIdFrom!=null">
-                accountIdFrom = #{flow.accountIdFrom}
+            <if test="accountIdFrom!=null">
+                accountIdFrom = #{accountIdFrom}
             </if>
-            <if test="flow.accountIdTo!=null">
-                or accountIdTo = #{flow.accountIdTo}
+            <if test="accountIdTo!=null">
+                or accountIdTo = #{accountIdTo}
             </if>
         </where>
     </select>
