@@ -106,6 +106,8 @@ public class UserServiceImpl implements UserService {
         // 检查用户名是否唯一存在
         String userName = userLoginDTO.getUserName();
         FormatUtil.checkNotNull("用户名", userName);
+        if (ConstantUtil.USER_WALLET_NAME.equals(userName))
+            throw new ServiceException("不允许钱包登录!");
         List<User> userList = userMapper.selectUsersBySingleAttr("userName", userName);
         ListUtil.checkSingle("用户名", userList);
         // 检查密码是否匹配

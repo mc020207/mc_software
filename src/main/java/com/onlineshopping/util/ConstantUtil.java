@@ -47,6 +47,7 @@ public final class ConstantUtil {
     public static final Integer USER_NORMAL = 0;
     // userId
     public static final Integer USER_WALLET_ID = 1;
+    public static final String USER_WALLET_NAME = "wallet";
     public static final Integer USER_ADMIN_ID = 2;
 
     // 分页信息
