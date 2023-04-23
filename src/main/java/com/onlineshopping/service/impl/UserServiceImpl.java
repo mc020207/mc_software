@@ -20,7 +20,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.DigestUtils;
 
 import java.util.List;
 
@@ -50,6 +49,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void checkUniqueExceptSelf(String fieldName, String fieldValue, Integer myId) throws RuntimeException {
         List<User> userList = userMapper.selectUsersBySingleAttr(fieldName, fieldValue);
+        if (userList.size() == 0)
+            return;
         if (!(userList.size() == 1))
             throw new ServiceException(fieldName + "应该只有唯一一个, 数据库出bug了?");
         if (!myId.equals(userList.get(0).getUserId()))
