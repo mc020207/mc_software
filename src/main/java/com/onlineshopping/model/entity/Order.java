@@ -1,13 +1,14 @@
 package com.onlineshopping.model.entity;
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Order implements Serializable {
     private Integer orderId;
     private Integer userId;
     private Integer productId;
     private Integer orderState;
-    private Date orderDate;
+    private Timestamp orderDate;
     private Double orderMoney;
 
     @Override
@@ -54,11 +55,11 @@ public class Order implements Serializable {
         this.orderState = orderState;
     }
 
-    public Date getOrderDate() {
+    public Timestamp getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(Timestamp orderDate) {
         this.orderDate = orderDate;
     }
 
@@ -70,7 +71,7 @@ public class Order implements Serializable {
         this.orderMoney = orderMoney;
     }
 
-    public Order(Integer orderId, Integer userId, Integer productId, Integer orderState, Date orderDate, Double orderMoney) {
+    public Order(Integer orderId, Integer userId, Integer productId, Integer orderState, Timestamp orderDate, Double orderMoney) {
         this.orderId = orderId;
         this.userId = userId;
         this.productId = productId;

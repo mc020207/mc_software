@@ -5,10 +5,11 @@ import com.onlineshopping.model.entity.Order;
 import com.onlineshopping.util.ConstantUtil;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 public class OrderDisplayVO {
-    private Date orderDate;
+    private Timestamp orderDate;
     private Integer orderId;
     private Double orderMoney;
     private Integer productId;
@@ -27,11 +28,11 @@ public class OrderDisplayVO {
                 '}';
     }
 
-    public Date getOrderDate() {
+    public Timestamp getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(Timestamp orderDate) {
         this.orderDate = orderDate;
     }
 
@@ -78,7 +79,7 @@ public class OrderDisplayVO {
     public OrderDisplayVO() {
     }
 
-    public OrderDisplayVO(Date orderDate, Integer orderId, Double orderMoney, Integer productId, String productName, Integer productState) {
+    public OrderDisplayVO(Timestamp orderDate, Integer orderId, Double orderMoney, Integer productId, String productName, Integer productState) {
         this.orderDate = orderDate;
         this.orderId = orderId;
         this.orderMoney = orderMoney;

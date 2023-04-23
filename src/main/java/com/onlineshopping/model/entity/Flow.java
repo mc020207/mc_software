@@ -2,13 +2,14 @@ package com.onlineshopping.model.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Flow implements Serializable {
     private Integer FlowId;
     private Integer accountIdFrom;
     private Integer accountIdTo;
     private Double flowMoney;
-    private Date flowDate;
+    private Timestamp flowDate;
 
     @Override
     public String toString() {
@@ -53,18 +54,18 @@ public class Flow implements Serializable {
         this.flowMoney = flowMoney;
     }
 
-    public Date getFlowDate() {
+    public Timestamp getFlowDate() {
         return flowDate;
     }
 
-    public void setFlowDate(Date flowDate) {
+    public void setFlowDate(Timestamp flowDate) {
         this.flowDate = flowDate;
     }
 
     public Flow() {
     }
 
-    public Flow(Integer flowId, Integer accountIdFrom, Integer accountIdTo, Double flowMoney, Date flowDate) {
+    public Flow(Integer flowId, Integer accountIdFrom, Integer accountIdTo, Double flowMoney, Timestamp flowDate) {
         FlowId = flowId;
         this.accountIdFrom = accountIdFrom;
         this.accountIdTo = accountIdTo;

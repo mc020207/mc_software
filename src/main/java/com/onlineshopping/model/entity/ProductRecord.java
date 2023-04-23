@@ -2,11 +2,12 @@ package com.onlineshopping.model.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class ProductRecord implements Serializable {
     private Integer productRecordId;
     private Integer productId;
-    private Date productRecordDate;
+    private Timestamp productRecordDate;
     private String productRecordComment;
     private Integer productRecordState;
 
@@ -40,11 +41,11 @@ public class ProductRecord implements Serializable {
         this.productId = productId;
     }
 
-    public Date getProductRecordDate() {
+    public Timestamp getProductRecordDate() {
         return productRecordDate;
     }
 
-    public void setProductRecordDate(Date productRecordDate) {
+    public void setProductRecordDate(Timestamp productRecordDate) {
         this.productRecordDate = productRecordDate;
     }
 
@@ -64,7 +65,7 @@ public class ProductRecord implements Serializable {
         this.productRecordState = productRecordState;
     }
 
-    public ProductRecord(Integer productRecordId, Integer productId, Date productRecordDate, String productRecordComment, Integer productRecordState) {
+    public ProductRecord(Integer productRecordId, Integer productId, Timestamp productRecordDate, String productRecordComment, Integer productRecordState) {
         this.productRecordId = productRecordId;
         this.productId = productId;
         this.productRecordDate = productRecordDate;

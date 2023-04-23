@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -68,11 +69,11 @@ public class ProductServiceImpl implements ProductService {
         condition.setProductRecordState(ConstantUtil.RECORD_NOT_SOLVE);
         List<ProductRecord> productRecords = productRecordMapper.selectProductRecords(condition, 0, ConstantUtil.PAGE_SIZE);
         if (productRecords==null || productRecords.size()==0){
-            ProductRecord productRecord = new ProductRecord(null,productId,new Date(System.currentTimeMillis()),null,ConstantUtil.RECORD_NOT_SOLVE);
+            ProductRecord productRecord = new ProductRecord(null,productId,new Timestamp(System.currentTimeMillis()),null,ConstantUtil.RECORD_NOT_SOLVE);
             productRecordMapper.insertProductRecord(productRecord);
         }else{
             ProductRecord productRecord = productRecords.get(0);
-            productRecord.setProductRecordDate(new Date(System.currentTimeMillis()));
+            productRecord.setProductRecordDate(new Timestamp(System.currentTimeMillis()));
             productRecordMapper.updateProductRecordById(productRecord);
         }
     }
@@ -281,7 +282,7 @@ public class ProductServiceImpl implements ProductService {
         productMapper.updateProductInfo(product);
         ProductRecord productRecord = new ProductRecord();
         productRecord.setProductRecordState(ConstantUtil.RECORD_SOLVE);
-        productRecord.setProductRecordDate(new Date(System.currentTimeMillis()));
+        productRecord.setProductRecordDate(new Timestamp(System.currentTimeMillis()));
         productRecord.setProductId(productId);
         productRecord.setProductRecordComment("同意");
         productRecordMapper.updateProductRecordById(productRecord);
@@ -303,7 +304,7 @@ public class ProductServiceImpl implements ProductService {
         ProductRecord productRecord = new ProductRecord();
         productRecord.setProductRecordComment("拒绝:"+reason);
         productRecord.setProductRecordState(ConstantUtil.RECORD_SOLVE);
-        productRecord.setProductRecordDate(new Date(System.currentTimeMillis()));
+        productRecord.setProductRecordDate(new Timestamp(System.currentTimeMillis()));
         productRecord.setProductId(productId);
         productRecordMapper.updateProductRecordById(productRecord);
     }

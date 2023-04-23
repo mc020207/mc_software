@@ -1,14 +1,17 @@
 package com.onlineshopping.service.impl;
 
 import com.onlineshopping.exception.ServiceException;
+import com.onlineshopping.mapper.AccountMapper;
 import com.onlineshopping.mapper.OrderMapper;
 import com.onlineshopping.mapper.ProductMapper;
 import com.onlineshopping.mapper.ShopMapper;
+import com.onlineshopping.model.entity.Account;
 import com.onlineshopping.model.entity.Order;
 import com.onlineshopping.model.entity.Product;
 import com.onlineshopping.model.entity.Shop;
 import com.onlineshopping.model.vo.OrderDisplayVO;
 import com.onlineshopping.model.vo.OrdersDisplayVO;
+import com.onlineshopping.service.AccountService;
 import com.onlineshopping.service.OrderService;
 import com.onlineshopping.util.ConstantUtil;
 import com.onlineshopping.util.FormatUtil;
@@ -20,10 +23,12 @@ import org.springframework.boot.web.servlet.filter.OrderedHiddenHttpMethodFilter
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.zip.CheckedOutputStream;
+
 @Service
 public class OrderServiceImpl implements OrderService {
     @Resource
@@ -32,6 +37,10 @@ public class OrderServiceImpl implements OrderService {
     OrderMapper orderMapper;
     @Resource
     ShopMapper shopMapper;
+    @Resource
+    AccountService accountService;
+    @Resource
+    AccountMapper accountMapper;
 
     private Integer getUserId(HttpServletRequest request) {
         String token = JwtUserUtil.getToken(request);
@@ -56,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
     private OrdersDisplayVO getOrdersDisplayVo(Order condition, Integer startRow, Integer num) {
         Integer totalNumber = orderMapper.countOrders(condition);
         List<Order> orders = orderMapper.selectOrders(condition, startRow, num);
-        return new OrdersDisplayVO(getOrderDisplayVOList(orders),totalNumber);
+        return new OrdersDisplayVO(getOrderDisplayVOList(orders), totalNumber);
     }
 
     @Override
@@ -69,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
         if (!Objects.equals(product.getProductState(), ConstantUtil.PRODUCT_ON_SHELF)) {
             throw new ServiceException("商品未上架出售");
         }
-        Order order = new Order(null, userId, productId, ConstantUtil.ORDER_NOT_PAY, new Date(System.currentTimeMillis()), product.getProductPrice());
+        Order order = new Order(null, userId, productId, ConstantUtil.ORDER_NOT_PAY, new Timestamp(System.currentTimeMillis()), product.getProductPrice());
         orderMapper.insertOrder(order);
     }
 
@@ -87,11 +96,19 @@ public class OrderServiceImpl implements OrderService {
         if (!Objects.equals(product.getProductState(), ConstantUtil.PRODUCT_ON_SHELF)) {
             throw new ServiceException("商品未上架出售");
         }
+        if (!Objects.equals(order.getUserId(), getUserId(request))){
+            throw new ServiceException("不可以下单他人购物车的商品");
+        }
         order.setOrderState(ConstantUtil.ORDER_NOT_RECEIVE);
-        order.setOrderDate(new Date(System.currentTimeMillis()));
+        order.setOrderDate(new Timestamp(System.currentTimeMillis()));
         order.setOrderMoney(product.getProductPrice());
         orderMapper.updateOrderInfo(order);
         // 此处需要转账功能
+        Account accountCondition = new Account();
+        accountCondition.setAccountType(ConstantUtil.ACCOUNT_USER);
+        accountCondition.setUserId(order.getUserId());
+        Account account = accountMapper.selectAccount(accountCondition).get(0);
+        accountService.transfer(account.getAccountId(),ConstantUtil.ACCOUNT_MIDDLE_ID,order.getOrderMoney());
     }
 
     @Override
@@ -106,6 +123,12 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderState(ConstantUtil.ORDER_RECEIVE);
         orderMapper.updateOrderInfo(order);
         // 此处需要转账功能
+        Account accountCondition = new Account();
+        accountCondition.setAccountType(ConstantUtil.ACCOUNT_SHOP);
+        accountCondition.setUserId(order.getUserId());
+        Account account = accountMapper.selectAccount(accountCondition).get(0);
+        accountService.transfer(ConstantUtil.ACCOUNT_MIDDLE_ID,account.getAccountId(),order.getOrderMoney());
+
     }
 
     @Override
@@ -133,21 +156,21 @@ public class OrderServiceImpl implements OrderService {
     public OrdersDisplayVO ownerUnSendList(Integer page, HttpServletRequest request, HttpServletResponse response) {
         Integer userId = getUserId(request);
         Shop shop = shopMapper.selectShopByUserId(userId);
-        if (shop==null&& Objects.equals(shop.getShopState(), ConstantUtil.SHOP_OPEN)){
+        if (shop == null && Objects.equals(shop.getShopState(), ConstantUtil.SHOP_OPEN)) {
             throw new ServiceException("该商户没有开张的商店");
         }
         Order condition = new Order();
         condition.setOrderState(ConstantUtil.ORDER_NOT_RECEIVE);
         List<Order> orders = orderMapper.selectOrdersByShopId(condition, shop.getShopId(), (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
         Integer totalNumber = orderMapper.countOrdersByShopId(condition, shop.getShopId());
-        return new OrdersDisplayVO(getOrderDisplayVOList(orders),totalNumber);
+        return new OrdersDisplayVO(getOrderDisplayVOList(orders), totalNumber);
     }
 
     private List<OrderDisplayVO> getOrderDisplayVOList(List<Order> orders) {
         List<OrderDisplayVO> orderDisplayVOList = new ArrayList<>();
-        for (Order order : orders){
+        for (Order order : orders) {
             Product product = productMapper.selectProductById(order.getProductId());
-            orderDisplayVOList.add(new OrderDisplayVO(order,product));
+            orderDisplayVOList.add(new OrderDisplayVO(order, product));
         }
         return orderDisplayVOList;
     }

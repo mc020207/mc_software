@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +79,7 @@ public class AccountServiceImpl implements AccountService {
         flow.setAccountIdFrom(accountIdFrom);
         flow.setAccountIdTo(accountIdTo);
         flow.setFlowMoney(money);
-        flow.setFlowDate(new Date(System.currentTimeMillis()));
+        flow.setFlowDate(new Timestamp(System.currentTimeMillis()));
         flowMapper.insertFlow(flow);
     }
 

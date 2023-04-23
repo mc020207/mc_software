@@ -3,11 +3,12 @@ package com.onlineshopping.model.vo;
 import com.onlineshopping.model.entity.ProductRecord;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class ProductRecordDisplayVO {
     private Integer productId;
     private String productRecordComment;
-    private Date productRecordDate;
+    private Timestamp productRecordDate;
     private Integer productRecordId;
     private Integer productRecordState;
 
@@ -38,11 +39,11 @@ public class ProductRecordDisplayVO {
         this.productRecordComment = productRecordComment;
     }
 
-    public Date getProductRecordDate() {
+    public Timestamp getProductRecordDate() {
         return productRecordDate;
     }
 
-    public void setProductRecordDate(Date productRecordDate) {
+    public void setProductRecordDate(Timestamp productRecordDate) {
         this.productRecordDate = productRecordDate;
     }
 
@@ -65,7 +66,7 @@ public class ProductRecordDisplayVO {
     public ProductRecordDisplayVO() {
     }
 
-    public ProductRecordDisplayVO(Integer productId, String productRecordComment, Date productRecordDate, Integer productRecordId, Integer productRecordState) {
+    public ProductRecordDisplayVO(Integer productId, String productRecordComment, Timestamp productRecordDate, Integer productRecordId, Integer productRecordState) {
         this.productId = productId;
         this.productRecordComment = productRecordComment;
         this.productRecordDate = productRecordDate;

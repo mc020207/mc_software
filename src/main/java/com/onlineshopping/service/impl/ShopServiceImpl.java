@@ -1,13 +1,11 @@
 package com.onlineshopping.service.impl;
 
 import com.onlineshopping.exception.ServiceException;
-import com.onlineshopping.mapper.ProductMapper;
-import com.onlineshopping.mapper.ShopMapper;
-import com.onlineshopping.mapper.ShopRecordMapper;
-import com.onlineshopping.mapper.UserMapper;
+import com.onlineshopping.mapper.*;
 import com.onlineshopping.model.dto.ShopRegisterDTO;
 import com.onlineshopping.model.entity.*;
 import com.onlineshopping.model.vo.*;
+import com.onlineshopping.service.AccountService;
 import com.onlineshopping.service.ProductService;
 import com.onlineshopping.service.ShopService;
 import com.onlineshopping.util.ConstantUtil;
@@ -21,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -41,6 +40,11 @@ public class ShopServiceImpl implements ShopService {
 
     @Resource
     ShopRecordMapper shopRecordMapper;
+
+    @Resource
+    AccountService accountService;
+    @Resource
+    AccountMapper accountMapper;
 
     /**
      * @Description: 获取isOpen状态的商店，若isOpen为null则不检查其状态
@@ -119,9 +123,10 @@ public class ShopServiceImpl implements ShopService {
             shop.setUserId(userId);
             shopMapper.updateShopInfo(shop);
         }
-        ShopRecord shopRecord = new ShopRecord(null, shop.getShopId(), new Date(System.currentTimeMillis()), "请求开店", ConstantUtil.RECORD_NOT_SOLVE);
+        ShopRecord shopRecord = new ShopRecord(null, shop.getShopId(), new Timestamp(System.currentTimeMillis()), "请求开店", ConstantUtil.RECORD_NOT_SOLVE);
         shopRecordMapper.insertShopRecord(shopRecord);
         // 此处需要一个转账的接口：虚拟账户 --注册资金--> 中间账户
+        accountService.transfer(ConstantUtil.ACCOUNT_DUMMY_ID,ConstantUtil.ACCOUNT_MIDDLE_ID,shop.getShopRegisterFund());
     }
 
     @Override
@@ -153,7 +158,7 @@ public class ShopServiceImpl implements ShopService {
         }
         myShop.setShopState(ConstantUtil.SHOP_IN_DELETE_INSPECTION);
         shopMapper.updateShopInfo(myShop);
-        ShopRecord shopRecord = new ShopRecord(null, myShop.getShopId(), new Date(System.currentTimeMillis()), "请求删除商店", ConstantUtil.RECORD_NOT_SOLVE);
+        ShopRecord shopRecord = new ShopRecord(null, myShop.getShopId(), new Timestamp(System.currentTimeMillis()), "请求删除商店", ConstantUtil.RECORD_NOT_SOLVE);
         shopRecordMapper.insertShopRecord(shopRecord);
     }
 
@@ -184,7 +189,14 @@ public class ShopServiceImpl implements ShopService {
         shopRecord.setShopRecordState(ConstantUtil.RECORD_SOLVE);
         shopRecordMapper.updateShopById(shopRecord);
         // 此处需要一个转账的接口：中间账户 --注册资金--> 利润账户
+        accountService.transfer(ConstantUtil.ACCOUNT_MIDDLE_ID,ConstantUtil.ACCOUNT_PROFIT_ID,shop.getShopRegisterFund());
         // 此处需要给商店开一个账户
+        Account account = new Account();
+        account.setAccountMoney(0.0);
+        account.setAccountState(ConstantUtil.ACCOUNT_IS_VALID);
+        account.setAccountType(ConstantUtil.ACCOUNT_SHOP);
+        account.setUserId(shop.getUserId());
+        accountMapper.insertAccount(account);
     }
 
     @Override
@@ -200,6 +212,7 @@ public class ShopServiceImpl implements ShopService {
         shopRecord.setShopRecordState(ConstantUtil.RECORD_SOLVE);
         shopRecordMapper.updateShopById(shopRecord);
         // 此处需要一个转账的接口：中间账户 --注册资金--> 虚拟账户
+        accountService.transfer(ConstantUtil.ACCOUNT_MIDDLE_ID,ConstantUtil.ACCOUNT_DUMMY_ID,shop.getShopRegisterFund());
     }
 
     @Override
@@ -224,6 +237,15 @@ public class ShopServiceImpl implements ShopService {
         productCondition.setShopId(shopId);
         productMapper.updateProductState(productCondition,ConstantUtil.PRODUCT_DELETE);
         // 此处需要一个转账的接口：商店账户 --剩余资金--> 虚拟账户
+        Account accountCondition = new Account();
+        accountCondition.setUserId(shop.getUserId());
+        accountCondition.setAccountType(ConstantUtil.ACCOUNT_SHOP);
+        accountCondition.setAccountType(ConstantUtil.ACCOUNT_IS_VALID);
+        Account shopAccount = accountMapper.selectAccount(accountCondition).get(0);
+        accountService.transfer(shopAccount.getAccountId(),ConstantUtil.ACCOUNT_DUMMY_ID,shopAccount.getAccountMoney());
+        // 删除商户账户
+        shopAccount.setAccountType(ConstantUtil.ACCOUNT_IS_DELETED);
+        accountMapper.updateAccount(shopAccount);
     }
 
     @Override
