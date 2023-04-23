@@ -74,11 +74,11 @@ public class ShopServiceImpl implements ShopService {
         return shop;
     }
 
-    private Shop getMyShop(HttpServletRequest request,boolean canNull) {
+    private Shop getMyShop(HttpServletRequest request, boolean canNull) {
         String token = JwtUserUtil.getToken(request);
         Integer userId = Integer.valueOf(JwtUserUtil.getInfo(token, "userId"));
         Shop shop = shopMapper.selectShopByUserId(userId);
-        if (!canNull&&shop == null) {
+        if (!canNull && shop == null) {
             throw new ServiceException("该用户没有商店");
         }
         return shop;
@@ -103,7 +103,7 @@ public class ShopServiceImpl implements ShopService {
     @Override
     @Transactional
     public void shopRegisterOrUpdate(ShopRegisterDTO shopRegisterDTO, HttpServletRequest request, HttpServletResponse response) {
-        Shop shop=getMyShop(request,true);
+        Shop shop = getMyShop(request, true);
         if (shop != null && !Objects.equals(shop.getShopState(), ConstantUtil.SHOP_REJECTED)) {
             throw new ServiceException("申请中或已开放的商店不允许修改");
         }
@@ -118,7 +118,7 @@ public class ShopServiceImpl implements ShopService {
             shop.setUserId(userId);
             shopMapper.insertShop(shop);
             shop = shopMapper.selectShopByUserId(userId);
-        }else{
+        } else {
             shop.changeByShopDTO(shopRegisterDTO);
             shop.setUserId(userId);
             shopMapper.updateShopInfo(shop);
@@ -126,19 +126,20 @@ public class ShopServiceImpl implements ShopService {
         ShopRecord shopRecord = new ShopRecord(null, shop.getShopId(), new Timestamp(System.currentTimeMillis()), "请求开店", ConstantUtil.RECORD_NOT_SOLVE);
         shopRecordMapper.insertShopRecord(shopRecord);
         // 此处需要一个转账的接口：虚拟账户 --注册资金--> 中间账户
-        accountService.transfer(ConstantUtil.ACCOUNT_DUMMY_ID,ConstantUtil.ACCOUNT_MIDDLE_ID,shop.getShopRegisterFund());
+        accountService.transfer(ConstantUtil.ACCOUNT_DUMMY_ID, ConstantUtil.ACCOUNT_MIDDLE_ID, shop.getShopRegisterFund());
     }
 
     @Override
     @Transactional
     public ShopDisplayVO myShopInfo(HttpServletRequest request, HttpServletResponse response) {
-        Shop myShop = getMyShop(request,false);
+        Shop myShop = getMyShop(request, false);
         return new ShopDisplayVO(myShop);
     }
 
     @Override
+    @Transactional
     public void deleteMyShop(HttpServletRequest request, HttpServletResponse response) {
-        Shop myShop = getMyShop(request,false);
+        Shop myShop = getMyShop(request, false);
         Product condition = new Product();
         condition.setShopId(myShop.getShopId());
         List<Product> products = productMapper.selectProducts(condition, null, null);
@@ -189,7 +190,7 @@ public class ShopServiceImpl implements ShopService {
         shopRecord.setShopRecordState(ConstantUtil.RECORD_SOLVE);
         shopRecordMapper.updateShopById(shopRecord);
         // 此处需要一个转账的接口：中间账户 --注册资金--> 利润账户
-        accountService.transfer(ConstantUtil.ACCOUNT_MIDDLE_ID,ConstantUtil.ACCOUNT_PROFIT_ID,shop.getShopRegisterFund());
+        accountService.transfer(ConstantUtil.ACCOUNT_MIDDLE_ID, ConstantUtil.ACCOUNT_PROFIT_ID, shop.getShopRegisterFund());
         // 此处需要给商店开一个账户
         Account account = new Account();
         account.setAccountMoney(0.0);
@@ -201,21 +202,22 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     @Transactional
-    public void rejectShopRegister(Integer shopId,String reason) {
+    public void rejectShopRegister(Integer shopId, String reason) {
         Shop shop = getShopByShopId(shopId, ConstantUtil.SHOP_IN_INSPECTION);
         shop.setShopState(ConstantUtil.SHOP_REJECTED);
         shopMapper.updateShopInfo(shop);
         ShopRecord condition = new ShopRecord();
         condition.setShopId(shopId);
         ShopRecord shopRecord = shopRecordMapper.selectShopRecords(condition, 0, ConstantUtil.PAGE_SIZE).get(0);
-        shopRecord.setShopRecordComment("拒绝开张:"+reason);
+        shopRecord.setShopRecordComment("拒绝开张:" + reason);
         shopRecord.setShopRecordState(ConstantUtil.RECORD_SOLVE);
         shopRecordMapper.updateShopById(shopRecord);
         // 此处需要一个转账的接口：中间账户 --注册资金--> 虚拟账户
-        accountService.transfer(ConstantUtil.ACCOUNT_MIDDLE_ID,ConstantUtil.ACCOUNT_DUMMY_ID,shop.getShopRegisterFund());
+        accountService.transfer(ConstantUtil.ACCOUNT_MIDDLE_ID, ConstantUtil.ACCOUNT_DUMMY_ID, shop.getShopRegisterFund());
     }
 
     @Override
+    @Transactional
     public ShopsDisplayVO inspectShopsDelete(Integer page) {
         Shop condition = new Shop();
         condition.setShopState(ConstantUtil.SHOP_IN_DELETE_INSPECTION);
@@ -223,6 +225,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    @Transactional
     public void approveShopDelete(Integer shopId) {
         Shop shop = getShopByShopId(shopId, ConstantUtil.SHOP_IN_DELETE_INSPECTION);
         shop.setShopState(ConstantUtil.SHOP_DELETE);
@@ -235,20 +238,21 @@ public class ShopServiceImpl implements ShopService {
         shopRecordMapper.updateShopById(shopRecord);
         Product productCondition = new Product();
         productCondition.setShopId(shopId);
-        productMapper.updateProductState(productCondition,ConstantUtil.PRODUCT_DELETE);
+        productMapper.updateProductState(productCondition, ConstantUtil.PRODUCT_DELETE);
         // 此处需要一个转账的接口：商店账户 --剩余资金--> 虚拟账户
         Account accountCondition = new Account();
         accountCondition.setUserId(shop.getUserId());
         accountCondition.setAccountType(ConstantUtil.ACCOUNT_SHOP);
         accountCondition.setAccountType(ConstantUtil.ACCOUNT_IS_VALID);
         Account shopAccount = accountMapper.selectAccount(accountCondition).get(0);
-        accountService.transfer(shopAccount.getAccountId(),ConstantUtil.ACCOUNT_DUMMY_ID,shopAccount.getAccountMoney());
+        accountService.transfer(shopAccount.getAccountId(), ConstantUtil.ACCOUNT_DUMMY_ID, shopAccount.getAccountMoney());
         // 删除商户账户
         shopAccount.setAccountType(ConstantUtil.ACCOUNT_IS_DELETED);
         accountMapper.updateAccount(shopAccount);
     }
 
     @Override
+    @Transactional
     public void rejectShopDelete(Integer shopId, String reason) {
         Shop shop = getShopByShopId(shopId, ConstantUtil.SHOP_IN_DELETE_INSPECTION);
         shop.setShopState(ConstantUtil.SHOP_OPEN);
@@ -256,13 +260,13 @@ public class ShopServiceImpl implements ShopService {
         ShopRecord condition = new ShopRecord();
         condition.setShopId(shopId);
         ShopRecord shopRecord = shopRecordMapper.selectShopRecords(condition, 0, ConstantUtil.PAGE_SIZE).get(0);
-        shopRecord.setShopRecordComment("拒绝删除:"+reason);
+        shopRecord.setShopRecordComment("拒绝删除:" + reason);
         shopRecord.setShopRecordState(ConstantUtil.RECORD_SOLVE);
         shopRecordMapper.updateShopById(shopRecord);
         Product productCondition = new Product();
         productCondition.setShopId(shopId);
         productCondition.setProductState(ConstantUtil.PRODUCT_OFF_SHELF);
-        productMapper.updateProductState(productCondition,ConstantUtil.PRODUCT_ON_SHELF);
+        productMapper.updateProductState(productCondition, ConstantUtil.PRODUCT_ON_SHELF);
     }
 
 }

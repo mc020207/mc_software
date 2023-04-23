@@ -37,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
     ProductImgMapper productImgMapper;
     @Resource
     ProductRecordMapper productRecordMapper;
-    public Shop getShop(HttpServletRequest request) {
+    private Shop getShop(HttpServletRequest request) {
         String token = JwtUserUtil.getToken(request);
         Integer userId = Integer.parseInt(JwtUserUtil.getInfo(token, "userId"));
         Shop shop = shopMapper.selectShopByUserId(userId);
@@ -46,7 +46,8 @@ public class ProductServiceImpl implements ProductService {
         }
         return shop;
     }
-
+    @Override
+    @Transactional
     public boolean productCanDelete(Integer productId){
         Order order = new Order();
         order.setProductId(productId);
@@ -54,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
         return orderMapper.countOrders(order)==0;
     }
 
-    public boolean isMyProduct(Integer productId,HttpServletRequest request){
+    private boolean isMyProduct(Integer productId,HttpServletRequest request){
         Shop shop = getShop(request);
         Product product = productMapper.selectProductById(productId);
         if (product==null){
@@ -62,8 +63,7 @@ public class ProductServiceImpl implements ProductService {
         }
         return Objects.equals(shop.getShopId(), product.getShopId());
     }
-
-    public void addProductRecord(Integer productId){
+    private void addProductRecord(Integer productId){
         ProductRecord condition=new ProductRecord();
         condition.setProductId(productId);
         condition.setProductRecordState(ConstantUtil.RECORD_NOT_SOLVE);
@@ -77,8 +77,7 @@ public class ProductServiceImpl implements ProductService {
             productRecordMapper.updateProductRecordById(productRecord);
         }
     }
-
-    public ProductDisplayVO getProductDisplay(Product product){
+     private ProductDisplayVO getProductDisplay(Product product){
         ProductDisplayVO productDisplayVO = new ProductDisplayVO(product);
         List<ProductImg> productImgs = productImgMapper.selectProductImgByProductId(product.getProductId());
         List<ProductImgVO> productImgVOList=new ArrayList<>();
@@ -88,8 +87,7 @@ public class ProductServiceImpl implements ProductService {
         productDisplayVO.setImages(productImgVOList);
         return productDisplayVO;
     }
-
-    public ProductsDisplayVO getProductDisplayList(Product condition,Integer startRow,Integer num){
+    private ProductsDisplayVO getProductDisplayList(Product condition,Integer startRow,Integer num){
         Integer totalNum=productMapper.countProducts(condition);
         List<Product> products = productMapper.selectProducts(condition, startRow, num);
         List<ProductDisplayVO> productDisplayVOList=new ArrayList<>();

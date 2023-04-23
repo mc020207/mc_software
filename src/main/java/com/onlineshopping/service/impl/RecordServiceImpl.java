@@ -18,6 +18,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +39,7 @@ public class RecordServiceImpl implements RecordService {
         }
         return shop;
     }
-
-    public Integer getConditionShopId(HttpServletRequest request){
+    private Integer getConditionShopId(HttpServletRequest request){
         String token = JwtUserUtil.getToken(request);
         Integer userRole = Integer.valueOf(JwtUserUtil.getInfo(token, "userRole"));
         if (!userRole.equals(ConstantUtil.USER_ADMIN)){
@@ -48,7 +48,7 @@ public class RecordServiceImpl implements RecordService {
         }
         return null;
     }
-
+    @Transactional
     @Override
     public ShopRecordsDisplayVO getShopRecord(Integer page, HttpServletRequest request, HttpServletResponse response) {
         ShopRecord condition=new ShopRecord();
@@ -61,7 +61,7 @@ public class RecordServiceImpl implements RecordService {
         }
         return new ShopRecordsDisplayVO(shopRecordDisplayVOS,totalNumber);
     }
-
+    @Transactional
     @Override
     public ProductRecordsDisplayVO getProductRecord(Integer page, HttpServletRequest request, HttpServletResponse response) {
         ProductRecord condition=new ProductRecord();

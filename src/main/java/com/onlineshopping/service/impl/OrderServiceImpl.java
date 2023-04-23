@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.web.servlet.filter.OrderedHiddenHttpMethodFilter;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -46,7 +47,6 @@ public class OrderServiceImpl implements OrderService {
         String token = JwtUserUtil.getToken(request);
         return Integer.parseInt(JwtUserUtil.getInfo(token, "userId"));
     }
-
     private Order getMyOrderById(Integer orderId, HttpServletRequest request) {
         Order order = orderMapper.selectOrderById(orderId);
         if (order == null) {
@@ -61,13 +61,12 @@ public class OrderServiceImpl implements OrderService {
         }
         return order;
     }
-
     private OrdersDisplayVO getOrdersDisplayVo(Order condition, Integer startRow, Integer num) {
         Integer totalNumber = orderMapper.countOrders(condition);
         List<Order> orders = orderMapper.selectOrders(condition, startRow, num);
         return new OrdersDisplayVO(getOrderDisplayVOList(orders), totalNumber);
     }
-
+    @Transactional
     @Override
     public void addToCart(Integer productId, HttpServletRequest request, HttpServletResponse response) {
         Integer userId = getUserId(request);
@@ -83,6 +82,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void deleteFromCart(Integer orderId, HttpServletRequest request, HttpServletResponse response) {
         FormatUtil.checkPositive("orderId", orderId);
         getMyOrderById(orderId, request);
@@ -90,6 +90,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void buyProduct(Integer orderId, HttpServletRequest request, HttpServletResponse response) {
         Order order = getMyOrderById(orderId, request);
         Product product = productMapper.selectProductById(order.getProductId());
@@ -112,6 +113,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void sendProduct(Integer orderId, HttpServletRequest request, HttpServletResponse response) {
         Integer userId = getUserId(request);
         Shop shop = shopMapper.selectShopByUserId(userId);
@@ -132,6 +134,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrdersDisplayVO getCartList(Integer page, HttpServletRequest request, HttpServletResponse response) {
         Integer userId = getUserId(request);
         Order condition = new Order(null, userId, null, ConstantUtil.ORDER_NOT_PAY, null, null);
@@ -139,6 +142,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrdersDisplayVO userUnReceiveList(Integer page, HttpServletRequest request, HttpServletResponse response) {
         Integer userId = getUserId(request);
         Order condition = new Order(null, userId, null, ConstantUtil.ORDER_NOT_RECEIVE, null, null);
@@ -146,6 +150,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrdersDisplayVO userReceiveList(Integer page, HttpServletRequest request, HttpServletResponse response) {
         Integer userId = getUserId(request);
         Order condition = new Order(null, userId, null, ConstantUtil.ORDER_RECEIVE, null, null);
@@ -153,6 +158,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrdersDisplayVO ownerUnSendList(Integer page, HttpServletRequest request, HttpServletResponse response) {
         Integer userId = getUserId(request);
         Shop shop = shopMapper.selectShopByUserId(userId);
