@@ -134,14 +134,14 @@ public class AccountServiceImpl implements AccountService {
         Account accountTo = accountMapper.selectAccountById(accountIdTo);
         FormatUtil.checkNotNull("入账账户", accountTo);
         // 修改转账金额
-        if (!ConstantUtil.ACCOUNT_DUMMY.equals(accountIdFrom)) {
+        if (!ConstantUtil.ACCOUNT_DUMMY_ID.equals(accountIdFrom)) {
             if (accountFrom.getAccountMoney() < money)
                 throw new ServiceException("转账账户金额不足");
             accountFrom.setAccountMoney(accountFrom.getAccountMoney() - money);
             accountMapper.updateAccount(accountFrom);
         }
         // 修改入账金额
-        if (!ConstantUtil.ACCOUNT_DUMMY.equals(accountIdTo)) {
+        if (!ConstantUtil.ACCOUNT_DUMMY_ID.equals(accountIdTo)) {
             accountTo.setAccountMoney(accountTo.getAccountMoney() + money);
             accountMapper.updateAccount(accountTo);
         }
