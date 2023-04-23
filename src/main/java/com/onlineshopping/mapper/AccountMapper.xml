@@ -6,4 +6,26 @@
         insert into `account` (userId, accountType, accountMoney, accountState)
         values (#{userId}, #{accountType}, #{accountMoney}, #{accountState})
     </insert>
+
+    <select id="selectAccount" resultType="Account">
+        select *
+        from `account`
+        <where>
+            <if test="accountId!=NULL">
+                accountId = #{accountId}
+            </if>
+            <if test="userId!=NULL">
+                and userId = #{userId}
+            </if>
+            <if test="accountType!=NULL">
+                and accountType = #{accountType}
+            </if>
+            <if test="accountMoney!=NULL">
+                and accountMoney = #{accountMoney}
+            </if>
+            <if test="accountState!=NULL">
+                and accountState = #{accountState}
+            </if>
+        </where>
+    </select>
 </mapper>

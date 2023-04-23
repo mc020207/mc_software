@@ -1,10 +1,19 @@
 package com.onlineshopping.model.vo;
 
+import com.onlineshopping.model.entity.Account;
+
 public class AccountInfoVO {
     private Integer accountId;
     private Double accountMoney;
     private Integer accountState;
     private Integer accountType;
+
+    public AccountInfoVO(Account account) {
+        this.accountId = account.getAccountId();
+        this.accountMoney = account.getAccountMoney();
+        this.accountState = account.getAccountState();
+        this.accountType = account.getAccountType();
+    }
 
     @Override
     public String toString() {
