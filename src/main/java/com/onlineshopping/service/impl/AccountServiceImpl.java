@@ -3,11 +3,16 @@ package com.onlineshopping.service.impl;
 import com.onlineshopping.exception.ServiceException;
 import com.onlineshopping.mapper.AccountMapper;
 import com.onlineshopping.mapper.FlowMapper;
+import com.onlineshopping.mapper.UserMapper;
 import com.onlineshopping.model.entity.Account;
 import com.onlineshopping.model.entity.Flow;
+import com.onlineshopping.model.entity.User;
 import com.onlineshopping.model.vo.AccountInfoVO;
+import com.onlineshopping.model.vo.FlowDisplayVO;
+import com.onlineshopping.model.vo.FlowsDisplayVO;
 import com.onlineshopping.service.AccountService;
 import com.onlineshopping.util.ConstantUtil;
+import com.onlineshopping.util.FormatUtil;
 import com.onlineshopping.util.JwtUserUtil;
 import com.onlineshopping.util.ListUtil;
 import jakarta.annotation.Resource;
@@ -16,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,6 +31,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Resource
     private FlowMapper flowMapper;
+
+    @Resource
+    private UserMapper userMapper;
 
     /**
      * @Description: 根据token，检查权限并获取账户
@@ -73,6 +82,34 @@ public class AccountServiceImpl implements AccountService {
         flowMapper.insertFlow(flow);
     }
 
+    /**
+     * @Description: 根据accountId查询流水表（or关系）
+     * @Author: Lin-Yanjun
+     */
+    @Transactional
+    public FlowsDisplayVO getFlowList(Integer accountIdFrom, Integer accountIdTo, Integer page) {
+        Flow flow = new Flow();
+        if (accountIdFrom != null)
+            flow.setAccountIdFrom(accountIdFrom);
+        if (accountIdTo != null)
+            flow.setAccountIdTo(accountIdTo);
+        Integer startRow = (page - 1) * ConstantUtil.PAGE_SIZE;
+        Integer num = ConstantUtil.PAGE_SIZE;
+        List<Flow> flowList = flowMapper.selectFlowByAccountId(flow, startRow, num);
+        Integer totalNumber = flowMapper.countFlowByAccountId(flow);
+        List<FlowDisplayVO> flowDisplayVOList = new ArrayList<>();
+        Account accountFrom, accountTo;
+        User userFrom, userTo;
+        for (Flow f: flowList) {
+            accountFrom = accountMapper.selectAccountById(f.getAccountIdFrom());
+            accountTo = accountMapper.selectAccountById(f.getAccountIdTo());
+            userFrom = userMapper.selectUsersBySingleAttr("userId", accountFrom.getUserId()).get(0);
+            userTo = userMapper.selectUsersBySingleAttr("userId", accountTo.getUserId()).get(0);
+            flowDisplayVOList.add(new FlowDisplayVO(f, accountFrom, accountTo, userFrom, userTo));
+        }
+        return new FlowsDisplayVO(totalNumber, flowDisplayVOList);
+    }
+
     @Override
     @Transactional
     public AccountInfoVO info(HttpServletRequest request, Integer accountType) {
@@ -85,18 +122,11 @@ public class AccountServiceImpl implements AccountService {
         // 检查money非负
         if (money == null || money <= 0)
             throw new ServiceException("金额必须为正数");
-        // 查询出账账户
-        Account accountFrom = new Account();
-        accountFrom.setAccountId(accountIdFrom);
-        List<Account> accountFromList = accountMapper.selectAccount(accountFrom);
-        ListUtil.checkSingle("出账账户", accountFromList);
-        accountFrom = accountFromList.get(0);
-        // 查询入账账户
-        Account accountTo = new Account();
-        accountTo.setAccountId(accountIdTo);
-        List<Account> accountToList = accountMapper.selectAccount(accountTo);
-        ListUtil.checkSingle("入账账户", accountToList);
-        accountTo = accountToList.get(0);
+        // 查询账户
+        Account accountFrom = accountMapper.selectAccountById(accountIdFrom);
+        FormatUtil.checkNotNull("出账账户", accountFrom);
+        Account accountTo = accountMapper.selectAccountById(accountIdTo);
+        FormatUtil.checkNotNull("入账账户", accountTo);
         // 修改转账金额
         if (!ConstantUtil.ACCOUNT_DUMMY.equals(accountIdFrom)) {
             if (accountFrom.getAccountMoney() < money)
@@ -125,5 +155,26 @@ public class AccountServiceImpl implements AccountService {
     public void recharge(HttpServletRequest request, Integer accountType, Double money) {
         Account account = getAccount(request, accountType);
         transfer(ConstantUtil.ACCOUNT_DUMMY_ID, account.getAccountId(), money);
+    }
+
+    @Override
+    @Transactional
+    public FlowsDisplayVO flowFromList(HttpServletRequest request, Integer accountType, Integer page) {
+        Account account = getAccount(request, accountType);
+        return getFlowList(account.getAccountId(), null, page);
+    }
+
+    @Override
+    @Transactional
+    public FlowsDisplayVO flowToList(HttpServletRequest request, Integer accountType, Integer page) {
+        Account account = getAccount(request, accountType);
+        return getFlowList(null, account.getAccountId(), page);
+    }
+
+    @Override
+    @Transactional
+    public FlowsDisplayVO flowAllList(HttpServletRequest request, Integer accountType, Integer page) {
+        Account account = getAccount(request, accountType);
+        return getFlowList(account.getAccountId(), account.getAccountId(), page);
     }
 }

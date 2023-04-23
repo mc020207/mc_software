@@ -1,6 +1,7 @@
 package com.onlineshopping.service;
 
 import com.onlineshopping.model.vo.AccountInfoVO;
+import com.onlineshopping.model.vo.FlowsDisplayVO;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface AccountService {
@@ -27,4 +28,22 @@ public interface AccountService {
      * @Author: Lin-Yanjun
      */
     void recharge(HttpServletRequest request, Integer accountType, Double money);
+
+    /**
+     * @Description: 获取来自该account的流水表
+     * @Author: Lin-Yanjun
+     */
+    FlowsDisplayVO flowFromList(HttpServletRequest request, Integer accountType, Integer page);
+
+    /**
+     * @Description: 获取去往该account的流水表
+     * @Author: Lin-Yanjun
+     */
+    FlowsDisplayVO flowToList(HttpServletRequest request, Integer accountType, Integer page);
+
+    /**
+     * @Description: 获取来自或去往该account的流水表
+     * @Author: Lin-Yanjun
+     */
+    FlowsDisplayVO flowAllList(HttpServletRequest request, Integer accountType, Integer page);
 }

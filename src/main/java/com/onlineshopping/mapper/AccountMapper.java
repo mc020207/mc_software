@@ -10,5 +10,6 @@ import java.util.List;
 public interface AccountMapper {
     void insertAccount(Account account);
     List<Account> selectAccount(Account account);
+    Account selectAccountById(Integer accountId);
     void updateAccount(Account account);
 }

@@ -6,4 +6,33 @@
         insert into `flow` (accountIdFrom, accountIdTo, flowMoney, flowDate)
         values (#{accountIdFrom}, #{accountIdTo}, #{flowMoney}, #{flowDate})
     </insert>
+
+    <select id="selectFlowByAccountId" resultType="Flow">
+        select *
+        from `flow`
+        <where>
+            <if test="flow.accountIdFrom!=NULL">
+                accountIdFrom = #{flow.accountIdFrom}
+            </if>
+            <if test="flow.accountIdTo!=NULL">
+                or accountIdTo = #{flow.accountIdTo}
+            </if>
+        </where>
+        order by flowDate desc
+        limit #{startRow}, #{num}
+    </select>
+
+    <select id="countFlowByAccountId" resultType="Integer">
+        select count(*)
+        from `flow`
+        <where>
+            <if test="flow.accountIdFrom!=NULL">
+                accountIdFrom = #{flow.accountIdFrom}
+            </if>
+            <if test="flow.accountIdTo!=NULL">
+                or accountIdTo = #{flow.accountIdTo}
+            </if>
+        </where>
+    </select>
+
 </mapper>

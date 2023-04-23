@@ -6,6 +6,11 @@ public class FlowsDisplayVO {
     private List<FlowDisplayVO> flows;
     private Integer totalNumber;
 
+    public FlowsDisplayVO(Integer totalNumber, List<FlowDisplayVO> flowDisplayVOList) {
+        this.totalNumber = totalNumber;
+        this.flows = flowDisplayVOList;
+    }
+
     @Override
     public String toString() {
         return "FlowsDisplayVO{" +
@@ -13,6 +18,7 @@ public class FlowsDisplayVO {
                 ", totalNumber=" + totalNumber +
                 '}';
     }
+
 
     public List<FlowDisplayVO> getFlows() {
         return flows;

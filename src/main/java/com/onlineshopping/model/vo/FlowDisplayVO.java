@@ -1,5 +1,9 @@
 package com.onlineshopping.model.vo;
 
+import com.onlineshopping.model.entity.Account;
+import com.onlineshopping.model.entity.Flow;
+import com.onlineshopping.model.entity.User;
+
 public class FlowDisplayVO {
     private Integer accountIdFrom;
     private Integer accountIdTo;
@@ -10,6 +14,18 @@ public class FlowDisplayVO {
     private Double flowMoney;
     private String nameFrom;
     private String nameTo;
+
+    public FlowDisplayVO(Flow flow, Account accountFrom, Account accountTo, User userFrom, User userTo) {
+        this.accountIdFrom = accountFrom.getAccountId();
+        this.accountIdTo = accountTo.getAccountId();
+        this.accountTypeFrom = accountFrom.getAccountType();
+        this.accountTypeTo = accountTo.getAccountType();
+        this.flowDate = flow.getFlowDate().toString();
+        this.flowId = flow.getFlowId();
+        this.flowMoney = flow.getFlowMoney();
+        this.nameFrom = userFrom.getUserName();
+        this.nameTo = userTo.getUserName();
+    }
 
     @Override
     public String toString() {

@@ -1,7 +1,7 @@
 package com.onlineshopping.controller;
 
-import com.onlineshopping.model.vo.AccountInfoVO;
 import com.onlineshopping.model.vo.CommonResult;
+import com.onlineshopping.model.vo.FlowsDisplayVO;
 import com.onlineshopping.service.AccountService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,49 +10,53 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/account")
-public class AccountController {
+@RequestMapping("/api/flow")
+public class FlowController {
     @Resource
     AccountService accountService;
 
-    @RequestMapping(value = "/info", method = RequestMethod.GET)
-    public CommonResult info(HttpServletRequest request, Integer accountType) {
+    @RequestMapping(value = "/from/list", method = RequestMethod.GET)
+    public CommonResult flowFromList(HttpServletRequest request, Integer accountType, Integer page) {
         CommonResult cm = new CommonResult(false);
-        AccountInfoVO accountInfoVO;
+        FlowsDisplayVO flowsDisplayVO;
         try {
-            accountInfoVO = accountService.info(request, accountType);
+            flowsDisplayVO = accountService.flowFromList(request, accountType, page);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
         }
         cm.setSuccess(true);
-        cm.setObject(accountInfoVO);
+        cm.setObject(flowsDisplayVO);
         return cm;
     }
 
-    @RequestMapping(value = "/withdraw", method = RequestMethod.GET)
-    public CommonResult withdraw(HttpServletRequest request, Integer accountType, Double money) {
+    @RequestMapping(value = "/to/list", method = RequestMethod.GET)
+    public CommonResult flowToList(HttpServletRequest request, Integer accountType, Integer page) {
         CommonResult cm = new CommonResult(false);
+        FlowsDisplayVO flowsDisplayVO;
         try {
-            accountService.withdraw(request, accountType, money);
+            flowsDisplayVO = accountService.flowToList(request, accountType, page);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
         }
         cm.setSuccess(true);
+        cm.setObject(flowsDisplayVO);
         return cm;
     }
 
-    @RequestMapping(value = "/recharge", method = RequestMethod.GET)
-    public CommonResult recharge(HttpServletRequest request, Integer accountType, Double money) {
+    @RequestMapping(value = "/all/list", method = RequestMethod.GET)
+    public CommonResult flowAllList(HttpServletRequest request, Integer accountType, Integer page) {
         CommonResult cm = new CommonResult(false);
+        FlowsDisplayVO flowsDisplayVO;
         try {
-            accountService.recharge(request, accountType, money);
+            flowsDisplayVO = accountService.flowAllList(request, accountType, page);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
         }
         cm.setSuccess(true);
+        cm.setObject(flowsDisplayVO);
         return cm;
     }
 }

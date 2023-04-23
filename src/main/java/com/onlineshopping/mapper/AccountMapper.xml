@@ -29,6 +29,12 @@
         </where>
     </select>
 
+    <select id="selectAccountById" resultType="Account">
+        select *
+        from `account`
+        where accountId = #{accountId}
+    </select>
+
     <update id="updateAccount">
         update `account`
         <set>
