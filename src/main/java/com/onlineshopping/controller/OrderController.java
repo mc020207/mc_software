@@ -14,6 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
     @Resource
     OrderService orderService;
+    @RequestMapping(value = "/user/buy", method = RequestMethod.GET)
+    public CommonResult userBuyDirect(Integer productId,HttpServletRequest request, HttpServletResponse response) {
+        CommonResult cm = new CommonResult(false);
+        try {
+            orderService.buyProductDirectly(productId,request,response);
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
+        return cm;
+    }
     @RequestMapping(value = "/user/cart/add", method = RequestMethod.GET)
     public CommonResult userAddCart(Integer productId,HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
@@ -39,11 +51,11 @@ public class OrderController {
         return cm;
     }
 
-    @RequestMapping(value = "/user/buy", method = RequestMethod.GET)
-    public CommonResult userBuy(Integer orderId,HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/user/cart/buy", method = RequestMethod.GET)
+    public CommonResult userBuyFromCart(Integer orderId,HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            orderService.buyProduct(orderId, request, response);
+            orderService.buyProductFromCart(orderId, request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
@@ -76,7 +88,7 @@ public class OrderController {
         cm.setSuccess(true);
         return cm;
     }
-    @RequestMapping(value = "/user/send/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/wait/list", method = RequestMethod.GET)
     public CommonResult userSendList(Integer page,HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
@@ -107,6 +119,19 @@ public class OrderController {
         CommonResult cm = new CommonResult(false);
         try {
             cm.setObject(orderService.ownerUnSendList(page, request, response));
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
+        return cm;
+    }
+
+    @RequestMapping(value = "/owner/finish/list", method = RequestMethod.GET)
+    public CommonResult ownerFinishList(Integer page,HttpServletRequest request, HttpServletResponse response) {
+        CommonResult cm = new CommonResult(false);
+        try {
+            cm.setObject(orderService.ownerFinishList(page, request, response));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

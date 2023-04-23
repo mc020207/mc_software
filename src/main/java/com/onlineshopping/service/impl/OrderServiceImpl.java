@@ -66,6 +66,23 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orders = orderMapper.selectOrders(condition, startRow, num);
         return new OrdersDisplayVO(getOrderDisplayVOList(orders), totalNumber);
     }
+
+    private List<OrderDisplayVO> getOrderDisplayVOList(List<Order> orders) {
+        List<OrderDisplayVO> orderDisplayVOList = new ArrayList<>();
+        for (Order order : orders) {
+            Product product = productMapper.selectProductById(order.getProductId());
+            orderDisplayVOList.add(new OrderDisplayVO(order, product));
+        }
+        return orderDisplayVOList;
+    }
+    private Shop getMyShop(HttpServletRequest request){
+        Integer userId = getUserId(request);
+        Shop shop = shopMapper.selectShopByUserId(userId);
+        if (shop == null || Objects.equals(shop.getShopState(), ConstantUtil.SHOP_OPEN)) {
+            throw new ServiceException("该商户没有开张的商店");
+        }
+        return shop;
+    }
     @Transactional
     @Override
     public void addToCart(Integer productId, HttpServletRequest request, HttpServletResponse response) {
@@ -91,7 +108,26 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void buyProduct(Integer orderId, HttpServletRequest request, HttpServletResponse response) {
+    public void buyProductDirectly(Integer productId, HttpServletRequest request, HttpServletResponse response) {
+        Product product = productMapper.selectProductById(productId);
+        if (product == null) {
+            throw new ServiceException("该商品不存在");
+        }
+        if (!Objects.equals(product.getProductState(), ConstantUtil.PRODUCT_ON_SHELF)) {
+            throw new ServiceException("商品未上架出售");
+        }
+        Order order = new Order(null, getUserId(request), productId, ConstantUtil.ORDER_NOT_RECEIVE, new Timestamp(System.currentTimeMillis()), product.getProductPrice());
+        orderMapper.insertOrder(order);
+        Account accountCondition = new Account();
+        accountCondition.setAccountType(ConstantUtil.ACCOUNT_USER);
+        accountCondition.setUserId(order.getUserId());
+        Account account = accountMapper.selectAccount(accountCondition).get(0);
+        accountService.transfer(account.getAccountId(),ConstantUtil.ACCOUNT_MIDDLE_ID,order.getOrderMoney());
+    }
+
+    @Override
+    @Transactional
+    public void buyProductFromCart(Integer orderId, HttpServletRequest request, HttpServletResponse response) {
         Order order = getMyOrderById(orderId, request);
         Product product = productMapper.selectProductById(order.getProductId());
         if (!Objects.equals(product.getProductState(), ConstantUtil.PRODUCT_ON_SHELF)) {
@@ -160,11 +196,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrdersDisplayVO ownerUnSendList(Integer page, HttpServletRequest request, HttpServletResponse response) {
-        Integer userId = getUserId(request);
-        Shop shop = shopMapper.selectShopByUserId(userId);
-        if (shop == null && Objects.equals(shop.getShopState(), ConstantUtil.SHOP_OPEN)) {
-            throw new ServiceException("该商户没有开张的商店");
-        }
+        Shop shop = getMyShop(request);
         Order condition = new Order();
         condition.setOrderState(ConstantUtil.ORDER_NOT_RECEIVE);
         List<Order> orders = orderMapper.selectOrdersByShopId(condition, shop.getShopId(), (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
@@ -172,12 +204,14 @@ public class OrderServiceImpl implements OrderService {
         return new OrdersDisplayVO(getOrderDisplayVOList(orders), totalNumber);
     }
 
-    private List<OrderDisplayVO> getOrderDisplayVOList(List<Order> orders) {
-        List<OrderDisplayVO> orderDisplayVOList = new ArrayList<>();
-        for (Order order : orders) {
-            Product product = productMapper.selectProductById(order.getProductId());
-            orderDisplayVOList.add(new OrderDisplayVO(order, product));
-        }
-        return orderDisplayVOList;
+    @Override
+    @Transactional
+    public OrdersDisplayVO ownerFinishList(Integer page, HttpServletRequest request, HttpServletResponse response) {
+        Shop shop = getMyShop(request);
+        Order condition = new Order();
+        condition.setOrderState(ConstantUtil.ORDER_RECEIVE);
+        List<Order> orders = orderMapper.selectOrdersByShopId(condition, shop.getShopId(), (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
+        Integer totalNumber = orderMapper.countOrdersByShopId(condition, shop.getShopId());
+        return new OrdersDisplayVO(getOrderDisplayVOList(orders), totalNumber);
     }
 }
