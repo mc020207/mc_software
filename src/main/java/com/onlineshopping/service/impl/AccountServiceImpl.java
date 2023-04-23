@@ -65,11 +65,7 @@ public class AccountServiceImpl implements AccountService {
         account.setUserId(userId);
         account.setAccountType(accountType);
         account.setAccountState(ConstantUtil.ACCOUNT_IS_VALID);
-        System.out.println(account.getUserId());
-        System.out.println(account.getAccountType());
-        System.out.println(account.getAccountState());
         List<Account> accountList = accountMapper.selectAccount(account);
-        System.out.println("bye");
         ListUtil.checkSingle("账户", accountList);
         return accountList.get(0);
     }
