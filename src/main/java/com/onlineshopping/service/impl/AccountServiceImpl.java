@@ -50,13 +50,13 @@ public class AccountServiceImpl implements AccountService {
             if (!ConstantUtil.ACCOUNT_USER.equals(accountType))
                 throw new ServiceException("普通用户只能操作个人账户");
         } else if (ConstantUtil.USER_OWNER.equals(userRole)) {
-            if (!ConstantUtil.ACCOUNT_USER.equals(accountType)
-                    || !ConstantUtil.ACCOUNT_SHOP.equals(accountType))
+            if (!(ConstantUtil.ACCOUNT_USER.equals(accountType)
+                    || ConstantUtil.ACCOUNT_SHOP.equals(accountType)))
                 throw new ServiceException("商户只能操作个人账户或商店账户");
         } else {
-            if (!ConstantUtil.ACCOUNT_USER.equals(accountType)
-                    || !ConstantUtil.ACCOUNT_PROFIT.equals(accountType)
-                    || !ConstantUtil.ACCOUNT_MIDDLE.equals(accountType))
+            if (!(ConstantUtil.ACCOUNT_USER.equals(accountType)
+                    || ConstantUtil.ACCOUNT_PROFIT.equals(accountType)
+                    || ConstantUtil.ACCOUNT_MIDDLE.equals(accountType)))
                 throw new ServiceException("管理员只能操作个人账户或商城利润账户或中间账户");
         }
         // 查询账户
@@ -65,7 +65,11 @@ public class AccountServiceImpl implements AccountService {
         account.setUserId(userId);
         account.setAccountType(accountType);
         account.setAccountState(ConstantUtil.ACCOUNT_IS_VALID);
+        System.out.println(account.getUserId());
+        System.out.println(account.getAccountType());
+        System.out.println(account.getAccountState());
         List<Account> accountList = accountMapper.selectAccount(account);
+        System.out.println("bye");
         ListUtil.checkSingle("账户", accountList);
         return accountList.get(0);
     }

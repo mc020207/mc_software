@@ -11,19 +11,19 @@
         select *
         from `account`
         <where>
-            <if test="accountId!=NULL">
+            <if test="accountId!=null">
                 accountId = #{accountId}
             </if>
-            <if test="userId!=NULL">
+            <if test="userId!=null">
                 and userId = #{userId}
             </if>
-            <if test="accountType!=NULL">
+            <if test="accountType!=null">
                 and accountType = #{accountType}
             </if>
-            <if test="accountMoney!=NULL">
+            <if test="accountMoney!=null">
                 and accountMoney = #{accountMoney}
             </if>
-            <if test="accountState!=NULL">
+            <if test="accountState!=null">
                 and accountState = #{accountState}
             </if>
         </where>

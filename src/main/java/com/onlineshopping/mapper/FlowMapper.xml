@@ -11,10 +11,10 @@
         select *
         from `flow`
         <where>
-            <if test="flow.accountIdFrom!=NULL">
+            <if test="flow.accountIdFrom!=null">
                 accountIdFrom = #{flow.accountIdFrom}
             </if>
-            <if test="flow.accountIdTo!=NULL">
+            <if test="flow.accountIdTo!=null">
                 or accountIdTo = #{flow.accountIdTo}
             </if>
         </where>
@@ -26,10 +26,10 @@
         select count(*)
         from `flow`
         <where>
-            <if test="flow.accountIdFrom!=NULL">
+            <if test="flow.accountIdFrom!=null">
                 accountIdFrom = #{flow.accountIdFrom}
             </if>
-            <if test="flow.accountIdTo!=NULL">
+            <if test="flow.accountIdTo!=null">
                 or accountIdTo = #{flow.accountIdTo}
             </if>
         </where>
