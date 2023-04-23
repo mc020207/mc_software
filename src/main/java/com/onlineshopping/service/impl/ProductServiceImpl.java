@@ -41,8 +41,8 @@ public class ProductServiceImpl implements ProductService {
         String token = JwtUserUtil.getToken(request);
         Integer userId = Integer.parseInt(JwtUserUtil.getInfo(token, "userId"));
         Shop shop = shopMapper.selectShopByUserId(userId);
-        if (shop==null){
-            throw new ServiceException("该用户没有开店");
+        if (shop==null|| !Objects.equals(shop.getShopState(), ConstantUtil.SHOP_OPEN)){
+            throw new ServiceException("该用户没有已经开放的商店");
         }
         return shop;
     }
@@ -66,10 +66,10 @@ public class ProductServiceImpl implements ProductService {
     private void addProductRecord(Integer productId){
         ProductRecord condition=new ProductRecord();
         condition.setProductId(productId);
-        condition.setProductRecordState(ConstantUtil.RECORD_NOT_SOLVE);
+        condition.setProductRecordState(ConstantUtil.PRODUCT_RECORD_NOT_SOLVE);
         List<ProductRecord> productRecords = productRecordMapper.selectProductRecords(condition, 0, ConstantUtil.PAGE_SIZE);
         if (productRecords==null || productRecords.size()==0){
-            ProductRecord productRecord = new ProductRecord(null,productId,new Timestamp(System.currentTimeMillis()),null,ConstantUtil.RECORD_NOT_SOLVE);
+            ProductRecord productRecord = new ProductRecord(null,productId,new Timestamp(System.currentTimeMillis()),null,ConstantUtil.PRODUCT_RECORD_NOT_SOLVE);
             productRecordMapper.insertProductRecord(productRecord);
         }else{
             ProductRecord productRecord = productRecords.get(0);
@@ -279,7 +279,7 @@ public class ProductServiceImpl implements ProductService {
         product.setProductState(ConstantUtil.PRODUCT_ON_SHELF);
         productMapper.updateProductInfo(product);
         ProductRecord productRecord = new ProductRecord();
-        productRecord.setProductRecordState(ConstantUtil.RECORD_SOLVE);
+        productRecord.setProductRecordState(ConstantUtil.PRODUCT_RECORD_PASS);
         productRecord.setProductRecordDate(new Timestamp(System.currentTimeMillis()));
         productRecord.setProductId(productId);
         productRecord.setProductRecordComment("同意");
@@ -301,7 +301,7 @@ public class ProductServiceImpl implements ProductService {
         productMapper.updateProductInfo(product);
         ProductRecord productRecord = new ProductRecord();
         productRecord.setProductRecordComment("拒绝:"+reason);
-        productRecord.setProductRecordState(ConstantUtil.RECORD_SOLVE);
+        productRecord.setProductRecordState(ConstantUtil.PRODUCT_RECORD_REJECT);
         productRecord.setProductRecordDate(new Timestamp(System.currentTimeMillis()));
         productRecord.setProductId(productId);
         productRecordMapper.updateProductRecordById(productRecord);
