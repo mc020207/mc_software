@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/myshop")
+@RequestMapping("/api/owner")
 public class OwnerController {
     @Resource
     ShopService shopService;
     @Resource
     ProductService productService;
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(value = "/shop/register", method = RequestMethod.POST)
     public CommonResult shopRegister(@RequestBody ShopRegisterFVO shopRegisterFVO, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
@@ -34,7 +34,7 @@ public class OwnerController {
         return cm;
     }
 
-    @RequestMapping(value = "/info", method = RequestMethod.GET)
+    @RequestMapping(value = "/shop/info", method = RequestMethod.GET)
     public CommonResult getShopInfo(HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
@@ -141,7 +141,7 @@ public class OwnerController {
         return cm;
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "/shop/delete", method = RequestMethod.GET)
     public CommonResult deleteShop(HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
