@@ -3,42 +3,40 @@ package com.onlineshopping.model.vo;
 import com.onlineshopping.model.entity.ProductImg;
 
 public class ProductImgVO {
-    private Integer productImgId;
-    private String productImgAddr;
+    private Integer productImageId;
+    private String productImageAddr;
 
     @Override
     public String toString() {
         return "ProductImgVO{" +
-                "productImgId=" + productImgId +
-                ", productImgAddr='" + productImgAddr + '\'' +
+                "productImageId=" + productImageId +
+                ", productImageAddr='" + productImageAddr + '\'' +
                 '}';
     }
 
-    public Integer getProductImgId() {
-        return productImgId;
+    public Integer getProductImageId() {
+        return productImageId;
     }
 
-    public void setProductImgId(Integer productImgId) {
-        this.productImgId = productImgId;
+    public void setProductImageId(Integer productImageId) {
+        this.productImageId = productImageId;
     }
 
-    public String getProductImgAddr() {
-        return productImgAddr;
+    public String getProductImageAddr() {
+        return productImageAddr;
     }
 
-    public void setProductImgAddr(String productImgAddr) {
-        this.productImgAddr = productImgAddr;
+    public void setProductImageAddr(String productImageAddr) {
+        this.productImageAddr = productImageAddr;
     }
 
-    public ProductImgVO() {
+    public ProductImgVO(Integer productImageId, String productImageAddr) {
+        this.productImageId = productImageId;
+        this.productImageAddr = productImageAddr;
     }
 
-    public ProductImgVO(Integer productImgId, String productImgAddr) {
-        this.productImgId = productImgId;
-        this.productImgAddr = productImgAddr;
-    }
     public ProductImgVO(ProductImg productImg) {
-        this.productImgId = productImg.getProductImgId();
-        this.productImgAddr = productImg.getProductImgAddr();
+        this.productImageId = productImg.getProductImgId();
+        this.productImageAddr = productImg.getProductImgAddr();
     }
 }

@@ -1,3 +1,6 @@
+drop database onlineshopping;
+create database onlineshopping;
+use onlineshopping
 CREATE TABLE `account`  (
   `accountId` int NOT NULL AUTO_INCREMENT,
   `userId` int NOT NULL,
