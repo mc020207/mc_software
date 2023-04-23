@@ -63,11 +63,17 @@
     <update id="updateProductInfo">
         update `product`
         <set>
-            <if test="product.productName!=null">
-                productName=#{product.productName}
+            <if test="productName!=null">
+                productName=#{productName}
             </if>
-            <if test="product.productIntro!=null">
-                ,productIntro=#{product.productIntro}
+            <if test="productIntro!=null">
+                ,productIntro=#{productIntro}
+            </if>
+            <if test="productState!=null">
+                ,productState=#{productState}
+            </if>
+            <if test="productPrice!=null">
+                ,productPrice=#{productPrice}
             </if>
         </set>
         where productId=#{productId}

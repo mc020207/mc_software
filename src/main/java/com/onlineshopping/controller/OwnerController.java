@@ -114,10 +114,10 @@ public class OwnerController {
     }
 
     @RequestMapping(value = "/product/image/delete", method = RequestMethod.GET)
-    public CommonResult deleteProductImage(Integer imageId, HttpServletRequest request, HttpServletResponse response) {
+    public CommonResult deleteProductImage(Integer productImgId, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            productService.deleteProductImage(imageId, request, response);
+            productService.deleteProductImage(productImgId, request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

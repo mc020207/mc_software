@@ -78,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
     private Shop getMyShop(HttpServletRequest request){
         Integer userId = getUserId(request);
         Shop shop = shopMapper.selectShopByUserId(userId);
-        if (shop == null || Objects.equals(shop.getShopState(), ConstantUtil.SHOP_OPEN)) {
+        if (shop == null || !Objects.equals(shop.getShopState(), ConstantUtil.SHOP_OPEN)) {
             throw new ServiceException("该商户没有开张的商店");
         }
         return shop;

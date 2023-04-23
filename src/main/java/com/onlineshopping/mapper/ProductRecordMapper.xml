@@ -87,20 +87,20 @@
         update productRecord
         set productRecordState=#{newState}
         <where>
-            <if test="productRecordId!=null">
-                productRecordId=#{productRecordId}
+            <if test="productRecord.productRecordId!=null">
+                productRecordId=#{productRecord.productRecordId}
             </if>
-            <if test="productId!=null">
-                and productId=#{productId}
+            <if test="productRecord.productId!=null">
+                and productId=#{productRecord.productId}
             </if>
-            <if test="productRecordDate!=null">
-                and productRecordDate=#{productRecordDate}
+            <if test="productRecord.productRecordDate!=null">
+                and productRecordDate=#{productRecord.productRecordDate}
             </if>
-            <if test="productRecordComment!=null">
-                and productRecordComment=#{productRecordComment}
+            <if test="productRecord.productRecordComment!=null">
+                and productRecordComment=#{productRecord.productRecordComment}
             </if>
-            <if test="productRecordState!=null">
-                and productRecordState=#{productRecordState}
+            <if test="productRecord.productRecordState!=null">
+                and productRecordState=#{productRecord.productRecordState}
             </if>
         </where>
     </update>

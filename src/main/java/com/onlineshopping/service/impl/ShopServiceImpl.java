@@ -42,6 +42,9 @@ public class ShopServiceImpl implements ShopService {
     ShopRecordMapper shopRecordMapper;
 
     @Resource
+    ProductRecordMapper productRecordMapper;
+
+    @Resource
     AccountService accountService;
     @Resource
     AccountMapper accountMapper;
@@ -152,8 +155,11 @@ public class ShopServiceImpl implements ShopService {
                 productMapper.updateProductInfo(product);
             } else if (Objects.equals(product.getProductState(), ConstantUtil.PRODUCT_IN_INSPECTION)) {
                 product.setProductState(ConstantUtil.PRODUCT_REJECTED);
-                ProductRecord productRecord = new ProductRecord();
-
+                ProductRecord productRecordCondition = new ProductRecord();
+                ProductRecord productRecord = productRecordMapper.selectProductRecords(productRecordCondition, 0, ConstantUtil.PAGE_SIZE).get(0);
+                productRecord.setProductRecordComment("商家申请删除商店");
+//                productRecord.setProductRecordState();
+                productRecordMapper.updateProductRecordById(productRecord);
                 productMapper.updateProductInfo(product);
             }
         }
