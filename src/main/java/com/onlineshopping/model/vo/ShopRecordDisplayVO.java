@@ -1,20 +1,24 @@
 package com.onlineshopping.model.vo;
 
+import com.onlineshopping.model.entity.ShopRecord;
+
+import java.sql.Date;
+
 public class ShopRecordDisplayVO {
     private Integer shopId;
     private String shopRecordComment;
-    private String shopRecordDate;
+    private Date shopRecordDate;
     private Integer shopRecordId;
-    private String shopRecordState;
+    private Integer shopRecordState;
 
     @Override
     public String toString() {
         return "ShopRecordDisplayVO{" +
                 "shopId=" + shopId +
                 ", shopRecordComment='" + shopRecordComment + '\'' +
-                ", shopRecordDate='" + shopRecordDate + '\'' +
+                ", shopRecordDate=" + shopRecordDate +
                 ", shopRecordId=" + shopRecordId +
-                ", shopRecordState='" + shopRecordState + '\'' +
+                ", shopRecordState=" + shopRecordState +
                 '}';
     }
 
@@ -34,11 +38,11 @@ public class ShopRecordDisplayVO {
         this.shopRecordComment = shopRecordComment;
     }
 
-    public String getShopRecordDate() {
+    public Date getShopRecordDate() {
         return shopRecordDate;
     }
 
-    public void setShopRecordDate(String shopRecordDate) {
+    public void setShopRecordDate(Date shopRecordDate) {
         this.shopRecordDate = shopRecordDate;
     }
 
@@ -50,22 +54,30 @@ public class ShopRecordDisplayVO {
         this.shopRecordId = shopRecordId;
     }
 
-    public String getShopRecordState() {
+    public Integer getShopRecordState() {
         return shopRecordState;
     }
 
-    public void setShopRecordState(String shopRecordState) {
+    public void setShopRecordState(Integer shopRecordState) {
         this.shopRecordState = shopRecordState;
     }
 
     public ShopRecordDisplayVO() {
     }
 
-    public ShopRecordDisplayVO(Integer shopId, String shopRecordComment, String shopRecordDate, Integer shopRecordId, String shopRecordState) {
+    public ShopRecordDisplayVO(Integer shopId, String shopRecordComment, Date shopRecordDate, Integer shopRecordId, Integer shopRecordState) {
         this.shopId = shopId;
         this.shopRecordComment = shopRecordComment;
         this.shopRecordDate = shopRecordDate;
         this.shopRecordId = shopRecordId;
         this.shopRecordState = shopRecordState;
+    }
+
+    public ShopRecordDisplayVO(ShopRecord shopRecord) {
+        this.shopId = shopRecord.getShopId();
+        this.shopRecordComment = shopRecord.getShopRecordComment();
+        this.shopRecordDate = shopRecord.getShopRecordDate();
+        this.shopRecordId = shopRecord.getShopRecordId();
+        this.shopRecordState = shopRecord.getShopRecordState();
     }
 }

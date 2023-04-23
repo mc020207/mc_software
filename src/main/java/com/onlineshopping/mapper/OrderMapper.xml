@@ -37,22 +37,22 @@
             `order`.productId=product.productId
             and product.shopId=shop.shopId
             <if test="order.orderId!=null">
-                and orderId=#{order.orderId}
+                and `order`.orderId=#{order.orderId}
             </if>
             <if test="order.userId!=null">
-                and userId=#{order.userId}
+                and `order`.userId=#{order.userId}
             </if>
             <if test="order.productId!=null">
                 and `order`.productId=#{order.productId}
             </if>
             <if test="order.orderState!=null">
-                and orderState=#{order.orderState}
+                and `order`.orderState=#{order.orderState}
             </if>
             <if test="order.orderDate!=null">
-                and orderDate=#{order.orderDate}
+                and `order`.orderDate=#{order.orderDate}
             </if>
             <if test="order.orderMoney!=null">
-                and orderMoney=#{order.orderMoney}
+                and `order`.orderMoney=#{order.orderMoney}
             </if>
         </where>
         <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
@@ -96,22 +96,22 @@
             `order`.productId=product.productId
             and product.shopId=shop.shopId
             <if test="order.orderId!=null">
-                and orderId=#{order.orderId}
+                and `order`.orderId=#{order.orderId}
             </if>
             <if test="order.userId!=null">
-                and userId=#{order.userId}
+                and `order`.userId=#{order.userId}
             </if>
             <if test="order.productId!=null">
                 and `order`.productId=#{order.productId}
             </if>
             <if test="order.orderState!=null">
-                and orderState=#{order.orderState}
+                and `order`.orderState=#{order.orderState}
             </if>
             <if test="order.orderDate!=null">
-                and orderDate=#{order.orderDate}
+                and `order`.orderDate=#{order.orderDate}
             </if>
             <if test="order.orderMoney!=null">
-                and orderMoney=#{order.orderMoney}
+                and `order`.orderMoney=#{order.orderMoney}
             </if>
         </where>
     </select>

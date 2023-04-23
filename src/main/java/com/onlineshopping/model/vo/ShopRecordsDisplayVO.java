@@ -2,7 +2,7 @@ package com.onlineshopping.model.vo;
 
 import java.util.List;
 
-public class ShopsRecordDisplayVO {
+public class ShopRecordsDisplayVO {
     private List<ShopRecordDisplayVO> records;
     private Integer totalNumber;
 
@@ -30,10 +30,10 @@ public class ShopsRecordDisplayVO {
         this.totalNumber = totalNumber;
     }
 
-    public ShopsRecordDisplayVO() {
+    public ShopRecordsDisplayVO() {
     }
 
-    public ShopsRecordDisplayVO(List<ShopRecordDisplayVO> records, Integer totalNumber) {
+    public ShopRecordsDisplayVO(List<ShopRecordDisplayVO> records, Integer totalNumber) {
         this.records = records;
         this.totalNumber = totalNumber;
     }

@@ -1,20 +1,24 @@
 package com.onlineshopping.model.vo;
 
+import com.onlineshopping.model.entity.ProductRecord;
+
+import java.sql.Date;
+
 public class ProductRecordDisplayVO {
     private Integer productId;
     private String productRecordComment;
-    private String productRecordDate;
+    private Date productRecordDate;
     private Integer productRecordId;
-    private String productRecordState;
+    private Integer productRecordState;
 
     @Override
     public String toString() {
         return "ProductRecordDisplayVO{" +
                 "productId=" + productId +
                 ", productRecordComment='" + productRecordComment + '\'' +
-                ", productRecordDate='" + productRecordDate + '\'' +
+                ", productRecordDate=" + productRecordDate +
                 ", productRecordId=" + productRecordId +
-                ", productRecordState='" + productRecordState + '\'' +
+                ", productRecordState=" + productRecordState +
                 '}';
     }
 
@@ -34,11 +38,11 @@ public class ProductRecordDisplayVO {
         this.productRecordComment = productRecordComment;
     }
 
-    public String getProductRecordDate() {
+    public Date getProductRecordDate() {
         return productRecordDate;
     }
 
-    public void setProductRecordDate(String productRecordDate) {
+    public void setProductRecordDate(Date productRecordDate) {
         this.productRecordDate = productRecordDate;
     }
 
@@ -50,22 +54,30 @@ public class ProductRecordDisplayVO {
         this.productRecordId = productRecordId;
     }
 
-    public String getProductRecordState() {
+    public Integer getProductRecordState() {
         return productRecordState;
     }
 
-    public void setProductRecordState(String productRecordState) {
+    public void setProductRecordState(Integer productRecordState) {
         this.productRecordState = productRecordState;
     }
 
     public ProductRecordDisplayVO() {
     }
 
-    public ProductRecordDisplayVO(Integer productId, String productRecordComment, String productRecordDate, Integer productRecordId, String productRecordState) {
+    public ProductRecordDisplayVO(Integer productId, String productRecordComment, Date productRecordDate, Integer productRecordId, Integer productRecordState) {
         this.productId = productId;
         this.productRecordComment = productRecordComment;
         this.productRecordDate = productRecordDate;
         this.productRecordId = productRecordId;
         this.productRecordState = productRecordState;
+    }
+
+    public ProductRecordDisplayVO(ProductRecord productRecord) {
+        this.productId = productRecord.getProductId();
+        this.productRecordComment = productRecord.getProductRecordComment();
+        this.productRecordDate = productRecord.getProductRecordDate();
+        this.productRecordId = productRecord.getProductRecordId();
+        this.productRecordState = productRecord.getProductRecordState();
     }
 }
