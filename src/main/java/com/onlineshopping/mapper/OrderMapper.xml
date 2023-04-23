@@ -36,6 +36,7 @@
         <where>
             `order`.productId=product.productId
             and product.shopId=shop.shopId
+            and product.shopId=#{shopId}
             <if test="order.orderId!=null">
                 and `order`.orderId=#{order.orderId}
             </if>
@@ -95,6 +96,7 @@
         <where>
             `order`.productId=product.productId
             and product.shopId=shop.shopId
+            and product.shopId=#{shopId}
             <if test="order.orderId!=null">
                 and `order`.orderId=#{order.orderId}
             </if>
