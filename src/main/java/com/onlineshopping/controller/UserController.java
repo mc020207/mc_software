@@ -47,7 +47,7 @@ public class UserController {
             return cm;
         }
         cm.setSuccess(true);
-        cm.setObject(new LoginVO(token));
+        cm.setObject(new TokenVO(token));
         return cm;
     }
 
@@ -92,7 +92,7 @@ public class UserController {
             return cm;
         }
         cm.setSuccess(true);
-        cm.setObject(token);
+        cm.setObject(new TokenVO(token));
         return cm;
     }
 
@@ -109,7 +109,7 @@ public class UserController {
             return cm;
         }
         cm.setSuccess(true);
-        cm.setObject(token);
+        cm.setObject(new TokenVO(token));
         return cm;
     }
 }

@@ -54,9 +54,10 @@ public class AccountServiceImpl implements AccountService {
                     || !ConstantUtil.ACCOUNT_SHOP.equals(accountType))
                 throw new ServiceException("商户只能操作个人账户或商店账户");
         } else {
-            if (!ConstantUtil.ACCOUNT_PROFIT.equals(accountType)
+            if (!ConstantUtil.ACCOUNT_USER.equals(accountType)
+                    || !ConstantUtil.ACCOUNT_PROFIT.equals(accountType)
                     || !ConstantUtil.ACCOUNT_MIDDLE.equals(accountType))
-                throw new ServiceException("管理员只能操作商城利润账户或中间账户");
+                throw new ServiceException("管理员只能操作个人账户或商城利润账户或中间账户");
         }
         // 查询账户
         Integer userId = Integer.valueOf(JwtUserUtil.getInfo(token, "userId"));
