@@ -19,16 +19,13 @@ import com.onlineshopping.util.JwtUserUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.boot.web.servlet.filter.OrderedHiddenHttpMethodFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.zip.CheckedOutputStream;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -43,10 +40,18 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     AccountMapper accountMapper;
 
+    /**
+     * @Description: 获取token中的用户ID
+     * @Author: Ma-cheng
+     */
     private Integer getUserId(HttpServletRequest request) {
         String token = JwtUserUtil.getToken(request);
         return Integer.parseInt(JwtUserUtil.getInfo(token, "userId"));
     }
+    /**
+     * @Description: 根据OrderId获取Order，会检查是否Order是不是User的
+     * @Author: Ma-cheng
+     */
     private Order getMyOrderById(Integer orderId, HttpServletRequest request) {
         Order order = orderMapper.selectOrderById(orderId);
         if (order == null) {
@@ -61,12 +66,19 @@ public class OrderServiceImpl implements OrderService {
         }
         return order;
     }
+    /**
+     * @Description: 根据给出的Condition组装OrdersDisplayVo
+     * @Author: Ma-cheng
+     */
     private OrdersDisplayVO getOrdersDisplayVo(Order condition, Integer startRow, Integer num) {
         Integer totalNumber = orderMapper.countOrders(condition);
         List<Order> orders = orderMapper.selectOrders(condition, startRow, num);
         return new OrdersDisplayVO(getOrderDisplayVOList(orders), totalNumber);
     }
-
+    /**
+     * @Description: 根据给出的OrderList组装OrderDisplayVoList
+     * @Author: Ma-cheng
+     */
     private List<OrderDisplayVO> getOrderDisplayVOList(List<Order> orders) {
         List<OrderDisplayVO> orderDisplayVOList = new ArrayList<>();
         for (Order order : orders) {
@@ -75,6 +87,10 @@ public class OrderServiceImpl implements OrderService {
         }
         return orderDisplayVOList;
     }
+    /**
+     * @Description: 获取用户的商店，并且检查商店是否开放
+     * @Author: Ma-cheng
+     */
     private Shop getMyShop(HttpServletRequest request){
         Integer userId = getUserId(request);
         Shop shop = shopMapper.selectShopByUserId(userId);
@@ -83,10 +99,11 @@ public class OrderServiceImpl implements OrderService {
         }
         return shop;
     }
-    @Transactional
-    @Override
-    public void addToCart(Integer productId, HttpServletRequest request, HttpServletResponse response) {
-        Integer userId = getUserId(request);
+    /**
+     * @Description: 检查商品是否可以购买，如果可以就返回商品
+     * @Author: Ma-cheng
+     */
+    private Product checkProductCanBuy(Integer productId){
         Product product = productMapper.selectProductById(productId);
         if (product == null) {
             throw new ServiceException("该商品不存在");
@@ -94,6 +111,16 @@ public class OrderServiceImpl implements OrderService {
         if (!Objects.equals(product.getProductState(), ConstantUtil.PRODUCT_ON_SHELF)) {
             throw new ServiceException("商品未上架出售");
         }
+        return product;
+    }
+    @Transactional
+    @Override
+    public void addToCart(Integer productId, HttpServletRequest request, HttpServletResponse response) {
+        FormatUtil.checkPositive("productId",productId);
+        Integer userId = getUserId(request);
+        // 检查商品是否可以购买
+        Product product = checkProductCanBuy(productId);
+        // 插入订单
         Order order = new Order(null, userId, productId, ConstantUtil.ORDER_NOT_PAY, new Timestamp(System.currentTimeMillis()), product.getProductPrice());
         orderMapper.insertOrder(order);
     }
@@ -109,15 +136,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void buyProductDirectly(Integer productId, HttpServletRequest request, HttpServletResponse response) {
-        Product product = productMapper.selectProductById(productId);
-        if (product == null) {
-            throw new ServiceException("该商品不存在");
-        }
-        if (!Objects.equals(product.getProductState(), ConstantUtil.PRODUCT_ON_SHELF)) {
-            throw new ServiceException("商品未上架出售");
-        }
+        FormatUtil.checkPositive("productId",productId);
+        Product product = checkProductCanBuy(productId);
+        // 插入订单
         Order order = new Order(null, getUserId(request), productId, ConstantUtil.ORDER_NOT_RECEIVE, new Timestamp(System.currentTimeMillis()), product.getProductPrice());
         orderMapper.insertOrder(order);
+        // 个人账户向中间账户转账
         Account accountCondition = new Account();
         accountCondition.setAccountType(ConstantUtil.ACCOUNT_USER);
         accountCondition.setUserId(order.getUserId());
@@ -128,19 +152,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void buyProductFromCart(Integer orderId, HttpServletRequest request, HttpServletResponse response) {
+        FormatUtil.checkPositive("orderId",orderId);
         Order order = getMyOrderById(orderId, request);
-        Product product = productMapper.selectProductById(order.getProductId());
-        if (!Objects.equals(product.getProductState(), ConstantUtil.PRODUCT_ON_SHELF)) {
-            throw new ServiceException("商品未上架出售");
-        }
-        if (!Objects.equals(order.getUserId(), getUserId(request))){
-            throw new ServiceException("不可以下单他人购物车的商品");
-        }
+        Product product = checkProductCanBuy(order.getProductId());
+        // 更改Order状态
         order.setOrderState(ConstantUtil.ORDER_NOT_RECEIVE);
         order.setOrderDate(new Timestamp(System.currentTimeMillis()));
         order.setOrderMoney(product.getProductPrice());
         orderMapper.updateOrderInfo(order);
-        // 此处需要转账功能
+        // 个人账户向中间账户转账
         Account accountCondition = new Account();
         accountCondition.setAccountType(ConstantUtil.ACCOUNT_USER);
         accountCondition.setUserId(order.getUserId());
@@ -151,8 +171,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void sendProduct(Integer orderId, HttpServletRequest request, HttpServletResponse response) {
-        Integer userId = getUserId(request);
-        Shop shop = shopMapper.selectShopByUserId(userId);
+        FormatUtil.checkPositive("orderId",orderId);
+        Shop shop = getMyShop(request);
         Order order = orderMapper.selectOrderById(orderId);
         if (order==null){
             throw new ServiceException("没有这个订单");
@@ -161,9 +181,13 @@ public class OrderServiceImpl implements OrderService {
         if (!Objects.equals(product.getShopId(), shop.getShopId())) {
             throw new ServiceException("不得发货其他商家的订单");
         }
+        if (!Objects.equals(order.getOrderState(), ConstantUtil.ORDER_NOT_RECEIVE)){
+            throw new ServiceException("订单不处于未发货状态");
+        }
+        // 更改Order状态
         order.setOrderState(ConstantUtil.ORDER_RECEIVE);
         orderMapper.updateOrderInfo(order);
-        // 此处需要转账功能
+        // 中间账户向商家商店账户转账
         Account accountCondition = new Account();
         accountCondition.setAccountType(ConstantUtil.ACCOUNT_SHOP);
         accountCondition.setUserId(order.getUserId());
@@ -175,6 +199,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrdersDisplayVO getCartList(Integer page, HttpServletRequest request, HttpServletResponse response) {
+        FormatUtil.checkPositive("page",page);
         Integer userId = getUserId(request);
         Order condition = new Order(null, userId, null, ConstantUtil.ORDER_NOT_PAY, null, null);
         return getOrdersDisplayVo(condition, (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
@@ -183,6 +208,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrdersDisplayVO userUnReceiveList(Integer page, HttpServletRequest request, HttpServletResponse response) {
+        FormatUtil.checkPositive("page",page);
         Integer userId = getUserId(request);
         Order condition = new Order(null, userId, null, ConstantUtil.ORDER_NOT_RECEIVE, null, null);
         return getOrdersDisplayVo(condition, (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
@@ -191,6 +217,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrdersDisplayVO userReceiveList(Integer page, HttpServletRequest request, HttpServletResponse response) {
+        FormatUtil.checkPositive("page",page);
         Integer userId = getUserId(request);
         Order condition = new Order(null, userId, null, ConstantUtil.ORDER_RECEIVE, null, null);
         return getOrdersDisplayVo(condition, (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
@@ -199,6 +226,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrdersDisplayVO ownerUnSendList(Integer page, HttpServletRequest request, HttpServletResponse response) {
+        FormatUtil.checkPositive("page",page);
         Shop shop = getMyShop(request);
         Order condition = new Order();
         condition.setOrderState(ConstantUtil.ORDER_NOT_RECEIVE);
@@ -210,6 +238,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrdersDisplayVO ownerFinishList(Integer page, HttpServletRequest request, HttpServletResponse response) {
+        FormatUtil.checkPositive("page",page);
         Shop shop = getMyShop(request);
         Order condition = new Order();
         condition.setOrderState(ConstantUtil.ORDER_RECEIVE);
