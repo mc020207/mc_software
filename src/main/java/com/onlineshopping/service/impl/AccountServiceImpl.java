@@ -122,8 +122,11 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public void transfer(Integer accountIdFrom, Integer accountIdTo, Double money) {
         // 检查money非负
-        if (money == null || money <= 0)
+        if (money == null || money < 0)
             throw new ServiceException("金额必须为正数");
+        if (money == 0.0){
+            return ;
+        }
         // 查询账户
         Account accountFrom = accountMapper.selectAccountById(accountIdFrom);
         FormatUtil.checkNotNull("出账账户", accountFrom);

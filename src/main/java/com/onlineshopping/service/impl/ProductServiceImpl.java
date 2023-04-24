@@ -155,8 +155,11 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void addProduct(ProductDTO productDTO, HttpServletRequest request, HttpServletResponse response) {
         FormatUtil.checkNotNull("productName", productDTO.getProductName());
-        FormatUtil.checkNotNull("productPriceName", productDTO.getProductName());
-        FormatUtil.checkNotNull("productIntro", productDTO.getProductName());
+        FormatUtil.checkNotNull("productIntro", productDTO.getProductIntro());
+        FormatUtil.checkNotNull("productPriceName", productDTO.getProductPrice());
+        if (productDTO.getProductPrice()<=0.0){
+            throw new ServiceException("金额必须为正数");
+        }
         Shop shop = getShop(request);
         Product product = productDTO.changeToProduct();
         product.setShopId(shop.getShopId());
@@ -178,7 +181,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void updateProductInfo(ProductDTO productDTO, HttpServletRequest request, HttpServletResponse response) {
+        FormatUtil.checkNotNull("productName", productDTO.getProductName());
+        FormatUtil.checkNotNull("productIntro", productDTO.getProductIntro());
+        FormatUtil.checkNotNull("productPriceName", productDTO.getProductPrice());
         FormatUtil.checkPositive("productId",productDTO.getProductId());
+        if (productDTO.getProductPrice()<=0.0){
+            throw new ServiceException("金额必须为正数");
+        }
         Shop shop = getShop(request);
         isMyProduct(productDTO.getProductId(),request);
         if (!productCanDelete(productDTO.getProductId())) {
