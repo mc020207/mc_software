@@ -42,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * @Description: 获取token中的用户ID
-     * @Author: Ma-cheng
+     * @Author: Ma-Cheng
      */
     private Integer getUserId(HttpServletRequest request) {
         String token = JwtUserUtil.getToken(request);
@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
     }
     /**
      * @Description: 根据OrderId获取Order，会检查是否Order是不是User的
-     * @Author: Ma-cheng
+     * @Author: Ma-Cheng
      */
     private Order getMyOrderById(Integer orderId, HttpServletRequest request) {
         Order order = orderMapper.selectOrderById(orderId);
@@ -68,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
     }
     /**
      * @Description: 根据给出的Condition组装OrdersDisplayVo
-     * @Author: Ma-cheng
+     * @Author: Ma-Cheng
      */
     private OrdersDisplayVO getOrdersDisplayVo(Order condition, Integer startRow, Integer num) {
         Integer totalNumber = orderMapper.countOrders(condition);
@@ -77,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
     }
     /**
      * @Description: 根据给出的OrderList组装OrderDisplayVoList
-     * @Author: Ma-cheng
+     * @Author: Ma-Cheng
      */
     private List<OrderDisplayVO> getOrderDisplayVOList(List<Order> orders) {
         List<OrderDisplayVO> orderDisplayVOList = new ArrayList<>();
@@ -89,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
     }
     /**
      * @Description: 获取用户的商店，并且检查商店是否开放
-     * @Author: Ma-cheng
+     * @Author: Ma-Cheng
      */
     private Shop getMyShop(HttpServletRequest request){
         Integer userId = getUserId(request);
@@ -101,7 +101,7 @@ public class OrderServiceImpl implements OrderService {
     }
     /**
      * @Description: 检查商品是否可以购买，如果可以就返回商品
-     * @Author: Ma-cheng
+     * @Author: Ma-Cheng
      */
     private Product checkProductCanBuy(Integer productId){
         Product product = productMapper.selectProductById(productId);
