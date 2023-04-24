@@ -181,6 +181,9 @@ public class ProductServiceImpl implements ProductService {
         FormatUtil.checkPositive("productId",productDTO.getProductId());
         Shop shop = getShop(request);
         isMyProduct(productDTO.getProductId(),request);
+        if (!productCanDelete(productDTO.getProductId())) {
+            throw new ServiceException("还有未发货的订单");
+        }
         Product product=productDTO.changeToProduct();
         product.setShopId(shop.getShopId());
         productMapper.updateProductInfo(product);
@@ -193,6 +196,9 @@ public class ProductServiceImpl implements ProductService {
     public void addProductImage(Integer productId, MultipartFile image, HttpServletRequest request, HttpServletResponse response) {
         FormatUtil.checkNotNull("image",image);
         isMyProduct(productId,request);
+        if (!productCanDelete(productId)) {
+            throw new ServiceException("还有未发货的订单");
+        }
         //获取文件的后缀名
         int lastIndexOf = Objects.requireNonNull(image.getOriginalFilename()).lastIndexOf(".");
         String suffix = image.getOriginalFilename().substring(lastIndexOf);
@@ -226,6 +232,9 @@ public class ProductServiceImpl implements ProductService {
             throw new ServiceException("没有这张图片");
         }
         isMyProduct(productImg.getProductId(),request);
+        if (!productCanDelete(productImg.getProductId())) {
+            throw new ServiceException("还有未发货的订单");
+        }
         productImgMapper.deleteProductImgByProductImgId(imageId);
         addProductRecord(productImg.getProductId());
         changeProductState(productImg.getProductId(), ConstantUtil.PRODUCT_IN_INSPECTION);
