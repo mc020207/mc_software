@@ -12,8 +12,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/api/**")
                 .excludePathPatterns("/api/user/register")
                 .excludePathPatterns("/api/user/login");
-        registry.addInterceptor(new OwnerInterceptor()).addPathPatterns("/api/myshop/**").addPathPatterns("/api/order/owner/send/list");
-        registry.addInterceptor(new AdminInterceptor()).addPathPatterns("/api/inspect/**");
+        registry.addInterceptor(new OwnerInterceptor()).addPathPatterns("/api/owner/**").addPathPatterns("/api/order/owner/**");
+        registry.addInterceptor(new AdminInterceptor()).addPathPatterns("/api/admin/**");
     }
 }
 
