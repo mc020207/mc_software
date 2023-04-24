@@ -56,15 +56,14 @@
 </template>
 
 <script>
-import {apiShopInfo,apiProductInfo,apiAdminShop,apiAdminProducts} from '@/api/api'
+import {apiVisitShopProductList,apiVisitShopInfo} from '@/api/api'
 export default {
   data() {
     return {
+      productShopList: [],
       currentPage:1,
       pageSize:9,     //一页的数量
-      total:0,
-      shopInfo: {},
-      productShopList:[]
+      total:100
     };
   },
   created() {
@@ -78,20 +77,19 @@ export default {
         return this.$message.error("非法访问");
       }
       var shopid = window.sessionStorage.getItem("shopId");
-      var normal = window.sessionStorage.getItem("normalShopInfo");
-      if (shopid == null || normal == null) {
+      // var normal = window.sessionStorage.getItem("normalShopInfo");
+      if (shopid == null) {
         // 非法访问
         this.$router.push("/home");
         return this.$message.error("非法访问");
       }
-      if(normal == "true"){
-          apiShopInfo({shopId:shopid}).then(response =>{
+          apiVisitShopInfo({shopId:shopid}).then(response =>{
             if(!response.success){
               this.$router.push("/home");
               return this.$message.error(response.message);
             }
             this.shopInfo = response.object;
-            apiProductInfo({shopId:shopid,page:this.currentPage}).then(response =>{
+          apiVisitShopProductList({shopId:shopid,page:this.currentPage}).then(response =>{
             if(!response.success){
               return this.$message.error(response.message);
             }
@@ -99,58 +97,12 @@ export default {
             this.productShopList = response.object.products;
           });
         });
-      }else if(t == "2"){
-          apiAdminShop({shopId:shopid}).then(response =>{
-            if(!response.success){
-              this.$router.push("/home");
-              return this.$message.error(response.message);
-            }
-            this.shopInfo = response.object;
-            apiAdminProducts({shopId:shopid,page:this.currentPage}).then(response =>{
-            if(!response.success){
-              return this.$message.error(response.message);
-            }
-            this.total = response.object.totalNumber;
-            this.productShopList = response.object.products;
-          });
-        });
-      }else{
-        this.$router.push("/home");
-        return this.$message.error("非法访问");
-      }
     },
 
     //监听页面值改变的事件
     handleCurrentChange(newPage){
        this.currentPage=newPage;
-       var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
-       var shopid = window.sessionStorage.getItem("shopId");
-        var normal = window.sessionStorage.getItem("normalShopInfo");
-        if (shopid == null || normal == null) {
-        // 非法访问
-          this.$router.push("/home");
-          return this.$message.error("非法访问");
-        }
-        if(normal == "true"){
-          apiProductInfo({shopId:shopid,page:this.currentPage}).then(response =>{
-            if(!response.success){
-              return this.$message.error(response.message);
-            }
-            this.total = response.object.totalNumber;
-            this.productShopList = response.object.products;
-      });
-        }else if(t=="2"){
-        apiAdminProducts({shopId:shopid,page:this.currentPage}).then(response =>{
-        if(!response.success){
-          this.$router.push("/home");
-          return this.$message.error(response.message);
-        }
-        this.total = response.object.totalNumber;
-        this.productShopList = response.object.products;
-        })
-      }else{
-        return this.$message.error("非法访问");
-      }
+      this.getShopInfo();
     },
   },
 };

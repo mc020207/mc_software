@@ -21,11 +21,77 @@
 </template>
 
 <script>
-import {apiUserInfo} from '@/api/api'
+import {apiUserInfo,apiUserPwdEdit,apiUserInfoEdit} from '@/api/api'
 export default {
   data() {
     return {
       userInfo: {},
+      editInfoForm:{
+        userName: "",
+        userPhone: "",
+        userIdCard: "",
+        userEmail: "",
+      },
+      editInfoFormRules: {
+        userName: [
+          { required: true, message: "请输入用户名称", trigger: "blur" },
+          {
+            min: 3,
+            max: 10,
+            message: "长度在 3 到 10 个字符",
+            trigger: "blur",
+          },
+          {
+            pattern: /^[a-zA-Z\d_]*$/,
+            message: `仅能出现英⽂字符、数字与下划线`,
+            trigger: "blur",
+          },
+        ],
+        userPhone:[
+             { required: true, message: "请输入手机号", trigger: "blur" },
+        ],
+        userIdCard: [
+          { required: true, message: "请输入身份证号", trigger: "blur" },
+          {
+            min: 18,
+            max: 18,
+            message: "长度为18字符",
+            trigger: "blur",
+          },
+        ],
+        userEmail: [
+          { required: true, message: "请输入邮箱", trigger: "blur" },
+          {
+            pattern: /^.+@.+$/,
+            message: `邮箱格式错误`,
+            trigger: "blur",
+          }
+        ],
+      },
+      editPwdForm:{
+        userOldPwd: "",
+        userNewPwd: "",
+      },
+      editPwdFormRules:{
+        userOldPwd: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          {
+            min: 6,
+            max: 31,
+            message: "长度在 6 到 32 个字符",
+            trigger: "blur",
+          },
+        ],
+        userNewPwd: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          {
+            min: 6,
+            max: 31,
+            message: "长度在 6 到 32 个字符",
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   created() {
@@ -57,6 +123,18 @@ export default {
            this.userInfo.userRoleStr='管理员';
           break;
         }
+      })
+    },
+    editInfo(){
+      apiUserInfoEdit(this.editInfoForm).then(response=>{
+        if (!response.success) return this.$message.error(response.message);
+        this.getUserInfo();
+      })
+    },
+    editPwd(){
+      apiUserPwdEdit(this.editPwdForm).then(response=>{
+        if (!response.success) return this.$message.error(response.message);
+        this.getUserInfo();
       })
     },
   },

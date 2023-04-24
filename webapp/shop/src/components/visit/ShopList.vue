@@ -1,3 +1,5 @@
+//已弃用
+
 <template>
   <div>
     <!-- 功能就是    AdminList.vue的mini版，但为了不写过多的if esle，直接分成了两个界面 -->
