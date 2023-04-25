@@ -32,9 +32,6 @@ public class ShopServiceImpl implements ShopService {
     ProductMapper productMapper;
 
     @Resource
-    UserMapper userMapper;
-
-    @Resource
     ProductService productService;
 
     @Resource

@@ -4,12 +4,14 @@ import com.onlineshopping.model.entity.Account;
 import com.onlineshopping.model.entity.Flow;
 import com.onlineshopping.model.entity.User;
 
+import java.sql.Timestamp;
+
 public class FlowDisplayVO {
     private Integer accountIdFrom;
     private Integer accountIdTo;
     private Integer accountTypeFrom;
     private Integer accountTypeTo;
-    private String flowDate;
+    private Timestamp flowDate;
     private Integer flowId;
     private Double flowMoney;
     private String nameFrom;
@@ -20,7 +22,7 @@ public class FlowDisplayVO {
         this.accountIdTo = accountTo.getAccountId();
         this.accountTypeFrom = accountFrom.getAccountType();
         this.accountTypeTo = accountTo.getAccountType();
-        this.flowDate = flow.getFlowDate().toString();
+        this.flowDate = flow.getFlowDate();
         this.flowId = flow.getFlowId();
         this.flowMoney = flow.getFlowMoney();
         this.nameFrom = userFrom.getUserName();
@@ -74,11 +76,11 @@ public class FlowDisplayVO {
         this.accountTypeTo = accountTypeTo;
     }
 
-    public String getFlowDate() {
+    public Timestamp Timestamp() {
         return flowDate;
     }
 
-    public void setFlowDate(String flowDate) {
+    public void setFlowDate(Timestamp flowDate) {
         this.flowDate = flowDate;
     }
 
@@ -117,7 +119,7 @@ public class FlowDisplayVO {
     public FlowDisplayVO() {
     }
 
-    public FlowDisplayVO(Integer accountIdFrom, Integer accountIdTo, Integer accountTypeFrom, Integer accountTypeTo, String flowDate, Integer flowId, Double flowMoney, String nameFrom, String nameTo) {
+    public FlowDisplayVO(Integer accountIdFrom, Integer accountIdTo, Integer accountTypeFrom, Integer accountTypeTo, Timestamp flowDate, Integer flowId, Double flowMoney, String nameFrom, String nameTo) {
         this.accountIdFrom = accountIdFrom;
         this.accountIdTo = accountIdTo;
         this.accountTypeFrom = accountTypeFrom;
