@@ -76,7 +76,7 @@ public class FlowDisplayVO {
         this.accountTypeTo = accountTypeTo;
     }
 
-    public Timestamp Timestamp() {
+    public Timestamp getFlowDate() {
         return flowDate;
     }
 
