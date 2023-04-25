@@ -62,7 +62,7 @@ public class ShopServiceImpl implements ShopService {
         if (shop == null) {
             throw new ServiceException("没有该商店");
         }
-        // 检查shopIsOpen
+        // 检查shopState
         if (shopState == null)
             return shop;
         if (!Objects.equals(shop.getShopState(), shopState)) {
@@ -78,6 +78,10 @@ public class ShopServiceImpl implements ShopService {
         return shop;
     }
 
+    /**
+     * @Description: 获取我的商店
+     * @Author: Ma-Cheng
+     */
     private Shop getMyShop(HttpServletRequest request, boolean canNull) {
         String token = JwtUserUtil.getToken(request);
         Integer userId = Integer.valueOf(JwtUserUtil.getInfo(token, "userId"));
@@ -88,6 +92,10 @@ public class ShopServiceImpl implements ShopService {
         return shop;
     }
 
+    /**
+     * @Description: 根据条件封装ShopsDisplayVO
+     * @Author: Ma-Cheng
+     */
     private ShopsDisplayVO getShopsDisplayVO(Shop condition, Integer startRow, Integer num) {
         Integer totalNumber = shopMapper.countShops(condition);
         List<Shop> shops = shopMapper.selectShops(condition, startRow, num);
@@ -108,6 +116,10 @@ public class ShopServiceImpl implements ShopService {
     @Transactional
     public void shopRegisterOrUpdate(ShopRegisterDTO shopRegisterDTO, HttpServletRequest request, HttpServletResponse response) {
         Shop shop = getMyShop(request, true);
+        FormatUtil.checkNotNull("shopName",shopRegisterDTO.getShopName());
+        FormatUtil.checkNotNull("shopIntro",shopRegisterDTO.getShopIntro());
+        FormatUtil.checkNotNull("shopAddr",shopRegisterDTO.getShopAddr());
+        FormatUtil.checkNotNull("shopFound",shopRegisterDTO.getShopRegisterFund());
         if (shop != null && !Objects.equals(shop.getShopState(), ConstantUtil.SHOP_REJECTED)) {
             throw new ServiceException("申请中或已开放的商店不允许修改");
         }
@@ -117,19 +129,22 @@ public class ShopServiceImpl implements ShopService {
         String token = JwtUserUtil.getToken(request);
         Integer userId = Integer.valueOf(JwtUserUtil.getInfo(token, "userId"));
         if (shop == null) {
+            // 创建新商店
             shop = new Shop();
             shop.changeByShopDTO(shopRegisterDTO);
             shop.setUserId(userId);
             shopMapper.insertShop(shop);
             shop = shopMapper.selectShopByUserId(userId);
         } else {
+            // 修改商店信息
             shop.changeByShopDTO(shopRegisterDTO);
             shop.setUserId(userId);
             shopMapper.updateShopInfo(shop);
         }
+        // 添加商店申请纪录
         ShopRecord shopRecord = new ShopRecord(null, shop.getShopId(), new Timestamp(System.currentTimeMillis()), "请求开店", ConstantUtil.SHOP_RECORD_REGISTER_NOT_SOLVE);
         shopRecordMapper.insertShopRecord(shopRecord);
-        // 此处需要一个转账的接口：虚拟账户 --注册资金--> 中间账户
+        // 虚拟账户 --注册资金--> 中间账户
         accountService.transfer(ConstantUtil.ACCOUNT_DUMMY_ID, ConstantUtil.ACCOUNT_MIDDLE_ID, shop.getShopRegisterFund());
     }
 
@@ -146,6 +161,7 @@ public class ShopServiceImpl implements ShopService {
         Shop myShop = getMyShop(request, false);
         Product condition = new Product();
         condition.setShopId(myShop.getShopId());
+        // 查看是不是商店的所有商品都没有未发货的纪录
         List<Product> products = productMapper.selectProducts(condition, null, null);
         for (Product product : products) {
             if (!productService.productCanDelete(product.getProductId())) {
@@ -156,6 +172,8 @@ public class ShopServiceImpl implements ShopService {
                 productMapper.updateProductInfo(product);
             } else if (Objects.equals(product.getProductState(), ConstantUtil.PRODUCT_IN_INSPECTION)) {
                 product.setProductState(ConstantUtil.PRODUCT_REJECTED);
+                productMapper.updateProductInfo(product);
+                // 查找并修改这个商品的纪录将他修改为已经处理
                 ProductRecord productRecordCondition = new ProductRecord();
                 productRecordCondition.setProductId(product.getProductId());
                 productRecordCondition.setProductRecordState(ConstantUtil.PRODUCT_RECORD_NOT_SOLVE);
@@ -164,11 +182,12 @@ public class ShopServiceImpl implements ShopService {
                 productRecord.setProductRecordState(ConstantUtil.PRODUCT_RECORD_REJECT);
                 productRecord.setProductRecordDate(new Timestamp(System.currentTimeMillis()));
                 productRecordMapper.updateProductRecordById(productRecord);
-                productMapper.updateProductInfo(product);
             }
         }
+        // 更改商店状态
         myShop.setShopState(ConstantUtil.SHOP_IN_DELETE_INSPECTION);
         shopMapper.updateShopInfo(myShop);
+        // 添加商店审核记录
         ShopRecord shopRecord = new ShopRecord(null, myShop.getShopId(), new Timestamp(System.currentTimeMillis()), "请求删除商店", ConstantUtil.SHOP_RECORD_DELETE_NOT_SOLVE);
         shopRecordMapper.insertShopRecord(shopRecord);
     }
@@ -190,9 +209,11 @@ public class ShopServiceImpl implements ShopService {
     @Override
     @Transactional
     public void approveShopRegister(Integer shopId) {
+        // 修改商店状态
         Shop shop = getShopByShopId(shopId, ConstantUtil.SHOP_IN_INSPECTION);
         shop.setShopState(ConstantUtil.SHOP_OPEN);
         shopMapper.updateShopInfo(shop);
+        // 修改商店申请纪录状态
         ShopRecord condition = new ShopRecord();
         condition.setShopId(shopId);
         condition.setShopRecordState(ConstantUtil.SHOP_RECORD_REGISTER_NOT_SOLVE);
@@ -201,9 +222,9 @@ public class ShopServiceImpl implements ShopService {
         shopRecord.setShopRecordState(ConstantUtil.SHOP_RECORD_REGISTER_PASS);
         shopRecord.setShopRecordDate(new Timestamp(System.currentTimeMillis()));
         shopRecordMapper.updateShopRecordById(shopRecord);
-        // 此处需要一个转账的接口：中间账户 --注册资金--> 利润账户
+        // 中间账户 --注册资金--> 利润账户
         accountService.transfer(ConstantUtil.ACCOUNT_MIDDLE_ID, ConstantUtil.ACCOUNT_PROFIT_ID, shop.getShopRegisterFund());
-        // 此处需要给商店开一个账户
+        // 给商店开一个账户
         Account account = new Account();
         account.setAccountMoney(0.0);
         account.setAccountState(ConstantUtil.ACCOUNT_IS_VALID);
@@ -215,9 +236,11 @@ public class ShopServiceImpl implements ShopService {
     @Override
     @Transactional
     public void rejectShopRegister(Integer shopId, String reason) {
+        // 修改商店状态
         Shop shop = getShopByShopId(shopId, ConstantUtil.SHOP_IN_INSPECTION);
         shop.setShopState(ConstantUtil.SHOP_REJECTED);
         shopMapper.updateShopInfo(shop);
+        // 修改商店纪录状态
         ShopRecord condition = new ShopRecord();
         condition.setShopId(shopId);
         condition.setShopRecordState(ConstantUtil.SHOP_RECORD_REGISTER_NOT_SOLVE);
@@ -226,7 +249,7 @@ public class ShopServiceImpl implements ShopService {
         shopRecord.setShopRecordState(ConstantUtil.SHOP_RECORD_REGISTER_REJECT);
         shopRecord.setShopRecordDate(new Timestamp(System.currentTimeMillis()));
         shopRecordMapper.updateShopRecordById(shopRecord);
-        // 此处需要一个转账的接口：中间账户 --注册资金--> 虚拟账户
+        // 中间账户 --注册资金--> 虚拟账户
         accountService.transfer(ConstantUtil.ACCOUNT_MIDDLE_ID, ConstantUtil.ACCOUNT_DUMMY_ID, shop.getShopRegisterFund());
     }
 
@@ -255,7 +278,7 @@ public class ShopServiceImpl implements ShopService {
         Product productCondition = new Product();
         productCondition.setShopId(shopId);
         productMapper.updateProductState(productCondition, ConstantUtil.PRODUCT_DELETE);
-        // 此处需要一个转账的接口：商店账户 --剩余资金--> 虚拟账户
+        // 商店账户 --剩余资金--> 虚拟账户
         Account accountCondition = new Account();
         accountCondition.setUserId(shop.getUserId());
         accountCondition.setAccountType(ConstantUtil.ACCOUNT_SHOP);
@@ -287,5 +310,4 @@ public class ShopServiceImpl implements ShopService {
         productCondition.setProductState(ConstantUtil.PRODUCT_OFF_SHELF);
         productMapper.updateProductState(productCondition, ConstantUtil.PRODUCT_ON_SHELF);
     }
-
 }
