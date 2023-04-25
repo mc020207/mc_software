@@ -1,10 +1,9 @@
 package com.onlineshopping.model.vo;
 
-import com.onlineshopping.model.entity.Product;
 import com.onlineshopping.model.entity.Order;
+import com.onlineshopping.model.entity.Product;
 import com.onlineshopping.util.ConstantUtil;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -91,10 +90,10 @@ public class OrderDisplayVO {
     public OrderDisplayVO(Order order, Product product) {
         this.orderDate = order.getOrderDate();
         this.orderId = order.getOrderId();
-        if (Objects.equals(order.getOrderState(), ConstantUtil.ORDER_NOT_PAY)){
+        if (Objects.equals(order.getOrderState(), ConstantUtil.ORDER_NOT_PAY)) {
             this.orderMoney = product.getProductPrice();
-        }else{
-            this.orderMoney=order.getOrderMoney();
+        } else {
+            this.orderMoney = order.getOrderMoney();
         }
         this.productId = product.getProductId();
         this.productName = product.getProductName();

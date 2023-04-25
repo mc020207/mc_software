@@ -14,7 +14,8 @@ public interface ProductService {
      * @Description: 检查商品是否可以删除
      * @Author: Ma-Cheng
      */
-    boolean productCanDelete(Integer productId);
+    boolean productCannotDelete(Integer productId);
+
     /**
      * @Description: 商户向自己已注册的商店添加商品
      * @Author: Ma-Cheng
@@ -50,21 +51,25 @@ public interface ProductService {
      * @Author: Ma-Cheng
      */
     ProductsDisplayVO displayAllProductsOnShelf(Integer page);
+
     /**
      * @Description: 显示某个商店的所有商品
      * @Author: Ma-Cheng
      */
     ProductsDisplayVO displayProductsByShopId(Integer page, Integer shopId);
+
     /**
      * @Description: 显示某个商品的详细信息
      * @Author: Ma-Cheng
      */
     ProductDisplayVO displayProductInfo(Integer productId);
+
     /**
      * @Description: 给商户查看自己商店中的所有商品
      * @Author: Ma-Cheng
      */
     ProductsDisplayVO getMyProducts(Integer page, HttpServletRequest request, HttpServletResponse response);
+
     /**
      * @Description: 给商户查看自己商店中商品信息
      * @Author: Ma-Cheng
@@ -82,15 +87,17 @@ public interface ProductService {
      * @Author: Ma-Cheng
      */
     ProductDisplayVO inspectProductInfo(Integer productId);
+
     /**
      * @Description: 管理员通过某个商品上架
      * @Author: Ma-Cheng
      */
     void passProduct(Integer productId);
+
     /**
      * @Description: 管理员拒绝某个商品上架
      * @Author: Ma-Cheng
      */
-    void rejectProduct(Integer productId,String reason);
+    void rejectProduct(Integer productId, String reason);
 
 }

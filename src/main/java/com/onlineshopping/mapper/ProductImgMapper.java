@@ -8,7 +8,10 @@ import java.util.List;
 @Repository
 public interface ProductImgMapper {
     void insertProductImg(ProductImg productImg);
+
     List<ProductImg> selectProductImgByProductId(Integer productId);
+
     ProductImg selectProductImgByProductImgId(Integer productImgId);
+
     void deleteProductImgByProductImgId(Integer productImgId);
 }

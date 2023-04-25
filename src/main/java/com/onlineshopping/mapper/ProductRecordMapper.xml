@@ -28,7 +28,8 @@
     </select>
 
     <select id="selectProductRecordsByShopId" resultType="ProductRecord">
-        select productRecordId,productRecord.productId as productId,productRecordDate,productRecordComment,productRecordState
+        select productRecordId,productRecord.productId as
+        productId,productRecordDate,productRecordComment,productRecordState
         from productRecord,product
         <where>
             productRecord.productId=product.productId

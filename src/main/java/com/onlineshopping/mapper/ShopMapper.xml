@@ -4,12 +4,16 @@
 <mapper namespace="com.onlineshopping.mapper.ShopMapper">
 
     <select id="selectShopByShopId" resultType="Shop">
-        select * from shop
-        where shopId=#{shopId} and shopState!=4
+        select *
+        from shop
+        where shopId = #{shopId}
+          and shopState != 4
     </select>
     <select id="selectShopByUserId" resultType="Shop">
-        select * from shop
-        where userId=#{userId} and shopState!=4
+        select *
+        from shop
+        where userId = #{userId}
+          and shopState != 4
     </select>
 
     <select id="selectShops" resultType="Shop">
@@ -113,16 +117,16 @@
         </where>
     </update>
 
-<!--    <update id="changeShopOpen">-->
-<!--        update `shop`-->
-<!--        set shopState=#{isApprove}-->
-<!--        where shopId = #{shopId}-->
-<!--    </update>-->
+    <!--    <update id="changeShopOpen">-->
+    <!--        update `shop`-->
+    <!--        set shopState=#{isApprove}-->
+    <!--        where shopId = #{shopId}-->
+    <!--    </update>-->
 
-<!--    <delete id="deleteShopByShopId">-->
-<!--        delete-->
-<!--        from `shop`-->
-<!--        where shopId = #{shopId}-->
-<!--    </delete>-->
+    <!--    <delete id="deleteShopByShopId">-->
+    <!--        delete-->
+    <!--        from `shop`-->
+    <!--        where shopId = #{shopId}-->
+    <!--    </delete>-->
 
 </mapper>

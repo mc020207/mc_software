@@ -95,7 +95,7 @@ public class ProductDisplayVO {
         this.images = images;
     }
 
-    public ProductDisplayVO(Product product){
+    public ProductDisplayVO(Product product) {
         this.productId = product.getProductId();
         this.productName = product.getProductName();
         this.shopId = product.getShopId();

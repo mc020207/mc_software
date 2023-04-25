@@ -56,10 +56,10 @@ public class VisitController {
     }
 
     @RequestMapping(value = "/shop/product/list", method = RequestMethod.GET)
-    public CommonResult displayShopProducts(Integer shopId,Integer page) {
+    public CommonResult displayShopProducts(Integer shopId, Integer page) {
         CommonResult cm = new CommonResult(false);
         try {
-            cm.setObject(productService.displayProductsByShopId(page,shopId));
+            cm.setObject(productService.displayProductsByShopId(page, shopId));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

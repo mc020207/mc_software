@@ -2,7 +2,6 @@ package com.onlineshopping.model.vo;
 
 import com.onlineshopping.model.entity.ShopRecord;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 public class ShopRecordDisplayVO {

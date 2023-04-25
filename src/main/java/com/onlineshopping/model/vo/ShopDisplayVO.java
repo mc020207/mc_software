@@ -102,6 +102,6 @@ public class ShopDisplayVO {
         this.shopAddr = shop.getShopAddr();
         this.shopRegisterFund = shop.getShopRegisterFund();
         this.shopRegisterDate = shop.getShopRegisterDate();
-        this.shopState=shop.getShopState();
+        this.shopState = shop.getShopState();
     }
 }

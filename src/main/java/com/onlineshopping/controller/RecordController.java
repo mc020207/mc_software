@@ -5,7 +5,6 @@ import com.onlineshopping.service.RecordService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RecordController {
     @Resource
     RecordService recordService;
+
     @RequestMapping(value = "/shop/list", method = RequestMethod.GET)
     public CommonResult getShopRecordList(Integer page, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);

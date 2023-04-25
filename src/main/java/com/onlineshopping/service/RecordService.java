@@ -11,6 +11,7 @@ public interface RecordService {
      * @Author: Ma-Cheng
      */
     ShopRecordsDisplayVO getShopRecord(Integer page, HttpServletRequest request, HttpServletResponse response);
+
     /**
      * @Description: 如果是Admin获取所有商品记录，否则获得本店所有商品纪录
      * @Author: Ma-Cheng

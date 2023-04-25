@@ -10,7 +10,7 @@ public interface AccountService {
      * @Author: Lin-Yanjun
      */
     AccountInfoVO info(HttpServletRequest request, Integer accountType);
-    
+
     /**
      * @Description: 转账
      * @Author: Lin-Yanjun

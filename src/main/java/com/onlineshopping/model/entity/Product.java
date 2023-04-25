@@ -1,7 +1,5 @@
 package com.onlineshopping.model.entity;
 
-import com.onlineshopping.model.vo.ProductAddFVO;
-
 import java.io.Serializable;
 
 public class Product implements Serializable {
@@ -12,6 +10,7 @@ public class Product implements Serializable {
     private Integer productState;
     private String productIntro;
     private Double productPrice;
+
     @Override
     public String toString() {
         return "Product{" +
@@ -71,7 +70,6 @@ public class Product implements Serializable {
     public void setProductPrice(Double productPrice) {
         this.productPrice = productPrice;
     }
-
 
 
     public Product() {

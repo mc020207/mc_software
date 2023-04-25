@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 
+<!--suppress ALL -->
 <mapper namespace="com.onlineshopping.mapper.ProductMapper">
 
     <select id="selectProductById" resultType="Product">
-        select * from product
-        where productId=#{productId} and productState!=4
+        select *
+        from product
+        where productId = #{productId}
+          and productState != 4
     </select>
 
     <select id="selectProducts" resultType="Product">
@@ -58,8 +61,8 @@
     </select>
 
     <insert id="insertProduct">
-        insert into `product` (shopId, productName,productState,productIntro,productPrice)
-        values (#{shopId}, #{productName},#{productState},#{productIntro},#{productPrice})
+        insert into `product` (shopId, productName, productState, productIntro, productPrice)
+        values (#{shopId}, #{productName}, #{productState}, #{productIntro}, #{productPrice})
     </insert>
 
     <update id="updateProductInfo">
@@ -81,6 +84,7 @@
         where productId=#{productId}
     </update>
 
+    <!--suppress SqlWithoutWhere -->
     <update id="updateProductState">
         update `product`
         set productState=#{newState}
@@ -103,16 +107,16 @@
         </where>
     </update>
 
-<!--    <delete id="deleteProductsByShopId">-->
-<!--        delete-->
-<!--        from `product`-->
-<!--        where shopId = #{shopId}-->
-<!--    </delete>-->
+    <!--    <delete id="deleteProductsByShopId">-->
+    <!--        delete-->
+    <!--        from `product`-->
+    <!--        where shopId = #{shopId}-->
+    <!--    </delete>-->
 
-<!--    <delete id="deleteProductsByProductId">-->
-<!--        delete-->
-<!--        from `product`-->
-<!--        where productId = #{productId}-->
-<!--    </delete>-->
+    <!--    <delete id="deleteProductsByProductId">-->
+    <!--        delete-->
+    <!--        from `product`-->
+    <!--        where productId = #{productId}-->
+    <!--    </delete>-->
 
 </mapper>

@@ -8,8 +8,12 @@ import java.util.List;
 @Repository
 public interface ShopRecordMapper {
     List<ShopRecord> selectShopRecords(ShopRecord shopRecord, Integer startRow, Integer num);
+
     Integer countShopRecords(ShopRecord shopRecord);
+
     void insertShopRecord(ShopRecord shopRecord);
-    void updateShopRecordState(ShopRecord shopRecord,Integer newState);
+
+    void updateShopRecordState(ShopRecord shopRecord, Integer newState);
+
     void updateShopRecordById(ShopRecord shopRecord);
 }

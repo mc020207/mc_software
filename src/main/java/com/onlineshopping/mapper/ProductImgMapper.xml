@@ -9,15 +9,16 @@
     <select id="selectProductImgByProductId" resultType="ProductImg">
         select *
         from `productimg`
-        where productId=#{productId}
+        where productId = #{productId}
     </select>
     <select id="selectProductImgByProductImgId" resultType="ProductImg">
         select *
         from `productimg`
-        where productImgId=#{productImgId}
+        where productImgId = #{productImgId}
     </select>
     <delete id="deleteProductImgByProductImgId">
-        delete from productimg
-        where productImgId=#{productImgId}
+        delete
+        from productimg
+        where productImgId = #{productImgId}
     </delete>
 </mapper>

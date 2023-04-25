@@ -15,7 +15,7 @@ public class RecordInterceptor implements HandlerInterceptor {
         try {
             String token = JwtUserUtil.getToken(request);
             Integer userRole = Integer.valueOf(JwtUserUtil.getInfo(token, "userRole"));
-            if (!userRole.equals(ConstantUtil.USER_OWNER) && !userRole.equals(ConstantUtil.USER_ADMIN)){
+            if (!userRole.equals(ConstantUtil.USER_OWNER) && !userRole.equals(ConstantUtil.USER_ADMIN)) {
                 throw new ServiceException("权限不足");
             }
         } catch (Exception e) {

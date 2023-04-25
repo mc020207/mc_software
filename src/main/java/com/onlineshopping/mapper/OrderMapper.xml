@@ -62,8 +62,9 @@
     </select>
 
     <select id="selectOrderById" resultType="Order">
-        select * from `order`
-        where orderId=#{orderId}
+        select *
+        from `order`
+        where orderId = #{orderId}
     </select>
 
     <select id="countOrders" resultType="int">
@@ -173,7 +174,7 @@
     <delete id="deleteOrderById">
         delete
         from `order`
-        where orderId=#{orderId};
+        where orderId = #{orderId};
     </delete>
 
 </mapper>

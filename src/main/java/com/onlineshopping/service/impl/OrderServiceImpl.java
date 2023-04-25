@@ -48,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
         String token = JwtUserUtil.getToken(request);
         return Integer.parseInt(JwtUserUtil.getInfo(token, "userId"));
     }
+
     /**
      * @Description: 根据OrderId获取Order，会检查是否Order是不是User的
      * @Author: Ma-Cheng
@@ -66,15 +67,17 @@ public class OrderServiceImpl implements OrderService {
         }
         return order;
     }
+
     /**
      * @Description: 根据给出的Condition组装OrdersDisplayVo
      * @Author: Ma-Cheng
      */
-    private OrdersDisplayVO getOrdersDisplayVo(Order condition, Integer startRow, Integer num) {
+    private OrdersDisplayVO getOrdersDisplayVo(Order condition, Integer startRow) {
         Integer totalNumber = orderMapper.countOrders(condition);
-        List<Order> orders = orderMapper.selectOrders(condition, startRow, num);
+        List<Order> orders = orderMapper.selectOrders(condition, startRow, ConstantUtil.PAGE_SIZE);
         return new OrdersDisplayVO(getOrderDisplayVOList(orders), totalNumber);
     }
+
     /**
      * @Description: 根据给出的OrderList组装OrderDisplayVoList
      * @Author: Ma-Cheng
@@ -87,11 +90,12 @@ public class OrderServiceImpl implements OrderService {
         }
         return orderDisplayVOList;
     }
+
     /**
      * @Description: 获取用户的商店，并且检查商店是否开放
      * @Author: Ma-Cheng
      */
-    private Shop getMyShop(HttpServletRequest request){
+    private Shop getMyShop(HttpServletRequest request) {
         Integer userId = getUserId(request);
         Shop shop = shopMapper.selectShopByUserId(userId);
         if (shop == null || !Objects.equals(shop.getShopState(), ConstantUtil.SHOP_OPEN)) {
@@ -99,11 +103,12 @@ public class OrderServiceImpl implements OrderService {
         }
         return shop;
     }
+
     /**
      * @Description: 检查商品是否可以购买，如果可以就返回商品
      * @Author: Ma-Cheng
      */
-    private Product checkProductCanBuy(Integer productId){
+    private Product checkProductCanBuy(Integer productId) {
         Product product = productMapper.selectProductById(productId);
         if (product == null) {
             throw new ServiceException("该商品不存在");
@@ -113,10 +118,11 @@ public class OrderServiceImpl implements OrderService {
         }
         return product;
     }
+
     @Transactional
     @Override
     public void addToCart(Integer productId, HttpServletRequest request, HttpServletResponse response) {
-        FormatUtil.checkPositive("productId",productId);
+        FormatUtil.checkPositive("productId", productId);
         Integer userId = getUserId(request);
         // 检查商品是否可以购买
         Product product = checkProductCanBuy(productId);
@@ -136,7 +142,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void buyProductDirectly(Integer productId, HttpServletRequest request, HttpServletResponse response) {
-        FormatUtil.checkPositive("productId",productId);
+        FormatUtil.checkPositive("productId", productId);
         Product product = checkProductCanBuy(productId);
         // 插入订单
         Order order = new Order(null, getUserId(request), productId, ConstantUtil.ORDER_NOT_RECEIVE, new Timestamp(System.currentTimeMillis()), product.getProductPrice());
@@ -146,13 +152,13 @@ public class OrderServiceImpl implements OrderService {
         accountCondition.setAccountType(ConstantUtil.ACCOUNT_USER);
         accountCondition.setUserId(order.getUserId());
         Account account = accountMapper.selectAccount(accountCondition).get(0);
-        accountService.transfer(account.getAccountId(),ConstantUtil.ACCOUNT_MIDDLE_ID,order.getOrderMoney());
+        accountService.transfer(account.getAccountId(), ConstantUtil.ACCOUNT_MIDDLE_ID, order.getOrderMoney());
     }
 
     @Override
     @Transactional
     public void buyProductFromCart(Integer orderId, HttpServletRequest request, HttpServletResponse response) {
-        FormatUtil.checkPositive("orderId",orderId);
+        FormatUtil.checkPositive("orderId", orderId);
         Order order = getMyOrderById(orderId, request);
         Product product = checkProductCanBuy(order.getProductId());
         // 更改Order状态
@@ -165,23 +171,23 @@ public class OrderServiceImpl implements OrderService {
         accountCondition.setAccountType(ConstantUtil.ACCOUNT_USER);
         accountCondition.setUserId(order.getUserId());
         Account account = accountMapper.selectAccount(accountCondition).get(0);
-        accountService.transfer(account.getAccountId(),ConstantUtil.ACCOUNT_MIDDLE_ID,order.getOrderMoney());
+        accountService.transfer(account.getAccountId(), ConstantUtil.ACCOUNT_MIDDLE_ID, order.getOrderMoney());
     }
 
     @Override
     @Transactional
     public void sendProduct(Integer orderId, HttpServletRequest request, HttpServletResponse response) {
-        FormatUtil.checkPositive("orderId",orderId);
+        FormatUtil.checkPositive("orderId", orderId);
         Shop shop = getMyShop(request);
         Order order = orderMapper.selectOrderById(orderId);
-        if (order==null){
+        if (order == null) {
             throw new ServiceException("没有这个订单");
         }
         Product product = productMapper.selectProductById(order.getProductId());
         if (!Objects.equals(product.getShopId(), shop.getShopId())) {
             throw new ServiceException("不得发货其他商家的订单");
         }
-        if (!Objects.equals(order.getOrderState(), ConstantUtil.ORDER_NOT_RECEIVE)){
+        if (!Objects.equals(order.getOrderState(), ConstantUtil.ORDER_NOT_RECEIVE)) {
             throw new ServiceException("订单不处于未发货状态");
         }
         // 更改Order状态
@@ -192,41 +198,41 @@ public class OrderServiceImpl implements OrderService {
         accountCondition.setAccountType(ConstantUtil.ACCOUNT_SHOP);
         accountCondition.setUserId(order.getUserId());
         Account account = accountMapper.selectAccount(accountCondition).get(0);
-        accountService.transfer(ConstantUtil.ACCOUNT_MIDDLE_ID,account.getAccountId(),order.getOrderMoney());
+        accountService.transfer(ConstantUtil.ACCOUNT_MIDDLE_ID, account.getAccountId(), order.getOrderMoney());
 
     }
 
     @Override
     @Transactional
     public OrdersDisplayVO getCartList(Integer page, HttpServletRequest request, HttpServletResponse response) {
-        FormatUtil.checkPositive("page",page);
+        FormatUtil.checkPositive("page", page);
         Integer userId = getUserId(request);
         Order condition = new Order(null, userId, null, ConstantUtil.ORDER_NOT_PAY, null, null);
-        return getOrdersDisplayVo(condition, (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
+        return getOrdersDisplayVo(condition, (page - 1) * ConstantUtil.PAGE_SIZE);
     }
 
     @Override
     @Transactional
     public OrdersDisplayVO userUnReceiveList(Integer page, HttpServletRequest request, HttpServletResponse response) {
-        FormatUtil.checkPositive("page",page);
+        FormatUtil.checkPositive("page", page);
         Integer userId = getUserId(request);
         Order condition = new Order(null, userId, null, ConstantUtil.ORDER_NOT_RECEIVE, null, null);
-        return getOrdersDisplayVo(condition, (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
+        return getOrdersDisplayVo(condition, (page - 1) * ConstantUtil.PAGE_SIZE);
     }
 
     @Override
     @Transactional
     public OrdersDisplayVO userReceiveList(Integer page, HttpServletRequest request, HttpServletResponse response) {
-        FormatUtil.checkPositive("page",page);
+        FormatUtil.checkPositive("page", page);
         Integer userId = getUserId(request);
         Order condition = new Order(null, userId, null, ConstantUtil.ORDER_RECEIVE, null, null);
-        return getOrdersDisplayVo(condition, (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
+        return getOrdersDisplayVo(condition, (page - 1) * ConstantUtil.PAGE_SIZE);
     }
 
     @Override
     @Transactional
     public OrdersDisplayVO ownerUnSendList(Integer page, HttpServletRequest request, HttpServletResponse response) {
-        FormatUtil.checkPositive("page",page);
+        FormatUtil.checkPositive("page", page);
         Shop shop = getMyShop(request);
         Order condition = new Order();
         condition.setOrderState(ConstantUtil.ORDER_NOT_RECEIVE);
@@ -238,7 +244,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrdersDisplayVO ownerFinishList(Integer page, HttpServletRequest request, HttpServletResponse response) {
-        FormatUtil.checkPositive("page",page);
+        FormatUtil.checkPositive("page", page);
         Shop shop = getMyShop(request);
         Order condition = new Order();
         condition.setOrderState(ConstantUtil.ORDER_RECEIVE);

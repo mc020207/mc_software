@@ -56,10 +56,10 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/shop/open/reject", method = RequestMethod.GET)
-    public CommonResult rejectShopOpen(Integer shopId,String reason) {
+    public CommonResult rejectShopOpen(Integer shopId, String reason) {
         CommonResult cm = new CommonResult(false);
         try {
-            shopService.rejectShopRegister(shopId,reason);
+            shopService.rejectShopRegister(shopId, reason);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
@@ -95,10 +95,10 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/shop/delete/reject", method = RequestMethod.GET)
-    public CommonResult rejectShopDelete(Integer shopId,String reason) {
+    public CommonResult rejectShopDelete(Integer shopId, String reason) {
         CommonResult cm = new CommonResult(false);
         try {
-            shopService.rejectShopDelete(shopId,reason);
+            shopService.rejectShopDelete(shopId, reason);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
@@ -147,10 +147,10 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/product/reject", method = RequestMethod.GET)
-    public CommonResult rejectProduct(Integer productId,String reason) {
+    public CommonResult rejectProduct(Integer productId, String reason) {
         CommonResult cm = new CommonResult(false);
         try {
-            productService.rejectProduct(productId,reason);
+            productService.rejectProduct(productId, reason);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class RecordServiceImpl implements RecordService {
     @Resource
@@ -30,6 +31,7 @@ public class RecordServiceImpl implements RecordService {
     ProductRecordMapper productRecordMapper;
     @Resource
     ShopMapper shopMapper;
+
     private Shop getMyShop(HttpServletRequest request) {
         String token = JwtUserUtil.getToken(request);
         Integer userId = Integer.valueOf(JwtUserUtil.getInfo(token, "userId"));
@@ -39,39 +41,42 @@ public class RecordServiceImpl implements RecordService {
         }
         return shop;
     }
-    private Integer getConditionShopId(HttpServletRequest request){
+
+    private Integer getConditionShopId(HttpServletRequest request) {
         String token = JwtUserUtil.getToken(request);
         Integer userRole = Integer.valueOf(JwtUserUtil.getInfo(token, "userRole"));
-        if (!userRole.equals(ConstantUtil.USER_ADMIN)){
+        if (!userRole.equals(ConstantUtil.USER_ADMIN)) {
             Shop shop = getMyShop(request);
             return shop.getShopId();
         }
         return null;
     }
+
     @Transactional
     @Override
     public ShopRecordsDisplayVO getShopRecord(Integer page, HttpServletRequest request, HttpServletResponse response) {
-        ShopRecord condition=new ShopRecord();
+        ShopRecord condition = new ShopRecord();
         condition.setShopId(getConditionShopId(request));
         List<ShopRecord> shopRecords = shopRecordMapper.selectShopRecords(condition, (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
         Integer totalNumber = shopRecordMapper.countShopRecords(condition);
-        List<ShopRecordDisplayVO> shopRecordDisplayVOS=new ArrayList<>();
-        for (ShopRecord shopRecord : shopRecords){
+        List<ShopRecordDisplayVO> shopRecordDisplayVOS = new ArrayList<>();
+        for (ShopRecord shopRecord : shopRecords) {
             shopRecordDisplayVOS.add(new ShopRecordDisplayVO(shopRecord));
         }
-        return new ShopRecordsDisplayVO(shopRecordDisplayVOS,totalNumber);
+        return new ShopRecordsDisplayVO(shopRecordDisplayVOS, totalNumber);
     }
+
     @Transactional
     @Override
     public ProductRecordsDisplayVO getProductRecord(Integer page, HttpServletRequest request, HttpServletResponse response) {
-        ProductRecord condition=new ProductRecord();
+        ProductRecord condition = new ProductRecord();
         Integer shopId = getConditionShopId(request);
-        List<ProductRecord> productRecords = productRecordMapper.selectProductRecordsByShopId(condition, shopId,(page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
-        Integer totalNumber = productRecordMapper.countProductRecordsByShopId(condition,shopId);
-        List<ProductRecordDisplayVO> productRecordDisplayVOS=new ArrayList<>();
-        for (ProductRecord productRecord : productRecords){
+        List<ProductRecord> productRecords = productRecordMapper.selectProductRecordsByShopId(condition, shopId, (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
+        Integer totalNumber = productRecordMapper.countProductRecordsByShopId(condition, shopId);
+        List<ProductRecordDisplayVO> productRecordDisplayVOS = new ArrayList<>();
+        for (ProductRecord productRecord : productRecords) {
             productRecordDisplayVOS.add(new ProductRecordDisplayVO(productRecord));
         }
-        return new ProductRecordsDisplayVO(productRecordDisplayVOS,totalNumber);
+        return new ProductRecordsDisplayVO(productRecordDisplayVOS, totalNumber);
     }
 }

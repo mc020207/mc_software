@@ -1,8 +1,8 @@
 package com.onlineshopping.service;
 
-import com.onlineshopping.exception.ServiceException;
 import com.onlineshopping.model.dto.ShopRegisterDTO;
-import com.onlineshopping.model.vo.*;
+import com.onlineshopping.model.vo.ShopDisplayVO;
+import com.onlineshopping.model.vo.ShopsDisplayVO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -54,7 +54,7 @@ public interface ShopService {
      * @Description: 管理员拒绝某商店的注册申请
      * @Author: Ma-Cheng
      */
-    void rejectShopRegister(Integer shopId,String reason);
+    void rejectShopRegister(Integer shopId, String reason);
 
     /**
      * @Description: 管理员查看某商店的删除申请
@@ -72,6 +72,6 @@ public interface ShopService {
      * @Description: 管理员拒绝某商店的删除申请
      * @Author: Ma-Cheng
      */
-    void rejectShopDelete(Integer shopId,String reason);
+    void rejectShopDelete(Integer shopId, String reason);
 
 }

@@ -2,7 +2,10 @@ package com.onlineshopping.controller;
 
 import com.onlineshopping.model.dto.ProductDTO;
 import com.onlineshopping.model.dto.ShopRegisterDTO;
-import com.onlineshopping.model.vo.*;
+import com.onlineshopping.model.vo.CommonResult;
+import com.onlineshopping.model.vo.ImgAddFVO;
+import com.onlineshopping.model.vo.ProductAddFVO;
+import com.onlineshopping.model.vo.ShopRegisterFVO;
 import com.onlineshopping.service.ProductService;
 import com.onlineshopping.service.ShopService;
 import jakarta.annotation.Resource;
@@ -38,7 +41,7 @@ public class OwnerController {
     public CommonResult getShopInfo(HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            cm.setObject(shopService.myShopInfo(request,response));
+            cm.setObject(shopService.myShopInfo(request, response));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
@@ -61,10 +64,10 @@ public class OwnerController {
     }
 
     @RequestMapping(value = "/product/add", method = RequestMethod.POST)
-    public CommonResult addProduct(@RequestBody ProductAddFVO productAddFVO,HttpServletRequest request, HttpServletResponse response) {
+    public CommonResult addProduct(@RequestBody ProductAddFVO productAddFVO, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            productService.addProduct(new ProductDTO(productAddFVO),request,response);
+            productService.addProduct(new ProductDTO(productAddFVO), request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
@@ -87,10 +90,10 @@ public class OwnerController {
     }
 
     @RequestMapping(value = "/product/info/edit", method = RequestMethod.POST)
-    public CommonResult editProductInfo(@RequestBody ProductAddFVO productAddFVO,HttpServletRequest request, HttpServletResponse response) {
+    public CommonResult editProductInfo(@RequestBody ProductAddFVO productAddFVO, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            productService.updateProductInfo(new ProductDTO(productAddFVO),request,response);
+            productService.updateProductInfo(new ProductDTO(productAddFVO), request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
@@ -103,7 +106,7 @@ public class OwnerController {
     public CommonResult addProductImage(@RequestBody ImgAddFVO imgAddFVO, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            productService.addProductImage(imgAddFVO.getProductId(), imgAddFVO.getImage(),request,response);
+            productService.addProductImage(imgAddFVO.getProductId(), imgAddFVO.getImage(), request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

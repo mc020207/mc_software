@@ -20,7 +20,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +101,7 @@ public class AccountServiceImpl implements AccountService {
         List<FlowDisplayVO> flowDisplayVOList = new ArrayList<>();
         Account accountFrom, accountTo;
         User userFrom, userTo;
-        for (Flow f: flowList) {
+        for (Flow f : flowList) {
             accountFrom = accountMapper.selectAccountById(f.getAccountIdFrom());
             accountTo = accountMapper.selectAccountById(f.getAccountIdTo());
             userFrom = userMapper.selectUsersBySingleAttr("userId", accountFrom.getUserId()).get(0);
@@ -124,8 +123,8 @@ public class AccountServiceImpl implements AccountService {
         // 检查money非负
         if (money == null || money < 0)
             throw new ServiceException("金额必须为正数");
-        if (money == 0.0){
-            return ;
+        if (money == 0.0) {
+            return;
         }
         // 查询账户
         Account accountFrom = accountMapper.selectAccountById(accountIdFrom);

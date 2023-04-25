@@ -37,17 +37,17 @@ public final class ConstantUtil {
     public static final Integer ORDER_NOT_RECEIVE = 1;
     public static final Integer ORDER_NOT_PAY = 0;
     // ProductRecordState
-    public static final Integer PRODUCT_RECORD_PASS=2;
-    public static final Integer PRODUCT_RECORD_REJECT=1;
-    public static final Integer PRODUCT_RECORD_NOT_SOLVE=0;
+    public static final Integer PRODUCT_RECORD_PASS = 2;
+    public static final Integer PRODUCT_RECORD_REJECT = 1;
+    public static final Integer PRODUCT_RECORD_NOT_SOLVE = 0;
 
     // ShopRecordState
-    public static final Integer SHOP_RECORD_DELETE_REJECT=5;
-    public static final Integer SHOP_RECORD_DELETE_PASS=4;
-    public static final Integer SHOP_RECORD_DELETE_NOT_SOLVE=3;
-    public static final Integer SHOP_RECORD_REGISTER_REJECT=2;
-    public static final Integer SHOP_RECORD_REGISTER_PASS=1;
-    public static final Integer SHOP_RECORD_REGISTER_NOT_SOLVE=0;
+    public static final Integer SHOP_RECORD_DELETE_REJECT = 5;
+    public static final Integer SHOP_RECORD_DELETE_PASS = 4;
+    public static final Integer SHOP_RECORD_DELETE_NOT_SOLVE = 3;
+    public static final Integer SHOP_RECORD_REGISTER_REJECT = 2;
+    public static final Integer SHOP_RECORD_REGISTER_PASS = 1;
+    public static final Integer SHOP_RECORD_REGISTER_NOT_SOLVE = 0;
 
     // userRole
     public static final Integer USER_ADMIN = 2;

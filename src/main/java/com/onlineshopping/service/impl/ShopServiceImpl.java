@@ -4,22 +4,20 @@ import com.onlineshopping.exception.ServiceException;
 import com.onlineshopping.mapper.*;
 import com.onlineshopping.model.dto.ShopRegisterDTO;
 import com.onlineshopping.model.entity.*;
-import com.onlineshopping.model.vo.*;
+import com.onlineshopping.model.vo.ShopDisplayVO;
+import com.onlineshopping.model.vo.ShopsDisplayVO;
 import com.onlineshopping.service.AccountService;
 import com.onlineshopping.service.ProductService;
 import com.onlineshopping.service.ShopService;
 import com.onlineshopping.util.ConstantUtil;
 import com.onlineshopping.util.FormatUtil;
 import com.onlineshopping.util.JwtUserUtil;
-import com.onlineshopping.util.ListUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,9 +94,9 @@ public class ShopServiceImpl implements ShopService {
      * @Description: 根据条件封装ShopsDisplayVO
      * @Author: Ma-Cheng
      */
-    private ShopsDisplayVO getShopsDisplayVO(Shop condition, Integer startRow, Integer num) {
+    private ShopsDisplayVO getShopsDisplayVO(Shop condition, Integer startRow) {
         Integer totalNumber = shopMapper.countShops(condition);
-        List<Shop> shops = shopMapper.selectShops(condition, startRow, num);
+        List<Shop> shops = shopMapper.selectShops(condition, startRow, ConstantUtil.PAGE_SIZE);
         List<ShopDisplayVO> shopDisplayVOList = new ArrayList<>();
         for (Shop shop : shops) {
             shopDisplayVOList.add(new ShopDisplayVO(shop));
@@ -116,10 +114,10 @@ public class ShopServiceImpl implements ShopService {
     @Transactional
     public void shopRegisterOrUpdate(ShopRegisterDTO shopRegisterDTO, HttpServletRequest request, HttpServletResponse response) {
         Shop shop = getMyShop(request, true);
-        FormatUtil.checkNotNull("shopName",shopRegisterDTO.getShopName());
-        FormatUtil.checkNotNull("shopIntro",shopRegisterDTO.getShopIntro());
-        FormatUtil.checkNotNull("shopAddr",shopRegisterDTO.getShopAddr());
-        FormatUtil.checkNotNull("shopFound",shopRegisterDTO.getShopRegisterFund());
+        FormatUtil.checkNotNull("shopName", shopRegisterDTO.getShopName());
+        FormatUtil.checkNotNull("shopIntro", shopRegisterDTO.getShopIntro());
+        FormatUtil.checkNotNull("shopAddr", shopRegisterDTO.getShopAddr());
+        FormatUtil.checkNotNull("shopFound", shopRegisterDTO.getShopRegisterFund());
         if (shop != null && !Objects.equals(shop.getShopState(), ConstantUtil.SHOP_REJECTED)) {
             throw new ServiceException("申请中或已开放的商店不允许修改");
         }
@@ -164,7 +162,7 @@ public class ShopServiceImpl implements ShopService {
         // 查看是不是商店的所有商品都没有未发货的纪录
         List<Product> products = productMapper.selectProducts(condition, null, null);
         for (Product product : products) {
-            if (!productService.productCanDelete(product.getProductId())) {
+            if (productService.productCannotDelete(product.getProductId())) {
                 throw new ServiceException("该商店还有没有处理的订单，不可以删除");
             }
             if (Objects.equals(product.getProductState(), ConstantUtil.PRODUCT_ON_SHELF)) {
@@ -197,7 +195,7 @@ public class ShopServiceImpl implements ShopService {
     public ShopsDisplayVO inspectShopsRegister(Integer page) {
         Shop condition = new Shop();
         condition.setShopState(ConstantUtil.SHOP_IN_INSPECTION);
-        return getShopsDisplayVO(condition, (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
+        return getShopsDisplayVO(condition, (page - 1) * ConstantUtil.PAGE_SIZE);
     }
 
     @Override
@@ -258,7 +256,7 @@ public class ShopServiceImpl implements ShopService {
     public ShopsDisplayVO inspectShopsDelete(Integer page) {
         Shop condition = new Shop();
         condition.setShopState(ConstantUtil.SHOP_IN_DELETE_INSPECTION);
-        return getShopsDisplayVO(condition, (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
+        return getShopsDisplayVO(condition, (page - 1) * ConstantUtil.PAGE_SIZE);
     }
 
     @Override
