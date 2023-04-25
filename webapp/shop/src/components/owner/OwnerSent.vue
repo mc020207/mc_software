@@ -1,28 +1,28 @@
 <script>
-import {apiFlowToList,apiFlowFromList,apiFlowAllList} from '@/api/api'
+import {apiOrderOwnerFinishList} from '@/api/api'
 export default {
   data() {
     return {
-      flowList: [],
+      orderList: [],
       currentPage:1,
       pageSize:9,   //一页的数量
       total:0
     };
   },
   created() {
-    this.getFlowList();
+    this.getList();
   },
   methods: {
-    async getFlowList() {
+    async getList() {
       var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
-      if(t!="0" && t!="1"){
+      if(t!="1"){
         this.$message.error("非法访问");
         this.$router.push("/login");
       }
-      apiFlowAllList({accountType:0,page:this.currentPage}).then(response =>{
+      apiOrderOwnerFinishList({page:this.currentPage}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
         this.total = response.object.totalNumber;
-        this.flowList = response.object.flows;
+        this.orderList = response.object.orders;
       })
     },
   },

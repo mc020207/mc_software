@@ -5,7 +5,7 @@ export default {
     return {
       accountInfo: {},
       flowInfo:{
-          accountType:0,
+          accountType:1,
           money:0
       }
     };
@@ -16,7 +16,7 @@ export default {
   methods: {
     async getAccountInfo() {
       var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
-      if(t!="0" && t!="1"){
+      if(t!="1"){
         this.$message.error("非法访问");
         this.$router.push("/login");
       }

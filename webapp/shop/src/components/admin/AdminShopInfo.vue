@@ -56,15 +56,11 @@
 </template>
 
 <script>
-import {apiVisitShopProductList,apiVisitShopInfo} from '@/api/api'
+import {apiAdminShopInfo} from '@/api/api'
 export default {
   data() {
-    return {
-      shopInfo:"",
-      productShopList: [],
-      currentPage:1,
-      pageSize:9,     //一页的数量
-      total:100
+      return {
+        shopInfo:{}
     };
   },
   created() {
@@ -73,7 +69,7 @@ export default {
   methods: {
     async getShopInfo() {
       var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
-      if(t!= "0" && t!="1" && t!="2"){
+      if(t!="2"){
         this.$router.push("/login");
         return this.$message.error("非法访问");
       }
@@ -84,26 +80,13 @@ export default {
         this.$router.push("/home");
         return this.$message.error("非法访问");
       }
-          apiVisitShopInfo({shopId:shopid}).then(response =>{
+          apiAdminShopInfo({shopId:shopid}).then(response =>{
             if(!response.success){
               this.$router.push("/home");
               return this.$message.error(response.message);
             }
             this.shopInfo = response.object;
-          apiVisitShopProductList({shopId:shopid,page:this.currentPage}).then(response =>{
-            if(!response.success){
-              return this.$message.error(response.message);
-            }
-            this.total = response.object.totalNumber;
-            this.productShopList = response.object.products;
-          });
         });
-    },
-
-    //监听页面值改变的事件
-    handleCurrentChange(newPage){
-       this.currentPage=newPage;
-      this.getShopInfo();
     },
   },
 };

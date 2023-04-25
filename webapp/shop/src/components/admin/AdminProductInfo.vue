@@ -1,5 +1,5 @@
 <script>
-import {apiAdminProductInfo} from '@/api/api'
+import {apiVisitProductInfo} from '@/api/api'
 export default {
   data() {
     return {
@@ -12,7 +12,7 @@ export default {
   methods: {
     async getInfo() {
       var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
-      if(t!="2"){
+      if(t!= "0" && t!="1" && t!="2"){
         this.$router.push("/login");
         return this.$message.error("非法访问");
       }
@@ -23,7 +23,7 @@ export default {
         this.$router.push("/home");
         return this.$message.error("非法访问");
       }
-          apiAdminProductInfo({productId:pid}).then(response =>{
+          apiVisitProductInfo({productId:pid}).then(response =>{
             if(!response.success){
               this.$router.push("/home");
               return this.$message.error(response.message);

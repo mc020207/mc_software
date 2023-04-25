@@ -221,11 +221,10 @@ export function apiOwnerShopInfo() {
   })
 }
 
-export function apiOwnerShopDelete(params) {
+export function apiOwnerShopDelete() {
   return service({
     url: '/owner/shop/delete',
-    method: 'get',
-    params
+    method: 'get'
   })
 }
 
@@ -365,9 +364,9 @@ export function apiAdminProductPass(params) {
   })
 }
 
-export function apiAdminProductDelete(params) {
+export function apiAdminProductReject(params) {
   return service({
-    url: '/admin/product/delete',
+    url: '/admin/product/reject',
     method: 'get',
     params
   })
