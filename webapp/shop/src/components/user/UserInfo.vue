@@ -9,6 +9,12 @@
     <!-- 面包屑卡片视图 -->
     <el-card> 
       <el-descriptions title="个人信息" direction="vertical" :column="3" border>
+        <template slot="extra">
+      <el-button type="primary" @click="infoDialogVisible = true" >修改信息</el-button>
+    </template>
+     <template slot="extra">
+      <el-button type="primary" @click="pwdDialogVisible = true" >修改密码</el-button>
+    </template>
   <el-descriptions-item label="用户名">{{userInfo.userName}}</el-descriptions-item>
   <el-descriptions-item label="手机号">{{userInfo.userPhone}}</el-descriptions-item>
    <el-descriptions-item label="用户身份">{{userInfo.userRoleStr}}</el-descriptions-item>
@@ -17,6 +23,79 @@
   <el-descriptions-item label="邮箱">{{userInfo.userEmail}}</el-descriptions-item>
 </el-descriptions>
     </el-card>
+    
+    <el-dialog
+      title="修改信息"
+      :visible.sync="infoDialogVisible"
+      width="50%">
+      <el-form
+        ref="editInfoFormRef"
+        :model="editInfoForm"
+        :rules="editInfoFormRules"
+        label-width="0px"
+      >
+        <!-- 用户名 -->
+        <el-form-item prop="userName">
+          <el-input
+            v-model="editInfoForm.userName"
+            prefix-icon="el-icon-user"
+          ></el-input>
+          </el-form-item>
+          <!-- 手机号 -->
+        <el-form-item prop="userPhone">
+          <el-input
+            v-model="editInfoForm.userPhone"
+            prefix-icon="el-icon-dianhua"
+          ></el-input>
+          </el-form-item>
+          <!-- 邮箱 -->
+        <el-form-item prop="userEmail">
+          <el-input
+            v-model="editInfoForm.userEmail"
+            prefix-icon="el-icon-youxiang"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+          <!-- 按钮 -->
+      <span slot="footer" class="dialog-footer">
+        
+        <el-button type="primary" @click=" editInfo">提交</el-button>
+        <el-button type="info" @click="reseteditInfoForm">重置</el-button>
+        <el-button @click="infoDialogVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
+      <el-dialog
+      title="修改密码"
+      :visible.sync="pwdDialogVisible"
+      width="50%">
+      <el-form
+        ref="editPwdFormRef"
+        :model="editPwdForm"
+        :rules="editPwdFormRules"
+        label-width="0px"
+      >
+          <!-- 旧密码 -->
+        <el-form-item prop="userOldPwd">
+          <el-input
+            v-model="editPwdForm.userOldPwd"
+            prefix-icon="el-icon-password"
+          ></el-input>
+        </el-form-item>
+          <!-- 新密码 -->
+        <el-form-item prop="userNewPwd">
+          <el-input
+            v-model="editPwdForm.userNewPwd"
+            prefix-icon="el-icon-password"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+          <!-- 按钮 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click=" editPwd()">提交</el-button>
+        <el-button type="info" @click="reseteditPwdForm">重置</el-button>
+        <el-button @click="pwdDialogVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -25,11 +104,11 @@ import {apiUserInfo,apiUserPwdEdit,apiUserInfoEdit} from '@/api/api'
 export default {
   data() {
     return {
+      //修改信息
       userInfo: {},
       editInfoForm:{
         userName: "",
         userPhone: "",
-        userIdCard: "",
         userEmail: "",
       },
       editInfoFormRules: {
@@ -50,15 +129,6 @@ export default {
         userPhone:[
              { required: true, message: "请输入手机号", trigger: "blur" },
         ],
-        userIdCard: [
-          { required: true, message: "请输入身份证号", trigger: "blur" },
-          {
-            min: 18,
-            max: 18,
-            message: "长度为18字符",
-            trigger: "blur",
-          },
-        ],
         userEmail: [
           { required: true, message: "请输入邮箱", trigger: "blur" },
           {
@@ -68,6 +138,8 @@ export default {
           }
         ],
       },
+      infoDialogVisible:false,
+      pwdDialogVisible:false,
       editPwdForm:{
         userOldPwd: "",
         userNewPwd: "",
@@ -131,11 +203,19 @@ export default {
         this.getUserInfo();
       })
     },
+      //重置表单
+    reseteditInfoForm() {
+      this.$refs.editInfoFormRef.resetFields();
+    },
     editPwd(){
       apiUserPwdEdit(this.editPwdForm).then(response=>{
         if (!response.success) return this.$message.error(response.message);
         this.getUserInfo();
       })
+    },
+       //重置表单
+    reseteditPwdForm() {
+      this.$refs.editPwdFormRef.resetFields();
     },
   },
 };

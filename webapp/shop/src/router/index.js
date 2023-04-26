@@ -5,9 +5,9 @@ import Register from "../components/Register.vue";
 import Home from "../components/Home.vue";
 import Welcome from '../components/Welcome'
 import UserInfo from '../components/user/UserInfo.vue'
-import ShopList from '../components/visit/ShopList.vue'
-import ShopInfo from '../components/visit/ShopInfo.vue'
-import MyShopInfo from '../components/owner/OwnerInfo.vue'
+// import ShopList from '../components/visit/ShopList.vue'
+// import ShopInfo from '../components/visit/ShopInfo.vue'
+// import MyShopInfo from '../components/owner/OwnerInfo.vue'
 import AdminShopOpen from '../components/admin/AdminShopOpen.vue'
 Vue.use(VueRouter);
 
@@ -32,11 +32,11 @@ const routes = [
     children:[{path:'/welcome',component:Welcome},
     // admin_routes
     {path:'/admin/list',component: AdminShopOpen},
-    // shop_routes
-    {path:'/shop/list',component:ShopList},
-    {path:'/shop/info',component:ShopInfo},
-    // owner_routes
-    {path:'/owner/info',component:MyShopInfo},
+    // // shop_routes
+    // {path:'/shop/list',component:ShopList},
+    // {path:'/shop/info',component:ShopInfo},
+    // // owner_routes
+    // {path:'/owner/info',component:MyShopInfo},
     //user_routes
     {path:'/user/info',component:UserInfo},
   ]
