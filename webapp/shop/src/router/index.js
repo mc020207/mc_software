@@ -5,10 +5,10 @@ import Register from "../components/Register.vue";
 import Home from "../components/Home.vue";
 import Welcome from '../components/Welcome'
 import UserInfo from '../components/user/UserInfo.vue'
-import ShopList from '../components/shop/ShopList.vue'
-import ShopInfo from '../components/shop/ShopInfo.vue'
+import ShopList from '../components/visit/ShopList.vue'
+import ShopInfo from '../components/visit/ShopInfo.vue'
 import MyShopInfo from '../components/owner/OwnerInfo.vue'
-import AdminList from '../components/admin/AdminList.vue'
+import AdminShopOpen from '../components/admin/AdminShopOpen.vue'
 Vue.use(VueRouter);
 
 
@@ -31,7 +31,7 @@ const routes = [
     redirect:'/welcome',
     children:[{path:'/welcome',component:Welcome},
     // admin_routes
-    {path:'/admin/list',component:AdminList},
+    {path:'/admin/list',component: AdminShopOpen},
     // shop_routes
     {path:'/shop/list',component:ShopList},
     {path:'/shop/info',component:ShopInfo},
@@ -53,10 +53,12 @@ router.beforeEach((to, from, next) => {
   //获取token
   const tokenStr=window.sessionStorage.getItem('token');
   if(!tokenStr) return next("/login");
-  let valid = ["/","/login","/register","/home",'/welcome','/admin/list','/shop/list','/shop/info','/owner/info','/user/info'];
-  for(let i = 0; i < valid.length; i++) {
-    if(to.path == valid[i]) return next();
-  }
-  next("/home");
+  //先开发
+  return next();
+  // let valid = ["/","/login","/register","/home",'/welcome','/admin/list','/shop/list','/shop/info','/owner/info','/user/info'];
+  // for(let i = 0; i < valid.length; i++) {
+  //   if(to.path == valid[i]) return next();
+  // }
+  // next("/home");
 });
 export default router;
