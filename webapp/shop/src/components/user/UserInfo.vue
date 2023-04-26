@@ -27,7 +27,7 @@
     <el-dialog
       title="修改信息"
       :visible.sync="infoDialogVisible"
-      width="50%">
+      width="30%">
       <el-form
         ref="editInfoFormRef"
         :model="editInfoForm"
@@ -67,7 +67,7 @@
       <el-dialog
       title="修改密码"
       :visible.sync="pwdDialogVisible"
-      width="50%">
+      width="30%">
       <el-form
         ref="editPwdFormRef"
         :model="editPwdForm"
@@ -91,7 +91,7 @@
       </el-form>
           <!-- 按钮 -->
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click=" editPwd()">提交</el-button>
+        <el-button type="primary" @click=" editPwd">提交</el-button>
         <el-button type="info" @click="reseteditPwdForm">重置</el-button>
         <el-button @click="pwdDialogVisible = false">取 消</el-button>
       </span>
@@ -198,20 +198,32 @@ export default {
       })
     },
     editInfo(){
+       this.$refs.editInfoFormRef.validate(async (valid) => {
+        if (!valid) return;
       apiUserInfoEdit(this.editInfoForm).then(response=>{
         if (!response.success) return this.$message.error(response.message);
+        this.infoDialogVisible=false;
         this.getUserInfo();
       })
+       })
     },
       //重置表单
     reseteditInfoForm() {
       this.$refs.editInfoFormRef.resetFields();
     },
     editPwd(){
-      apiUserPwdEdit(this.editPwdForm).then(response=>{
+      // md5加密 密码
+    this.$refs.editPwdFormRef.validate(async (valid) => {
+        if (!valid) return;
+          var editPwdForm={...this.editPwdForm};
+        editPwdForm.userOldPwd=this.$md5(editPwdForm.userOldPwd);
+        editPwdForm.userNewPwd=this.$md5(editPwdForm.userNewPwd);
+      apiUserPwdEdit(editPwdForm).then(response=>{
         if (!response.success) return this.$message.error(response.message);
+        this.pwdDialogVisible=false;
         this.getUserInfo();
       })
+    })
     },
        //重置表单
     reseteditPwdForm() {
@@ -221,4 +233,12 @@ export default {
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+ .edit_form {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+</style>

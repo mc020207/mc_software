@@ -140,8 +140,12 @@ export default {
     register() {
       this.$refs.registerFormRef.validate(async (valid) => {
         if (!valid) return;
-        // 后端没部署，暂时注释
-        apiRegister(this.registerForm).then(response =>{
+        // md5加密 密码
+        
+        var registerForm={...this.registerForm};
+        registerForm.userPwd=this.$md5(registerForm.userPwd);
+
+        apiRegister(registerForm).then(response =>{
           if (!response.success) return this.$message.error(response.message);
           this.$message({
             showClose: true,
