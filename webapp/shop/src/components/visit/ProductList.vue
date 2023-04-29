@@ -10,7 +10,7 @@
     <!-- 面包屑卡片视图 -->
   <el-row v-for="(o,index_i) in 2" :key="o">
   <el-col :span="4" v-for="(o,index_j) in 5" :key="o" :offset="index_j?1:0">
-    <el-card :body-style="{ padding: '0px' }"  style="width:195px;height:280px" >
+    <el-card :body-style="{ padding: '0px' }"  style="width:195px;height:280px" v-if="index_i*5+index_j<productList.length">
       <!-- <el-image :src="productList[index_i*2+index_j].images.productImageAddr" style="width:200px;" fit="fill"> -->
           <el-image src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" style="width:195px;height:195" fit="fill">
          <div slot="error" class="image-slot">
@@ -18,10 +18,10 @@
       </div>
       </el-image>
       <div style="padding: 1px;">
-        <span>{{productList[index_i*2+index_j].productName}}</span>
-        <div class="bottom clearfix">{{productList[index_i*2+index_j].productIntro}}</div>
+        <span>{{productList[index_i*5+index_j].productName}}</span>
+        <div class="bottom clearfix">{{productList[index_i*5+index_j].productIntro}}</div>
       </div>
-         <el-button size="small" round>{{productList[index_i*2+index_j].productPrice}}  购买</el-button>
+         <el-button size="small" round>{{productList[index_i*5+index_j].productPrice}}  购买</el-button>
          <el-button >详情</el-button>
     </el-card>
   </el-col>
@@ -57,6 +57,7 @@ export default {
         if (!response.success) return this.$message.error(response.message);
         this.total = response.object.totalNumber;
         this.productList = response.object.products;
+        console.log(this.productList.length);
       });
     },
     //监听页面值改变的事件
