@@ -69,11 +69,51 @@
         <el-button type="primary" @click="withdraw">充值</el-button>
       </span>
     </el-dialog>
+
+     <el-card>
+      <!-- 流水表区 -->
+      <template>
+      <el-select v-model="opValue" placeholder="请选择" @change="getFlowList">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+    </template>
+     <el-table :data="flowList" border stripe>
+        <el-table-column type="index"></el-table-column>
+        <el-table-column
+          label="对方账户名"
+          prop="accountName"
+          width="200"
+        ></el-table-column>
+        <el-table-column
+          label="资金"
+          prop="flowMoney"
+          width="150"
+        ></el-table-column>
+        <el-table-column
+          label="转账日期"
+          prop="flowDate"
+        ></el-table-column>
+      </el-table>
+      <!-- 分页区域 -->
+      <el-pagination 
+       layout="total, prev, pager, next, jumper"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-size="pageSize"
+      :total="total">
+    </el-pagination>
+    </el-card>
 </div>
 </template>
 
 <script>
 import {apiAccountInfo,apiAccountRecharge,apiAccountWithdraw} from '@/api/api'
+import {apiFlowToList,apiFlowFromList,apiFlowAllList} from '@/api/api'
 export default {
   data() {
     return {
@@ -135,11 +175,32 @@ export default {
             trigger: "blur",
           },
         ]
-       }
+       },
+      //flow
+      flowList: [],
+      currentPage:1,
+      pageSize:9,   //一页的数量
+      total:0,
+      
+      opValue:3,
+      options:[
+        {
+          value:1,
+          label: '出账'
+        },
+         {
+          value:2,
+          label: '入账'
+        },
+        {
+          value:3,
+          label: '出入账'
+        },
+      ],
     };
   },
   created() {
-    this.getAccountInfo();
+    this.getAccountInfo().then(this.getFlowList());
   },
   methods: {
     async getAccountInfo() {
@@ -173,7 +234,7 @@ export default {
         if (!valid) return;
       apiAccountRecharge(this.rechargeForm).then(response=>{
         if (!response.success) return this.$message.error(response.message);
-        this.getAccountInfo();
+        this.getAccountInfo().then(this.getFlowList());
         this.rechargeDialogVisible=false;
       })})
     },
@@ -182,9 +243,76 @@ export default {
         if (!valid) return;
       apiAccountWithdraw(this.withdrawForm).then(response=>{
         if (!response.success) return this.$message.error(response.message);
-        this.getAccountInfo();
+        this.getAccountInfo().then(this.getFlowList());
         this.withdrawDialogVisible=false;
       })})
+    },
+    //flow
+    async getFlowList() {
+    switch (this.opValue){
+      case 1:{
+        apiFlowFromList({accountType:1,page:this.currentPage}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+        this.total = response.object.totalNumber;
+        this.flowList = response.object.flows;
+
+         for(let i=0;i<this.flowList.length;i++){
+            if(this.flowList[i].accountIdFrom==this.accountInfo.accountId){
+              this.flowList[i].accountName=this.flowList[i].nameTo;
+              this.flowList[i].flowMoney=-this.flowList[i].flowMoney;
+            }
+            else{
+              this.flowList[i].accountName=this.flowList[i].nameFrom;
+            }
+      }
+      })
+        break;
+      }
+      case 2:{
+        apiFlowToList({accountType:1,page:this.currentPage}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+        this.total = response.object.totalNumber;
+        this.flowList = response.object.flows;
+
+         for(let i=0;i<this.flowList.length;i++){
+            if(this.flowList[i].accountIdFrom==this.accountInfo.accountId){
+              this.flowList[i].accountName=this.flowList[i].nameTo;
+              this.flowList[i].flowMoney=-this.flowList[i].flowMoney;
+            }
+            else{
+              this.flowList[i].accountName=this.flowList[i].nameFrom;
+            }
+      }
+      })
+        break;
+      }
+      case 3:{
+        apiFlowAllList({accountType:1,page:this.currentPage}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+        this.total = response.object.totalNumber;
+        this.flowList = response.object.flows;
+
+         for(let i=0;i<this.flowList.length;i++){
+            if(this.flowList[i].accountIdFrom==this.accountInfo.accountId){
+              this.flowList[i].accountName=this.flowList[i].nameTo;
+              this.flowList[i].flowMoney=-this.flowList[i].flowMoney;
+            }
+            else{
+              this.flowList[i].accountName=this.flowList[i].nameFrom;
+            }
+      }
+      })
+        break;
+      }
+       default:
+          this.$message.error("非法访问");
+          this.$router.push("/login");
+    }
+    },
+    //监听页面值改变的事件
+    handleCurrentChange(newPage){
+       this.currentPage=newPage;
+       this.getFlowList();
     },
   },
 };

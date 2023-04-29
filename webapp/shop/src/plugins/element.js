@@ -28,6 +28,8 @@ import {
   Descriptions,
   DescriptionsItem,
   Tooltip,
+  Select,
+  Option,
 } from "element-ui";
 
 Vue.use(Button);
@@ -56,4 +58,6 @@ Vue.use(Dialog);
 Vue.use(Descriptions);
 Vue.use(DescriptionsItem);
 Vue.use(Tooltip);
+Vue.use(Select);
+Vue.use(Option);
 Vue.prototype.$message = Message;
