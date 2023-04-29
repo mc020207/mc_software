@@ -149,17 +149,21 @@ export default {
             { 
               path:"/shop/list",
               nextName:"已开放商店列表"
-            }
+            },
+            
           ]
         },
         {
           id:"owner",
           authName: "我的商店",
           children:[
-            { 
-              
-              path:"/owner/info",
-              nextName:"我的商店信息"
+            // { 
+            //   path:"/owner/info",
+            //   nextName:"我的商店信息"
+            // },
+             { 
+              path:"/owner/account",
+              nextName:"账户流水"
             }
           ]
         }
@@ -200,6 +204,10 @@ export default {
               
               path:"/admin/list",
               nextName:"待审核商店信息列表"
+            },
+             { 
+              path:"/admin/profit",
+              nextName:"账户流水"
             }
           ]
         }

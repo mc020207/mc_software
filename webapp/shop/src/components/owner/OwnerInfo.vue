@@ -96,13 +96,6 @@
             prefix-icon="el-icon-shangdian"
           ></el-input>
         </el-form-item>
-         <!-- 身份证号 -->
-        <el-form-item prop="userIdCard">
-          <el-input
-            v-model="shopRegisterForm.userIdCard"
-            prefix-icon="el-icon-shenfenzheng"
-          ></el-input>
-        </el-form-item>
         <!-- 商店简介 -->
         <el-form-item prop="shopIntro">
           <el-input
@@ -178,15 +171,6 @@ export default {
             trigger: "blur",
           }
         ],
-        // userIdCard: [
-        //   { required: true, message: "请输入身份证号", trigger: "blur" },
-        //   {
-        //     min: 18,
-        //     max: 18,
-        //     message: "长度为18字符",
-        //     trigger: "blur",
-        //   },
-        // ],
         shopIntro:[
              { required: true, message: "请输入商店简介", trigger: "blur" },
              {
