@@ -118,9 +118,8 @@ export default {
           authName: "商店界面",
           children:[
             { 
-    
-              path:"/shop/list",
-              nextName:"已开放商店列表"
+              path:"/visit/product/list",
+              nextName:"开放商品列表"
             }
           ]
         }
@@ -147,8 +146,8 @@ export default {
           authName: "商店界面",
           children:[
             { 
-              path:"/shop/list",
-              nextName:"已开放商店列表"
+              path:"/visit/product/list",
+              nextName:"开放商品列表"
             },
             
           ]
@@ -189,10 +188,9 @@ export default {
           id:"shop",
           authName: "商店界面",
           children:[
-            { 
-             
-              path:"/shop/list",
-              nextName:"已开放商店列表"
+           { 
+              path:"/visit/product/list",
+              nextName:"开放商品列表"
             }
           ]
         },

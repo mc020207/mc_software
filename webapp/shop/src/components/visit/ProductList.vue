@@ -1,3 +1,42 @@
+
+<template>
+  <div>
+    <!-- 导航区 -->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>商店界面</el-breadcrumb-item>
+      <el-breadcrumb-item>开放商品列表</el-breadcrumb-item>
+    </el-breadcrumb>
+    <!-- 面包屑卡片视图 -->
+  <el-row v-for="(o,index_i) in 2" :key="o">
+  <el-col :span="4" v-for="(o,index_j) in 5" :key="o" :offset="index_j?1:0">
+    <el-card :body-style="{ padding: '0px' }"  style="width:195px;height:280px" >
+      <!-- <el-image :src="productList[index_i*2+index_j].images.productImageAddr" style="width:200px;" fit="fill"> -->
+          <el-image src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" style="width:195px;height:195" fit="fill">
+         <div slot="error" class="image-slot">
+        <i class="el-icon-picture-outline"></i>
+      </div>
+      </el-image>
+      <div style="padding: 1px;">
+        <span>{{productList[index_i*2+index_j].productName}}</span>
+        <div class="bottom clearfix">{{productList[index_i*2+index_j].productIntro}}</div>
+      </div>
+         <el-button size="small" round>{{productList[index_i*2+index_j].productPrice}}  购买</el-button>
+         <el-button >详情</el-button>
+    </el-card>
+  </el-col>
+</el-row>
+ <!-- 分页区域 -->
+      <el-pagination 
+       layout="total, prev, pager, next, jumper"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-size="pageSize"
+      :total="total">
+    </el-pagination>
+  </div>
+</template>
+
 <script>
 import {apiVisitProductList} from '@/api/api'
 export default {
@@ -5,7 +44,7 @@ export default {
     return {
       productList: [],
       currentPage:1,
-      pageSize:9,   //一页的数量
+      pageSize:9,   //一页的数量  应改成10个
       total:0
     };
   },
@@ -14,15 +53,6 @@ export default {
   },
   methods: {
     async getList() {
-      var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
-      if(t!= "0" && t!="1" && t!="2"){
-        
-        this.$router.push("/login");
-        return this.$message.error("非法访问");
-      }
-    //   var result=await this.$http.get('/shop/list',{
-    //     page:this.currentPage
-    //   });
       apiVisitProductList({page:this.currentPage}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
         this.total = response.object.totalNumber;
@@ -47,3 +77,15 @@ export default {
   },
 };
 </script>
+
+<style lang="less" scoped>
+.el-row {
+    margin-bottom: 15px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .el-col {
+    border-radius: 4px;
+  }
+</style>

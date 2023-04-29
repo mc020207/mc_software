@@ -30,6 +30,7 @@ import {
   Tooltip,
   Select,
   Option,
+  Image
 } from "element-ui";
 
 Vue.use(Button);
@@ -60,4 +61,5 @@ Vue.use(DescriptionsItem);
 Vue.use(Tooltip);
 Vue.use(Select);
 Vue.use(Option);
+Vue.use(Image);
 Vue.prototype.$message = Message;

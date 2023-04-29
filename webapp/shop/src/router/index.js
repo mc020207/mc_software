@@ -8,6 +8,7 @@ import UserInfo from '../components/user/UserInfo.vue'
 import UserAccount from "../components/user/UserAccount.vue";
 // import ShopList from '../components/visit/ShopList.vue'
 // import ShopInfo from '../components/visit/ShopInfo.vue'
+import ProductList from '../components/visit/ProductList.vue';
 // import MyShopInfo from '../components/owner/OwnerInfo.vue';
 import OwnerAccount from '../components/owner/OwnerAccount.vue';
 import AdminShopOpen from '../components/admin/AdminShopOpen.vue';
@@ -39,6 +40,7 @@ const routes = [
     // shop_routes
     // {path:'/shop/list',component:ShopList},
     // {path:'/shop/info',component:ShopInfo},
+    {path:'/visit/product/list',component:ProductList},
     // owner_routes
     // {path:'/owner/info',component:MyShopInfo},
     {path:'/owner/account',component:OwnerAccount},
