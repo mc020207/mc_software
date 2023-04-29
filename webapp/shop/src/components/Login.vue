@@ -97,7 +97,7 @@ export default {
           if (!response.success) return this.$message.error(response.message);
           this.$message({
             showClose: true,
-            message: response.message,
+            message: "登录成功",
             type: 'success'
           });
           //保存token

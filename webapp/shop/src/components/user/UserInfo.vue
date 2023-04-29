@@ -202,6 +202,11 @@ export default {
         if (!valid) return;
       apiUserInfoEdit(this.editInfoForm).then(response=>{
         if (!response.success) return this.$message.error(response.message);
+        this.$message({
+            showClose: true,
+            message: "修改成功",
+            type: 'success'
+          });
         this.infoDialogVisible=false;
         this.getUserInfo();
       })
@@ -216,10 +221,15 @@ export default {
     this.$refs.editPwdFormRef.validate(async (valid) => {
         if (!valid) return;
           var editPwdForm={...this.editPwdForm};
-        editPwdForm.userOldPwd=this.$md5(editPwdForm.userOldPwd);
-        editPwdForm.userNewPwd=this.$md5(editPwdForm.userNewPwd);
+        // editPwdForm.userOldPwd=this.$md5(editPwdForm.userOldPwd);
+        // editPwdForm.userNewPwd=this.$md5(editPwdForm.userNewPwd);
       apiUserPwdEdit(editPwdForm).then(response=>{
         if (!response.success) return this.$message.error(response.message);
+        this.$message({
+            showClose: true,
+            message: "修改成功",
+            type: 'success'
+          });
         this.pwdDialogVisible=false;
         this.getUserInfo();
       })

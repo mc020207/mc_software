@@ -94,16 +94,22 @@ export default {
     //根据用户信息，获得对应菜单
     //解析JWT，等后端实装后再说
     //在path中填写对应路径
-    // var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
-    this.menuList=[
-      {
+    var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
+      switch (t) {
+
+        case "0":
+          this.menuList=[
+        {
           id:"user",
           authName: "用户界面",
           children:[
             { 
-             
               path:"/user/info",
               nextName:"我的信息"
+            },
+            { 
+              path:"/user/account",
+              nextName:"账户流水"
             }
           ]
         },
@@ -112,7 +118,35 @@ export default {
           authName: "商店界面",
           children:[
             { 
-             
+    
+              path:"/shop/list",
+              nextName:"已开放商店列表"
+            }
+          ]
+        }
+      ]
+          break;
+        case "1":
+          this.menuList=[
+        {
+          id:"user",
+          authName: "用户界面",
+          children:[
+            { 
+              path:"/user/info",
+              nextName:"我的信息"
+            },
+             { 
+              path:"/user/account",
+              nextName:"账户流水"
+            }
+          ]
+        },
+        {
+          id:"shop",
+          authName: "商店界面",
+          children:[
+            { 
               path:"/shop/list",
               nextName:"已开放商店列表"
             }
@@ -128,8 +162,37 @@ export default {
               nextName:"我的商店信息"
             }
           ]
+        }
+      ]
+          break;
+        case "2":
+          this.menuList=[
+        {
+          id:"user",
+          authName: "用户界面",
+          children:[
+            { 
+              path:"/user/info",
+              nextName:"我的信息"
+            },
+            { 
+              path:"/user/account",
+              nextName:"账户流水"
+            }
+          ]
         },
-         {
+        {
+          id:"shop",
+          authName: "商店界面",
+          children:[
+            { 
+             
+              path:"/shop/list",
+              nextName:"已开放商店列表"
+            }
+          ]
+        },
+        {
           id:"admin",
           authName: "管理员",
           children:[
@@ -140,147 +203,12 @@ export default {
             }
           ]
         }
-    ];
-
-    //   switch (t) {
-
-    //     case "0":
-    //       this.menuList=[
-    //     {
-    //       id:"user",
-    //       authName: "用户界面",
-    //       children:[
-    //         { 
-             
-    //           path:"/user/info",
-    //           nextName:"我的信息"
-    //         }
-    //       ]
-    //     },
-    //     {
-    //       id:"shop",
-    //       authName: "商店界面",
-    //       children:[
-    //         { 
-    
-    //           path:"/shop/list",
-    //           nextName:"已开放商店列表"
-    //         }
-    //       ]
-    //     },
-    //      {
-    //       id:"user",
-    //       authName: "用户界面",
-    //       children:[
-    //         { 
-             
-    //           path:"/user/info",
-    //           nextName:"我的信息"
-    //         }
-    //       ]
-    //     },
-    //     {
-    //       id:"shop",
-    //       authName: "商店界面",
-    //       children:[
-    //         { 
-             
-    //           path:"/shop/list",
-    //           nextName:"已开放商店列表"
-    //         }
-    //       ]
-    //     },
-    //     {
-    //       id:"admin",
-    //       authName: "管理员",
-    //       children:[
-    //         { 
-              
-    //           path:"/admin/list",
-    //           nextName:"待审核商店信息列表"
-    //         }
-    //       ]
-    //     }
-    //   ]
-    //       break;
-    //     case "1":
-    //       this.menuList=[
-    //     {
-    //       id:"user",
-    //       authName: "用户界面",
-    //       children:[
-    //         { 
-             
-    //           path:"/user/info",
-    //           nextName:"我的信息"
-    //         }
-    //       ]
-    //     },
-    //     {
-    //       id:"shop",
-    //       authName: "商店界面",
-    //       children:[
-    //         { 
-             
-    //           path:"/shop/list",
-    //           nextName:"已开放商店列表"
-    //         }
-    //       ]
-    //     },
-    //     {
-    //       id:"owner",
-    //       authName: "我的商店",
-    //       children:[
-    //         { 
-              
-    //           path:"/owner/info",
-    //           nextName:"我的商店信息"
-    //         }
-    //       ]
-    //     }
-    //   ]
-    //       break;
-    //     case "2":
-    //       this.menuList=[
-    //     {
-    //       id:"user",
-    //       authName: "用户界面",
-    //       children:[
-    //         { 
-             
-    //           path:"/user/info",
-    //           nextName:"我的信息"
-    //         }
-    //       ]
-    //     },
-    //     {
-    //       id:"shop",
-    //       authName: "商店界面",
-    //       children:[
-    //         { 
-             
-    //           path:"/shop/list",
-    //           nextName:"已开放商店列表"
-    //         }
-    //       ]
-    //     },
-    //     {
-    //       id:"admin",
-    //       authName: "管理员",
-    //       children:[
-    //         { 
-              
-    //           path:"/admin/list",
-    //           nextName:"待审核商店信息列表"
-    //         }
-    //       ]
-    //     }
-    //   ]
-    //       break;
-    //     default:
-    //       this.$message.error("非法访问");
-    //       this.$router.push("/login");
-    //   }
+      ]
+          break;
+        default:
+          this.$message.error("非法访问");
+          this.$router.push("/login");
+      }
     },
     //点击按钮，切换菜单的折叠与展开
     toggleCollapse(){
