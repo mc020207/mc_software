@@ -30,24 +30,27 @@
             :default-active="activePath"
           >
             <!-- 一级菜单 -->
-            <el-submenu :index="item.id" v-for="item in menuList" :key="item.id">
+            <el-submenu :index="item.id" v-for="item in menuList" :key="item.id" >
               <!-- 一级菜单模板区域 -->
               <template slot="title">
-                <!-- 图标  先不搞，最后处理-->
+                <!-- 图标 -->
                 <i class="el-icon-location"></i>
                 <!-- 文本 -->
                 <span>{{ item.authName }}</span>
               </template>
               
               <!-- 二级菜单  -->
-              <el-menu-item :index="subItem.path" v-for="subItem in item.children" :key="subItem.path"
-               @click="saveNaveState(subItem.path)"
+               <template v-for="subItem in item.children">
+              <el-menu-item :index="subItem.path"  :key="subItem.path"
+               @click="saveNaveState(subItem.path)" v-if="getActivepath(subItem)"
               >
                 <!-- 图标 -->
                 <i class="el-icon-menu"></i>
                 <!-- 文本 -->
-                <span>{{subItem.nextName}}</span></el-menu-item
-              >
+                <span>{{subItem.nextName}}</span>
+              
+                </el-menu-item>
+              </template>
             </el-submenu>
           </el-menu>
         </el-aside>
@@ -120,6 +123,14 @@ export default {
             { 
               path:"/visit/product/list",
               nextName:"开放商品列表"
+            },
+            {
+              path:'/visit/product/info',
+              nextName:"商品详细信息"
+            },
+            {
+              path:'/visit/shop/product/list',
+              nextName:"该商店商品"
             }
           ]
         }
@@ -149,7 +160,14 @@ export default {
               path:"/visit/product/list",
               nextName:"开放商品列表"
             },
-            
+             {
+              path:'/visit/product/info',
+              nextName:"商品详细信息"
+            },
+              {
+              path:'/visit/shop/product/list',
+              nextName:"该商店商品"
+            }
           ]
         },
         {
@@ -188,9 +206,17 @@ export default {
           id:"shop",
           authName: "商店界面",
           children:[
-           { 
+            { 
               path:"/visit/product/list",
               nextName:"开放商品列表"
+            },
+             {
+              path:'/visit/product/info',
+              nextName:"商品详细信息"
+            },
+              {
+              path:'/visit/shop/product/list',
+              nextName:"该商店商品"
             }
           ]
         },
@@ -224,6 +250,22 @@ export default {
     saveNaveState(activePath){
         window.sessionStorage.setItem('activePath',activePath);
         this.activePath=activePath;
+    },
+    getActivepath(subItem){
+      var ifshow=true;
+      if(subItem.path=='/visit/product/info'){
+        let productId = window.sessionStorage.getItem("productId");
+        if(productId==null){
+          ifshow=false;
+        }
+      }
+      else if(subItem.path=='/visit/shop/product/list'){
+          let shopId = window.sessionStorage.getItem("ShopProductList_shopId");
+        if(shopId==null){
+          ifshow=false;
+        }
+      }
+      return ifshow;
     }
   },
 };

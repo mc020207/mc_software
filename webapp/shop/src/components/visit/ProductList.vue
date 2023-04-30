@@ -12,7 +12,7 @@
   <el-col :span="4" v-for="(o,index_j) in 5" :key="o" :offset="index_j?1:0">
     <el-card :body-style="{ padding: '0px' }"  style="width:195px;height:280px" v-if="index_i*5+index_j<productList.length">
       <!-- <el-image :src="productList[index_i*2+index_j].images.productImageAddr" style="width:200px;" fit="fill"> -->
-          <el-image src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" style="width:195px;height:195" fit="fill">
+          <el-image src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" style="width:100%;height:195" fit="fill">
          <div slot="error" class="image-slot">
         <i class="el-icon-picture-outline"></i>
       </div>
@@ -22,7 +22,7 @@
         <div class="bottom clearfix">{{productList[index_i*5+index_j].productIntro}}</div>
       </div>
          <el-button size="small" round>{{productList[index_i*5+index_j].productPrice}}  购买</el-button>
-         <el-button >详情</el-button>
+         <el-button @click="productInspectInfo(productList[index_i*5+index_j].productId)">详情</el-button>
     </el-card>
   </el-col>
 </el-row>
@@ -57,7 +57,6 @@ export default {
         if (!response.success) return this.$message.error(response.message);
         this.total = response.object.totalNumber;
         this.productList = response.object.products;
-        console.log(this.productList.length);
       });
     },
     //监听页面值改变的事件
@@ -69,10 +68,9 @@ export default {
 
     async productInspectInfo(productId){
          window.sessionStorage.setItem("productId", productId);
-        //  window.sessionStorage.setItem("normalShopInfo", true);
-         var activePath="/shop/info";
-         //这么写有点逆天，不过能跑
+         var activePath='/visit/product/info';
          this.$parent.$parent.$parent.$parent.saveNaveState(activePath);
+         window.sessionStorage.removeItem("ShopProductList_shopId");
          this.$router.push(activePath);
     },
   },

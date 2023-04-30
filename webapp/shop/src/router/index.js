@@ -6,9 +6,10 @@ import Home from "../components/Home.vue";
 import Welcome from '../components/Welcome'
 import UserInfo from '../components/user/UserInfo.vue'
 import UserAccount from "../components/user/UserAccount.vue";
-// import ShopList from '../components/visit/ShopList.vue'
-// import ShopInfo from '../components/visit/ShopInfo.vue'
+
 import ProductList from '../components/visit/ProductList.vue';
+import ProductInfo from '../components/visit/ProductInfo.vue';
+import ShopProductList from '../components/visit/ShopProductList.vue'; 
 // import MyShopInfo from '../components/owner/OwnerInfo.vue';
 import OwnerAccount from '../components/owner/OwnerAccount.vue';
 import AdminShopOpen from '../components/admin/AdminShopOpen.vue';
@@ -37,16 +38,16 @@ const routes = [
     //user_routes
     {path:'/user/info',component:UserInfo},
     {path:'/user/account',component:UserAccount},
-    // shop_routes
-    // {path:'/shop/list',component:ShopList},
-    // {path:'/shop/info',component:ShopInfo},
+    // visit_routes
     {path:'/visit/product/list',component:ProductList},
+    {path:'/visit/product/info',component:ProductInfo},
+    {path:'/visit/shop/product/list',component:ShopProductList},
     // owner_routes
     // {path:'/owner/info',component:MyShopInfo},
     {path:'/owner/account',component:OwnerAccount},
     // admin_routes
     {path:'/admin/list',component: AdminShopOpen},
-    { path:'/admin/profit',component:AdminProfit}
+    { path:'/admin/profit',component:AdminProfit},
   ]
   },
 ];

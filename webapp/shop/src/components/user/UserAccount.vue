@@ -10,6 +10,17 @@
      <!-- 面包屑卡片视图 -->
     <el-card> 
       <el-descriptions title="账户信息" direction="vertical" :column="3" border>
+            <!-- 流水表区 -->
+      <template slot="extra"  >
+      <el-select v-model="opValue" style="margin-right: 10px;" placeholder="请选择" @change="getFlowList">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+    </template>
         <template slot="extra">
       <el-button type="primary" @click="rechargeDialogVisible = true" >充值</el-button>
     </template>
@@ -71,17 +82,7 @@
     </el-dialog>
 
      <el-card>
-      <!-- 流水表区 -->
-      <template>
-      <el-select v-model="opValue" placeholder="请选择" @change="getFlowList">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-    </template>
+  
      <el-table :data="flowList" border stripe>
         <el-table-column type="index"></el-table-column>
         <el-table-column

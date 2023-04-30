@@ -115,7 +115,6 @@ export default {
 
     async shopInspectInfo(shopId){
          window.sessionStorage.setItem("shopId", shopId);
-        //  window.sessionStorage.setItem("normalShopInfo",false);
          var activePath="/shop/info";
          //这么写有点逆天，不过能跑
          this.$parent.$parent.$parent.$parent.saveNaveState(activePath);

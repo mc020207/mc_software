@@ -30,7 +30,11 @@ import {
   Tooltip,
   Select,
   Option,
-  Image
+  Image,
+  Carousel,
+  CarouselItem,
+  Loading,
+  Drawer,
 } from "element-ui";
 
 Vue.use(Button);
@@ -62,4 +66,8 @@ Vue.use(Tooltip);
 Vue.use(Select);
 Vue.use(Option);
 Vue.use(Image);
+Vue.use(Carousel);
+Vue.use(CarouselItem);
+Vue.use(Loading);
+Vue.use(Drawer);
 Vue.prototype.$message = Message;
