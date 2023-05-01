@@ -148,7 +148,7 @@ public class ProductServiceImpl implements ProductService {
         if (product == null) {
             throw new ServiceException("没有这个商品");
         }
-        if (!Objects.equals(product.getProductState(), ConstantUtil.PRODUCT_IN_INSPECTION)) {
+        if (!Objects.equals(product.getProductState(),productState)) {
             if (Objects.equals(productState, ConstantUtil.PRODUCT_IN_INSPECTION)) {
                 throw new ServiceException("该商品不是正在审核的商品");
             } else if (Objects.equals(productState, ConstantUtil.PRODUCT_ON_SHELF)) {
