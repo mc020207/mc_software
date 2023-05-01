@@ -52,11 +52,11 @@ const routes = [
     {path:'/owner/account',component:OwnerAccount},
     {path:'/owner/order',component:OwnerOrder},
     // admin_routes
-    {path:'/admin/list',component: AdminShopOpen},
-    { path:'/admin/profit',component:AdminProfit},
+    // {path:'/admin/list',component: AdminShopOpen},
+    // { path:'/admin/profit',component:AdminProfit},
     { path:'/temp',component:temp},
-    { path:'/admin/product/info',component:AdminProductInfo},
-    { path:'/admin/shop/info',component:AdminShopInfo},
+    // { path:'/admin/product/info',component:AdminProductInfo},
+    // { path:'/admin/shop/info',component:AdminShopInfo},
   ]
   },
 ];
