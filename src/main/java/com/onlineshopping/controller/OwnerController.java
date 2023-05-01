@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/owner")
@@ -67,7 +68,7 @@ public class OwnerController {
     public CommonResult addProduct(@RequestBody ProductAddFVO productAddFVO, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            productService.addProduct(new ProductDTO(productAddFVO), request, response);
+            cm.setObject(productService.addProduct(new ProductDTO(productAddFVO), request, response));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
@@ -107,6 +108,8 @@ public class OwnerController {
         CommonResult cm = new CommonResult(false);
         try {
             productService.addProductImage(imgAddFVO.getProductId(), imgAddFVO.getImage(), request, response);
+//            productService.addProductImage(productId, image, request, response);
+
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

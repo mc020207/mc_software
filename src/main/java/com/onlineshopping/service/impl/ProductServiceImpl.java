@@ -162,7 +162,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void addProduct(ProductDTO productDTO, HttpServletRequest request, HttpServletResponse response) {
+    public ProductDisplayVO addProduct(ProductDTO productDTO, HttpServletRequest request, HttpServletResponse response) {
         FormatUtil.checkNotNull("productName", productDTO.getProductName());
         FormatUtil.checkNotNull("productIntro", productDTO.getProductIntro());
         FormatUtil.checkNotNull("productPriceName", productDTO.getProductPrice());
@@ -173,8 +173,11 @@ public class ProductServiceImpl implements ProductService {
         Product product = productDTO.changeToProduct();
         product.setShopId(shop.getShopId());
         productMapper.insertProduct(product);
-        Integer productId = productMapper.selectProducts(product, 0, 1).get(0).getProductId();
+        List<Product> products = productMapper.selectProducts(product, null, null);
+        Integer productId = products.get(products.size()-1).getProductId();
         addProductRecord(productId);
+        product.setProductId(productId);
+        return getProductDisplay(product);
     }
 
     @Override
