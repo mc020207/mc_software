@@ -99,7 +99,7 @@
 
 <el-upload
   class="upload-demo"
-  action="http://localhost:8081/front/owner/product/add"
+  action="http://localhost:8081/front/owner/product/image/add"
   :on-preview="handlePreview"
   :on-remove="handleRemove"
   :before-remove="beforeRemove"
