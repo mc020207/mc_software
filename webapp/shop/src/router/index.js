@@ -6,14 +6,18 @@ import Home from "../components/Home.vue";
 import Welcome from '../components/Welcome'
 import UserInfo from '../components/user/UserInfo.vue'
 import UserAccount from "../components/user/UserAccount.vue";
+import UserCart from "../components/user/UserCart.vue";
 
 import ProductList from '../components/visit/ProductList.vue';
 import ProductInfo from '../components/visit/ProductInfo.vue';
 import ShopProductList from '../components/visit/ShopProductList.vue'; 
 // import MyShopInfo from '../components/owner/OwnerInfo.vue';
 import OwnerAccount from '../components/owner/OwnerAccount.vue';
+import OwnerOrder from  '../components/owner/OwnerOrder.vue';
 import AdminShopOpen from '../components/admin/AdminShopOpen.vue';
 import AdminProfit from '../components/admin/AdminProfit.vue';
+
+import temp from "../components/temp.vue";
 Vue.use(VueRouter);
 
 
@@ -38,6 +42,7 @@ const routes = [
     //user_routes
     {path:'/user/info',component:UserInfo},
     {path:'/user/account',component:UserAccount},
+    {path:'/user/cart',component:UserCart},
     // visit_routes
     {path:'/visit/product/list',component:ProductList},
     {path:'/visit/product/info',component:ProductInfo},
@@ -45,9 +50,11 @@ const routes = [
     // owner_routes
     // {path:'/owner/info',component:MyShopInfo},
     {path:'/owner/account',component:OwnerAccount},
+    {path:'/owner/order',component:OwnerOrder},
     // admin_routes
     {path:'/admin/list',component: AdminShopOpen},
     { path:'/admin/profit',component:AdminProfit},
+    { path:'/temp',component:temp},
   ]
   },
 ];

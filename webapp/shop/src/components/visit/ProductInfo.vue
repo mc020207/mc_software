@@ -87,14 +87,7 @@ export default {
             //   return this.$message.error(response.message);
             // }
             this.productInfo = response.object;
-            this.productInfo={
-              productId: 14,
-              productName: "string",
-              productIntro: "string",
-              productPrice: 0,
-              productState: 0,
-              shopId: 1,
-              images: [
+            this.productInfo.images=[
                 {
                   productImageId: 0,
                   productImageAddr: "https://i.postimg.cc/Bbg0RNLz/70448487-p0.png"
@@ -107,8 +100,7 @@ export default {
                   productImageId: 2,
                   productImageAddr: "https://i.postimg.cc/5tCMffQL/70987206-p0.jpg"
                 }
-              ]
-              };
+              ];
             this.loading=false;
         });
     },

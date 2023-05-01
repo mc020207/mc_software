@@ -113,7 +113,11 @@ export default {
             { 
               path:"/user/account",
               nextName:"账户流水"
-            }
+            },
+            {
+              path:'/user/cart',
+              nextName:"我的订单"
+            },
           ]
         },
         {
@@ -149,7 +153,11 @@ export default {
              { 
               path:"/user/account",
               nextName:"账户流水"
-            }
+            },
+            {
+              path:'/user/cart',
+              nextName:"我的订单"
+            },
           ]
         },
         {
@@ -181,7 +189,11 @@ export default {
              { 
               path:"/owner/account",
               nextName:"账户流水"
-            }
+            },
+            {
+              path:'/owner/order',
+              nextName:"商店订单"
+            },
           ]
         }
       ]
@@ -199,7 +211,11 @@ export default {
             { 
               path:"/user/account",
               nextName:"账户流水"
-            }
+            },
+            {
+              path:'/user/cart',
+              nextName:"我的订单"
+            },
           ]
         },
         {
