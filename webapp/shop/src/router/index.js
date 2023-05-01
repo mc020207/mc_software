@@ -55,6 +55,8 @@ const routes = [
     {path:'/admin/list',component: AdminShopOpen},
     { path:'/admin/profit',component:AdminProfit},
     { path:'/temp',component:temp},
+    { path:'/admin/product/info',component:AdminProductInfo},
+    { path:'/admin/shop/info',component:AdminShopInfo},
   ]
   },
 ];
