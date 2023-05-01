@@ -64,8 +64,7 @@ export default {
        this.currentPage=newPage;
        this.getList();
     },
-    //待处理事件逻辑
-
+    
     async productInspectInfo(productId){
          window.sessionStorage.setItem("productId", productId);
          var activePath='/visit/product/info';

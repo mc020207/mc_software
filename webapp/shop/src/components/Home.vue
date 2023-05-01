@@ -186,6 +186,14 @@ export default {
               path:"/owner/info",
               nextName:"我的商店信息"
             },
+            {
+              path:'/owner/product/list',
+              nextName:"我的商品列表"
+              },
+            {
+              path:'/owner/product/Info',
+              nextName:"商品详细信息"
+            },
              { 
               path:"/owner/account",
               nextName:"账户流水"
@@ -269,16 +277,27 @@ export default {
     },
     getActivepath(subItem){
       var ifshow=true;
-      if(subItem.path=='/visit/product/info'){
-        let productId = window.sessionStorage.getItem("productId");
-        if(productId==null){
-          ifshow=false;
-        }
-      }
-      else if(subItem.path=='/visit/shop/product/list'){
-          let shopId = window.sessionStorage.getItem("ShopProductList_shopId");
-        if(shopId==null){
-          ifshow=false;
+      switch (subItem.path){
+        case '/visit/product/info':{
+             let productId = window.sessionStorage.getItem("productId");
+              if(productId==null){
+                ifshow=false;
+              }
+              break;
+        };
+        case '/visit/shop/product/list':{
+              let shopId = window.sessionStorage.getItem("ShopProductList_shopId");
+              if(shopId==null){
+                ifshow=false;
+              }
+              break;
+        };
+        case '/owner/product/Info' :{
+              let OwnerproductId = window.sessionStorage.getItem("OwnerproductId");
+              if(OwnerproductId==null){
+                ifshow=false;
+              }
+             break;
         }
       }
       return ifshow;

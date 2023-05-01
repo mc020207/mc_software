@@ -76,16 +76,15 @@ export default {
   methods: {
     async getInfo() {
       var pid = window.sessionStorage.getItem("productId");
-      // var normal = window.sessionStorage.getItem("normalShopInfo");
       if (pid == null) {
         // 非法访问
         this.$router.push("/home");
         return this.$message.error("非法访问");
       }
       apiVisitProductInfo({productId:pid}).then(response =>{
-            // if(!response.success){
-            //   return this.$message.error(response.message);
-            // }
+            if(!response.success){
+              return this.$message.error(response.message);
+            }
             this.productInfo = response.object;
             this.productInfo.images=[
                 {

@@ -68,7 +68,6 @@
       </el-form>
           <!-- 按钮 -->
       <span slot="footer" class="dialog-footer">
-        
         <el-button type="primary" @click="shopRegister">提交</el-button>
         <el-button type="info" @click="resetshopRegisterForm">重置</el-button>
         <el-button @click="addDialogVisible = false">取 消</el-button>
