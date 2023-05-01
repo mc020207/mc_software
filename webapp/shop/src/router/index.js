@@ -48,6 +48,8 @@ const routes = [
     // admin_routes
     {path:'/admin/list',component: AdminShopOpen},
     { path:'/admin/profit',component:AdminProfit},
+    { path:'/admin/product/info',component:AdminProductInfo},
+    { path:'/admin/shop/info',component:AdminShopInfo},
   ]
   },
 ];

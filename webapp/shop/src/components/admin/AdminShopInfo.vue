@@ -30,7 +30,7 @@
         }}</el-descriptions-item>
       </el-descriptions>
     </el-card>
-      <el-table :data="productShopList" border stripe>
+      <!-- <el-table :data="productShopList" border stripe>
         <el-table-column type="index"></el-table-column>
          <el-table-column
           label="商品id"
@@ -42,15 +42,15 @@
           prop="productName"
           width="550"
         ></el-table-column>
-      </el-table>
+      </el-table> -->
        <!-- 分页区域 -->
-      <el-pagination 
+      <!-- <el-pagination 
        layout="total, prev, pager, next, jumper"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
       :page-size="pageSize"
-      :total="total">
-    </el-pagination>
+      :total="total"> -->
+    <!-- </el-pagination> -->
      
   </div>
 </template>
@@ -73,7 +73,7 @@ export default {
         this.$router.push("/login");
         return this.$message.error("非法访问");
       }
-      var shopid = window.sessionStorage.getItem("shopId");
+      var shopid = window.sessionStorage.getItem("admin_shopId");
       // var normal = window.sessionStorage.getItem("normalShopInfo");
       if (shopid == null) {
         // 非法访问
