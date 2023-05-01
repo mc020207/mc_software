@@ -16,6 +16,8 @@ import OwnerProductList from '../components/owner/OwnerProductList.vue';
 import OwnerProductInfo from '../components/owner/OwnerProduct.vue';
 import OwnerAccount from '../components/owner/OwnerAccount.vue';
 import OwnerOrder from  '../components/owner/OwnerOrder.vue';
+import ShopRecord from '../components/record/ShopRecord.vue';
+import ProductRecord from '../components/record/ProductRecord.vue';
 import AdminShopOpen from '../components/admin/AdminShopOpen.vue';
 import AdminProfit from '../components/admin/AdminProfit.vue';
 
@@ -61,6 +63,9 @@ const routes = [
     { path:'/temp',component:temp},
     // { path:'/admin/product/info',component:AdminProductInfo},
     // { path:'/admin/shop/info',component:AdminShopInfo},
+    // record_routes
+    {path:'/record/shop/list',component:ShopRecord},
+    {path:'/record/product/list',component:ProductRecord},
   ]
   },
 ];

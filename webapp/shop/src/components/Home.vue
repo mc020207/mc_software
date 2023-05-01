@@ -203,6 +203,20 @@ export default {
               nextName:"商店订单"
             },
           ]
+        },
+        {
+          id:"record",
+          authName:"申请记录",
+          children:[
+            {
+              path:'/record/shop/list',
+              nextName:"商店申请记录"
+              },
+            {
+              path:'/record/product/list',
+              nextName:"商品申请记录"
+              }
+          ]
         }
       ]
           break;
@@ -242,6 +256,20 @@ export default {
               path:'/visit/shop/product/list',
               nextName:"该商店商品"
             }
+          ]
+        },
+        {
+          id:"record",
+          authName:"申请记录",
+          children:[
+            {
+              path:'/record/shop/list',
+              nextName:"商店申请记录"
+              },
+            {
+              path:'/record/product/list',
+              nextName:"商品申请记录"
+              }
           ]
         },
         {
