@@ -23,7 +23,8 @@
         <div class="bottom clearfix">{{productInfo.productIntro}}</div>
       </div>
       <div style="display: flex;justify-content:flex-end;">
-         <el-button  type="success" round>{{productInfo.productPrice}}  购买</el-button>
+         <el-button  type="success" round  @click="buyProduct(productInfo.productId)">{{productInfo.productPrice}}  购买</el-button>
+         <el-button  type="primary" round  @click="cartAddProduct(productInfo.productId)">加入购物车</el-button>
          <el-button @click="toShopProductList">该商店全部商品</el-button>
         <el-button @click="getShopInfo">商店信息</el-button>
         </div>
@@ -58,7 +59,7 @@
   </div>
 </template>
 <script>
-import {apiVisitProductInfo,apiVisitShopInfo} from '@/api/api'
+import {apiVisitProductInfo,apiVisitShopInfo,apiOrderUserBuy,apiOrderUserAddCart} from '@/api/api'
 export default {
   data() {
     return {
@@ -87,7 +88,7 @@ export default {
             // }
             this.productInfo = response.object;
             this.productInfo={
-              productId: 10,
+              productId: 14,
               productName: "string",
               productIntro: "string",
               productPrice: 0,
@@ -127,6 +128,27 @@ export default {
          this.$parent.$parent.$parent.$parent.saveNaveState(activePath);
          this.$router.push(activePath);
     },
+      async buyProduct(productId){
+      apiOrderUserBuy({productId:productId}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+           this.$message({
+            showClose: true,
+            message: "购买成功",
+            type: 'success'
+          });
+     });
+    },
+       async cartAddProduct(productId){
+      apiOrderUserAddCart({productId:productId}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+           this.$message({
+            showClose: true,
+            message: "加入购物车成功",
+            type: 'success'
+          });
+     });
+    }
+    
   },
 };
 </script>

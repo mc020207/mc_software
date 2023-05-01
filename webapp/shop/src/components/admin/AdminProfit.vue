@@ -213,7 +213,7 @@ export default {
         if(this.accountInfo==null){
           this.$message.error('空值错误')
         }
-        if(this.accountInfo.accountType==1){
+        if(this.accountInfo.accountType==2){
           this.accountInfo.accountTypeStr="商店账户";
         }
         else{

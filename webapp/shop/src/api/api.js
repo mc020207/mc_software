@@ -136,7 +136,7 @@ export function apiOrderUserBuy(params) {
 
 export function apiOrderUserAddCart(params) {
   return service({
-    url: '/order/user/add/cart',
+    url: '/order/user/cart/add',
     method: 'get',
     params
   })

@@ -24,7 +24,7 @@
         <span>{{productList[index_i*5+index_j].productName}}</span>
         <div class="bottom clearfix">{{productList[index_i*5+index_j].productIntro}}</div>
       </div>
-         <el-button size="small" round>{{productList[index_i*5+index_j].productPrice}}  购买</el-button>
+         <el-button size="small" round @click="buyProduct(productList[index_i*5+index_j].productId)">{{productList[index_i*5+index_j].productPrice}}  购买</el-button>
          <el-button @click="productInspectInfo(productList[index_i*5+index_j].productId)">详情</el-button>
     </el-card>
   </el-col>
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import {apiVisitShopProductList,apiVisitShopInfo} from '@/api/api'
+import {apiVisitShopProductList,apiVisitShopInfo,apiOrderUserBuy} from '@/api/api'
 export default {
   data() {
     return {
@@ -117,6 +117,16 @@ export default {
             this.drawer = true;
         });
     },
+       async buyProduct(productId){
+      apiOrderUserBuy({productId:productId}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+           this.$message({
+            showClose: true,
+            message: "购买成功",
+            type: 'success'
+          });
+     });
+    }
   },
 };
 </script>

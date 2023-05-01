@@ -35,6 +35,7 @@ import {
   CarouselItem,
   Loading,
   Drawer,
+  Upload,
 } from "element-ui";
 
 Vue.use(Button);
@@ -70,4 +71,5 @@ Vue.use(Carousel);
 Vue.use(CarouselItem);
 Vue.use(Loading);
 Vue.use(Drawer);
+Vue.use(Upload);
 Vue.prototype.$message = Message;
