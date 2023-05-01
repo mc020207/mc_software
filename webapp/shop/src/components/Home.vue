@@ -182,10 +182,10 @@ export default {
           id:"owner",
           authName: "我的商店",
           children:[
-            // { 
-            //   path:"/owner/info",
-            //   nextName:"我的商店信息"
-            // },
+            { 
+              path:"/owner/info",
+              nextName:"我的商店信息"
+            },
              { 
               path:"/owner/account",
               nextName:"账户流水"

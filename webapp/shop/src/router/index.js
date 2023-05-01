@@ -11,7 +11,7 @@ import UserCart from "../components/user/UserCart.vue";
 import ProductList from '../components/visit/ProductList.vue';
 import ProductInfo from '../components/visit/ProductInfo.vue';
 import ShopProductList from '../components/visit/ShopProductList.vue'; 
-// import MyShopInfo from '../components/owner/OwnerInfo.vue';
+import MyShopInfo from '../components/owner/OwnerInfo.vue';
 import OwnerAccount from '../components/owner/OwnerAccount.vue';
 import OwnerOrder from  '../components/owner/OwnerOrder.vue';
 import AdminShopOpen from '../components/admin/AdminShopOpen.vue';
@@ -48,7 +48,7 @@ const routes = [
     {path:'/visit/product/info',component:ProductInfo},
     {path:'/visit/shop/product/list',component:ShopProductList},
     // owner_routes
-    // {path:'/owner/info',component:MyShopInfo},
+    {path:'/owner/info',component:MyShopInfo},
     {path:'/owner/account',component:OwnerAccount},
     {path:'/owner/order',component:OwnerOrder},
     // admin_routes
