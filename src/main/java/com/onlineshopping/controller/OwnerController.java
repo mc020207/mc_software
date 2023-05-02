@@ -3,7 +3,6 @@ package com.onlineshopping.controller;
 import com.onlineshopping.model.dto.ProductDTO;
 import com.onlineshopping.model.dto.ShopRegisterDTO;
 import com.onlineshopping.model.vo.CommonResult;
-import com.onlineshopping.model.vo.ImgAddFVO;
 import com.onlineshopping.model.vo.ProductAddFVO;
 import com.onlineshopping.model.vo.ShopRegisterFVO;
 import com.onlineshopping.service.ProductService;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/owner")
@@ -103,10 +103,11 @@ public class OwnerController {
     }
 
     @RequestMapping(value = "/product/image/add", method = RequestMethod.POST)
-    public CommonResult addProductImage(@RequestBody ImgAddFVO imgAddFVO, HttpServletRequest request, HttpServletResponse response) {
+    public CommonResult addProductImage(HttpServletRequest request, HttpServletResponse response,
+    Integer productId, @RequestBody MultipartFile image) {
         CommonResult cm = new CommonResult(false);
         try {
-            productService.addProductImage(imgAddFVO.getProductId(), imgAddFVO.getImage(), request, response);
+            productService.addProductImage(productId, image, request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

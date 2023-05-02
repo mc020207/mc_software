@@ -14,6 +14,7 @@ import com.onlineshopping.util.JwtUserUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -209,6 +210,15 @@ public class ProductServiceImpl implements ProductService {
         changeProductState(product.getProductId(), ConstantUtil.PRODUCT_IN_INSPECTION);
     }
 
+    public String getSavePath() {
+        // 这里需要注意的是ApplicationHome是属于SpringBoot的类
+        // 获取项目下resources/static/img路径
+        ApplicationHome applicationHome = new ApplicationHome(this.getClass());
+        // 保存目录位置根据项目需求可随意更改
+        return applicationHome.getDir().getParentFile()
+                .getParentFile().getAbsolutePath() + "/src/main/resources/static/img";
+    }
+
     @Override
     @Transactional
     public void addProductImage(Integer productId, MultipartFile image, HttpServletRequest request, HttpServletResponse response) {
@@ -223,8 +233,8 @@ public class ProductServiceImpl implements ProductService {
         //根据时间戳创建新的文件名，这样即便是第二次上传相同名称的文件，也不会把第一次的文件覆盖了
         String fileName = System.currentTimeMillis() + suffix;
         //获取当前项目的真实路径，然后拼接前面的文件
-        String destFileName = request.getServletContext().getRealPath("") + "static\\productImage" + File.separator + fileName;
-        //第一次运行的时候，这个文件所在的目录往往是不存在的，这里需要创建一下目录（创建到了webapp下static/user_source文件夹下）
+        String destFileName = getSavePath() + File.separator + fileName;
+        //第一次运行的时候，这个文件所在的目录往往是不存在的，这里需要创建一下目录（创建到了resources下static/img文件夹下）
         File destFile = new File(destFileName);
         if (!destFile.getParentFile().exists()) {
             if (!destFile.getParentFile().mkdirs())
@@ -236,7 +246,7 @@ public class ProductServiceImpl implements ProductService {
         } catch (IOException e) {
             throw new ServiceException("添加图片失败");
         }
-        String imagePath = "/static/article_image/" + fileName;
+        String imagePath = "/src/main/resources/static/img/" + fileName;
         productImgMapper.insertProductImg(new ProductImg(null, productId, imagePath));
         addProductRecord(productId);
         changeProductState(productId, ConstantUtil.PRODUCT_IN_INSPECTION);
