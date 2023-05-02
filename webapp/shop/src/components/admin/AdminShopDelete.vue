@@ -1,11 +1,10 @@
 <template>
   <div>
-    <!-- 功能就是    AdminList.vue的mini版，但为了不写过多的if esle，直接分成了两个界面 -->
     <!-- 导航区 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>商店界面</el-breadcrumb-item>
-      <el-breadcrumb-item>已开放商店列表</el-breadcrumb-item>
+      <el-breadcrumb-item>管理员</el-breadcrumb-item>
+      <el-breadcrumb-item>待审核商店信息列表</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 面包屑卡片视图 -->
     <el-card>
@@ -20,12 +19,12 @@
         <el-table-column
           label="简介"
           prop="shopIntro"
-          width="450"
+          width="400"
         ></el-table-column>
         <el-table-column
           label="地址"
           prop="shopAddr"
-          width="300"
+          width="250"
         ></el-table-column>
         <el-table-column
           label="注册资金"
@@ -37,13 +36,21 @@
           prop="shopRegisterDate"
           width="100"
         ></el-table-column>
-        <el-table-column label="详细信息">
+        <el-table-column label="审批">
             <template slot-scope="scope">
                   <!-- 详情 -->
                    <el-tooltip class="item" effect="dark" content="详细信息" placement="top" :enterable="false">
                   <el-button type="success" icon="el-icon-s-grid" size='mini' @click="shopInspectInfo(scope.row.shopId)"></el-button>
                 </el-tooltip>
                           
+                <!-- 同意 -->
+                  <el-tooltip class="item" effect="dark" content="同意" placement="top" :enterable="false">
+                   <el-button type="primary" icon="el-icon-check" size='mini' @click="shopInspectPass(scope.row.shopId)"></el-button>
+                </el-tooltip>
+                <!-- 拒绝 -->
+                  <el-tooltip class="item" effect="dark" content="拒绝" placement="top" :enterable="false">
+                  <el-button type="danger" icon="el-icon-close" size='mini' @click="shopInspectReject(scope.row.shopId)"></el-button>
+                </el-tooltip>
                
             </template>
              </el-table-column>
@@ -61,14 +68,14 @@
 </template>
 
 <script>
-import {apiShopList} from '@/api/api'
+import {apiAdminShopDeleteList,apiAdminShopDeletePass,apiAdminShopDeleteReject} from '@/api/api'
 export default {
   data() {
     return {
       inspectShopList: [],
       currentPage:1,
-      pageSize:9,   //一页的数量
-      total:0
+      pageSize:9,     //一页的数量
+      total:100
     };
   },
   created() {
@@ -76,16 +83,15 @@ export default {
   },
   methods: {
     async getShopList() {
-      var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
-      if(t!= "0" && t!="1" && t!="2"){
-        
-        this.$router.push("/login");
-        return this.$message.error("非法访问");
-      }
-    //   var result=await this.$http.get('/shop/list',{
+    //   var result=await this.$http.get('/user/info',{
     //     page:this.currentPage
     //   });
-      apiShopList({page:this.currentPage}).then(response =>{
+      var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
+      if(t!="2"){
+        this.$router.push("/home");
+        return this.$message.error("非法访问");
+      }
+      apiAdminShopDeleteList({page:this.currentPage}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
         this.total = response.object.totalNumber;
         this.inspectShopList = response.object.shops;
@@ -94,18 +100,50 @@ export default {
     //监听页面值改变的事件
     handleCurrentChange(newPage){
        this.currentPage=newPage;
-       this.getShopList();
+       var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
+      if(t!="2"){
+        this.$router.push("/home");
+        return this.$message.error("非法访问");
+      }
+      apiAdminList({page:this.currentPage}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+        this.total = response.object.totalNumber;
+        this.inspectShopList = response.object.shops;
+      });
     },
     //待处理事件逻辑
 
     async shopInspectInfo(shopId){
          window.sessionStorage.setItem("shopId", shopId);
-         window.sessionStorage.setItem("normalShopInfo", true);
          var activePath="/shop/info";
          //这么写有点逆天，不过能跑
          this.$parent.$parent.$parent.$parent.saveNaveState(activePath);
          this.$router.push(activePath);
     },
+   async shopInspectPass(shopId){
+      // var result=await this.$http.get('/inspect/pass',shopId);
+      apiAdminShopDeletePass({shopId:shopId}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+      });
+      var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
+      if(t!="2"){
+        this.$router.push("/home");
+        return this.$message.error("非法访问");
+      }
+      this.getShopList();
+    },
+   async shopInspectReject(shopId){
+      //var result=await this.$http.get('/inspect/reject',shopId);
+      apiAdminShopDeleteReject({shopId:shopId}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+      });
+      var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
+      if(t!="2"){
+        this.$router.push("/home");
+        return this.$message.error("非法访问");
+      }
+      this.getShopList();
+    }
   },
 };
 </script>
