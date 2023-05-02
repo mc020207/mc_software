@@ -67,7 +67,7 @@ public class OwnerController {
     public CommonResult addProduct(@RequestBody ProductAddFVO productAddFVO, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            productService.addProduct(new ProductDTO(productAddFVO), request, response);
+            cm.setObject(productService.addProduct(new ProductDTO(productAddFVO), request, response));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

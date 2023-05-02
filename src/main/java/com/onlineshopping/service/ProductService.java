@@ -20,7 +20,7 @@ public interface ProductService {
      * @Description: 商户向自己已注册的商店添加商品
      * @Author: Ma-Cheng
      */
-    void addProduct(ProductDTO productDTO, HttpServletRequest request, HttpServletResponse response);
+    ProductDisplayVO addProduct(ProductDTO productDTO, HttpServletRequest request, HttpServletResponse response);
 
     /**
      * @Description: 商户删除自己店面的商品
