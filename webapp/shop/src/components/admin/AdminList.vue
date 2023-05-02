@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import {apiAdminShopOpenList,apiAdminShopOpenPass,apiAdminShopOpenReject} from '@/api/api'
+import {apiAdminList,apiAdminPass,apiAdminReject} from '@/api/api'
 export default {
   data() {
     return {
@@ -91,7 +91,7 @@ export default {
         this.$router.push("/home");
         return this.$message.error("非法访问");
       }
-      apiAdminShopOpenList({page:this.currentPage}).then(response =>{
+      apiAdminList({page:this.currentPage}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
         this.total = response.object.totalNumber;
         this.inspectShopList = response.object.shops;
@@ -115,6 +115,7 @@ export default {
 
     async shopInspectInfo(shopId){
          window.sessionStorage.setItem("shopId", shopId);
+         window.sessionStorage.setItem("normalShopInfo",false);
          var activePath="/shop/info";
          //这么写有点逆天，不过能跑
          this.$parent.$parent.$parent.$parent.saveNaveState(activePath);
@@ -122,7 +123,7 @@ export default {
     },
    async shopInspectPass(shopId){
       // var result=await this.$http.get('/inspect/pass',shopId);
-      apiAdminShopOpenPass({shopId:shopId}).then(response =>{
+      apiAdminPass({shopId:shopId}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
       });
       var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
@@ -130,11 +131,16 @@ export default {
         this.$router.push("/home");
         return this.$message.error("非法访问");
       }
+      apiAdminList({page:this.currentPage}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+        this.total = response.object.totalNumber;
+        this.inspectShopList = response.object.shops;
+      });
       this.getShopList();
     },
    async shopInspectReject(shopId){
       //var result=await this.$http.get('/inspect/reject',shopId);
-      apiAdminShopOpenReject({shopId:shopId}).then(response =>{
+      apiAdminReject({shopId:shopId}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
       });
       var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
@@ -142,6 +148,11 @@ export default {
         this.$router.push("/home");
         return this.$message.error("非法访问");
       }
+      apiAdminList({page:this.currentPage}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+        this.total = response.object.totalNumber;
+        this.inspectShopList = response.object.shops;
+      });
       this.getShopList();
     }
   },

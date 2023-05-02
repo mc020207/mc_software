@@ -96,6 +96,13 @@
             prefix-icon="el-icon-shangdian"
           ></el-input>
         </el-form-item>
+         <!-- 身份证号 -->
+        <el-form-item prop="userIdCard">
+          <el-input
+            v-model="shopRegisterForm.userIdCard"
+            prefix-icon="el-icon-shenfenzheng"
+          ></el-input>
+        </el-form-item>
         <!-- 商店简介 -->
         <el-form-item prop="shopIntro">
           <el-input
@@ -132,7 +139,7 @@
 </template>
 
 <script>
-import {apiOwnerShopRegister,apiOwnerShopInfo,apiOwnerShopDelete,apiOwnerProductList,apiOwnerProductAdd,apiOwnerProductDelete} from '@/api/api'
+import {apiMyshopReg,apiMyshopInfo,apiMyshopProducts,apiMyshopAdd,apiMyshopDelete,apiMyshopCommit} from '@/api/api'
 export default {
   data() {
     return {
@@ -142,15 +149,12 @@ export default {
       pageSize:9,     //一页的数量
       total:100,
       //添加的商品名
-      productRegisterForm:{
+      productNameS:{
          productName:"",
-         productIntro:"",
-         productPrice:0
       },
-
       shopRegisterForm: {
         shopName: "",
-        // userIdCard: "",
+        userIdCard: "",
         shopIntro:"",
         shopAddr:"",
         shopRegisterFund:""
@@ -159,7 +163,6 @@ export default {
         shopIsOpen: -1
       },
      productShopList:[],
-
       //这是登录表单的验证规则对象
       shopRegisterFormRules: {
         shopName: [
@@ -170,6 +173,15 @@ export default {
             message: "长度在12个字符以内",
             trigger: "blur",
           }
+        ],
+        userIdCard: [
+          { required: true, message: "请输入身份证号", trigger: "blur" },
+          {
+            min: 18,
+            max: 18,
+            message: "长度为18字符",
+            trigger: "blur",
+          },
         ],
         shopIntro:[
              { required: true, message: "请输入商店简介", trigger: "blur" },
@@ -208,11 +220,8 @@ export default {
         ],
       },
       //添加商店表单的验证规则
-      productRegisterFormRules:{
-        productName:[  { required: true, message: "请输入商品名称", trigger: "blur" }],
-        //rules todo
-        productIntro:[],
-        productPrice:[]
+      productNameRules:{
+        productName:[  { required: true, message: "请输入商品名称", trigger: "blur" }]
       }
     };
   },
@@ -230,7 +239,7 @@ export default {
         if (!valid) return;
         this.addDialogVisible = false;
         this.getShopInfo();
-        apiOwnerShopRegister(this.shopRegisterForm).then(response =>{
+        apiMyshopReg(this.shopRegisterForm).then(response =>{
           if (!response.success) return this.$message.error(response.message);
           this.getShopInfo();
         })
@@ -252,13 +261,12 @@ export default {
         else{
           this.shopInfo = response.object;
           switch(this.shopInfo.shopIsOpen){
-            case 0:this.shopInfo.shopIsOpenStr = "审核待通过";break;
-            case 1:this.shopInfo.shopIsOpenStr = "审核未通过";break;
-            case 2:this.shopInfo.shopIsOpenStr = "商店开放";break;
-            case 3:this.shopInfo.shopIsOpenStr = "删除待通过";break;
-            case 4:this.shopInfo.shopIsOpenStr = "商店已删除";break;
+            case 0:this.shopInfo.shopIsOpenStr = "待提交";break;
+            case 1:this.shopInfo.shopIsOpenStr = "待审核";break;
+            case 2:this.shopInfo.shopIsOpenStr = "驳回";break;
+            case 3:this.shopInfo.shopIsOpenStr = "上线";break;
           }
-          apiOwnerProductList({page:this.currentPage}).then(response =>{
+          apiMyshopProducts({page:this.currentPage}).then(response =>{
             if(!response.success) return this.$message.error(response.message);
             this.productShopList = response.object.products;
             this.total = response.object.totalNumber;
@@ -270,7 +278,7 @@ export default {
     },
     handleCurrentChange(newPage){
       this.currentPage=newPage;
-      apiOwnerShopInfo({page:this.currentPage}).then(response =>{
+      apiMyshopProducts({page:this.currentPage}).then(response =>{
             if(!response.success) return this.$message.error(response.message);
             this.productShopList = response.object.products;
             this.total = response.object.totalNumber;
@@ -278,7 +286,7 @@ export default {
     },
     async productDelete(pid){
       //  var result=await this.$http.get('/myshop/product/delete',shopId);
-      apiOwnerProductDelete({productId:pid}).then(response =>{
+      apiMyshopDelete({productId:pid}).then(response =>{
         if(!response.success) return this.$message.error(response.message);
         this.$message({
               showClose: true,
@@ -294,7 +302,7 @@ export default {
           
           if (!valid) return;
        
-          apiOwnerProductAdd(this.productRegisterForm).then(response =>{
+          apiMyshopAdd({productName:this.productNameS.productName}).then(response =>{
               if(!response.success) return this.$message.error(response.message);
               this.$message({
               showClose: true,
@@ -305,24 +313,13 @@ export default {
           });
           });
     },
-    async shopDelete(){
-      apiOwnerShopDelete().then(response =>{
-        if(!response.success) return this.$message.error(response.message);
-        this.$message({
-              showClose: true,
-              message: "删除成功",
-              type: 'success'
-            });
-        this.getShopInfo();
-      })
+    async productCommit(){
+       //  var result=await this.$http.get('/myshop/commit');
+        apiMyshopCommit().then(response =>{
+            if(!response.success) return this.$message.error(response.message);
+            this.getShopInfo();
+          });
     }
-    // async productCommit(){
-    //    //  var result=await this.$http.get('/myshop/commit');
-    //     apiMyshopCommit().then(response =>{
-    //         if(!response.success) return this.$message.error(response.message);
-    //         this.getShopInfo();
-    //       });
-    // }
   },
 };
 </script>

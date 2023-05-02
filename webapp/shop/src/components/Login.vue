@@ -90,14 +90,12 @@ export default {
     login() {
       this.$refs.loginFormRef.validate(async (valid) => {
         if (!valid) return;
-       // md5加密 密码
-        var loginForm={...this.loginForm};
-        loginForm.userPwd=this.$md5(loginForm.userPwd);
-        apiLogin(loginForm).then(response =>{
+        // 后端没部署，暂时注释
+        apiLogin(this.loginForm).then(response =>{
           if (!response.success) return this.$message.error(response.message);
           this.$message({
             showClose: true,
-            message: "登录成功",
+            message: response.message,
             type: 'success'
           });
           //保存token

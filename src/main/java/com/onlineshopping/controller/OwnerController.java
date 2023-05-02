@@ -3,7 +3,6 @@ package com.onlineshopping.controller;
 import com.onlineshopping.model.dto.ProductDTO;
 import com.onlineshopping.model.dto.ShopRegisterDTO;
 import com.onlineshopping.model.vo.CommonResult;
-import com.onlineshopping.model.vo.ImgAddFVO;
 import com.onlineshopping.model.vo.ProductAddFVO;
 import com.onlineshopping.model.vo.ShopRegisterFVO;
 import com.onlineshopping.service.ProductService;
@@ -68,7 +67,7 @@ public class OwnerController {
     public CommonResult addProduct(@RequestBody ProductAddFVO productAddFVO, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            cm.setObject(productService.addProduct(new ProductDTO(productAddFVO), request, response));
+            productService.addProduct(new ProductDTO(productAddFVO), request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
@@ -104,12 +103,11 @@ public class OwnerController {
     }
 
     @RequestMapping(value = "/product/image/add", method = RequestMethod.POST)
-    public CommonResult addProductImage(@RequestBody ImgAddFVO imgAddFVO, HttpServletRequest request, HttpServletResponse response) {
+    public CommonResult addProductImage(HttpServletRequest request, HttpServletResponse response,
+    Integer productId, @RequestBody MultipartFile image) {
         CommonResult cm = new CommonResult(false);
         try {
-            productService.addProductImage(imgAddFVO.getProductId(), imgAddFVO.getImage(), request, response);
-//            productService.addProductImage(productId, image, request, response);
-
+            productService.addProductImage(productId, image, request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

@@ -28,14 +28,6 @@ import {
   Descriptions,
   DescriptionsItem,
   Tooltip,
-  Select,
-  Option,
-  Image,
-  Carousel,
-  CarouselItem,
-  Loading,
-  Drawer,
-  Upload,
 } from "element-ui";
 
 Vue.use(Button);
@@ -64,12 +56,4 @@ Vue.use(Dialog);
 Vue.use(Descriptions);
 Vue.use(DescriptionsItem);
 Vue.use(Tooltip);
-Vue.use(Select);
-Vue.use(Option);
-Vue.use(Image);
-Vue.use(Carousel);
-Vue.use(CarouselItem);
-Vue.use(Loading);
-Vue.use(Drawer);
-Vue.use(Upload);
 Vue.prototype.$message = Message;

@@ -9,7 +9,7 @@ import "./assets/font/iconfont.css";
 import "./assets/css/global.css";
 
 import jwt_decode from "jwt-decode";
-import md5 from 'js-md5';
+
 import axios from "axios";
 // import  VueCookies  from "vue-cookies";
 
@@ -32,7 +32,7 @@ import axios from "axios";
 Vue.config.productionTip = false;
 
 Vue.prototype.$decoder = jwt_decode;
-Vue.prototype.$md5 = md5;
+
 new Vue({
   router,
 
