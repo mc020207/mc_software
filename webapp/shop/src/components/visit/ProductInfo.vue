@@ -86,20 +86,9 @@ export default {
               return this.$message.error(response.message);
             }
             this.productInfo = response.object;
-            this.productInfo.images=[
-                {
-                  productImageId: 0,
-                  productImageAddr: "https://i.postimg.cc/Bbg0RNLz/70448487-p0.png"
-                },
-                 {
-                  productImageId: 1,
-                  productImageAddr: "https://i.postimg.cc/pLyH1f20/70467532-p0.png"
-                },
-                 {
-                  productImageId: 2,
-                  productImageAddr: "https://i.postimg.cc/5tCMffQL/70987206-p0.jpg"
-                }
-              ];
+            for(let i=0;i<this.productInfo.images.length;i++){
+              this.productInfo.images[i].productImageAddr="http://localhost:8080"+this.productInfo.images[i].productImageAddr;
+            }
             this.loading=false;
         });
     },

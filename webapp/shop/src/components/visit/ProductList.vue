@@ -11,8 +11,8 @@
   <el-row v-for="(o,index_i) in 2" :key="o">
   <el-col :span="4" v-for="(o,index_j) in 5" :key="o" :offset="index_j?1:0">
     <el-card :body-style="{ padding: '0px' }"  style="width:195px;height:280px" v-if="index_i*5+index_j<productList.length">
-      <!-- <el-image :src="productList[index_i*2+index_j].images.productImageAddr" style="width:200px;" fit="fill"> -->
-          <el-image src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" style="width:100%;height:195" fit="fill">
+          <el-image :src="productList[index_i*5+index_j].images[0].productImageAddr" style="width:100%;height:195px;" fit="fill">
+           
          <div slot="error" class="image-slot">
         <i class="el-icon-picture-outline"></i>
       </div>
@@ -57,6 +57,18 @@ export default {
         if (!response.success) return this.$message.error(response.message);
         this.total = response.object.totalNumber;
         this.productList = response.object.products;
+        
+       
+        for(let i=0;i<this.productList.length;i++){
+            if(this.productList[i].images.length){
+                this.productList[i].images[0].productImageAddr="http://localhost:8080"+this.productList[i].images[0].productImageAddr;
+            }
+            else{
+              this.productList[i].images[0]={
+                productImageAddr:"https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png",
+              }
+            }
+        }
       });
     },
     //监听页面值改变的事件

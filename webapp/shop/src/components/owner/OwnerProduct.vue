@@ -17,7 +17,7 @@
           </el-carousel-item>
         </el-carousel>
       </template>
-     <div style="height: 400px;" v-if="editImageVisible">
+     <div  v-if="editImageVisible">
       <el-upload
         class="upload-demo"
         action=""
