@@ -246,7 +246,7 @@ public class ProductServiceImpl implements ProductService {
         } catch (IOException e) {
             throw new ServiceException("添加图片失败");
         }
-        String imagePath = "/src/main/resources/static/img/" + fileName;
+        String imagePath = "/img/" + fileName;
         productImgMapper.insertProductImg(new ProductImg(null, productId, imagePath));
         addProductRecord(productId);
         changeProductState(productId, ConstantUtil.PRODUCT_IN_INSPECTION);
