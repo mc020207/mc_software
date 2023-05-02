@@ -7,7 +7,7 @@
           <el-breadcrumb-item>商品详细信息</el-breadcrumb-item>
         </el-breadcrumb>
       <template>
-        <el-carousel :interval="4000" type="card"  v-loading="loading" height="400px" >
+        <el-carousel :interval="4000" type="card"  v-loading="loading" height="400px" v-if="!editImageVisible">
           <el-carousel-item v-for="item in productInfo.images" :key="item.productImageId">
               <el-image :src="item.productImageAddr" style="width:100%;height:100%" fit="fill">
             <div slot="error" class="image-slot">
@@ -17,7 +17,21 @@
           </el-carousel-item>
         </el-carousel>
       </template>
-    <el-card v-loading="loading">
+     <div style="height: 400px;" v-if="editImageVisible">
+      <el-upload
+        class="upload-demo"
+        action=""
+        :on-remove="deleteImage"
+        :http-request="addImage"
+        :file-list="fileList"
+        list-type="picture">
+        <el-button size="small" type="primary">点击上传</el-button>
+        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+      </el-upload>
+
+      
+     </div>
+    <el-card v-loading="loading" >
       <el-descriptions
         title="商品信息"
         :column="3"
@@ -37,10 +51,10 @@
       </el-descriptions>
       <div style="display: flex;justify-content:flex-end;">
         <el-button  type="primary" round  @click="editDialogVisible=true">修改文字信息</el-button>
+        <el-button  type="primary" round  @click="editImage">{{imageStr}}</el-button>
          <el-button  type="danger" round  @click="deleteProduct">删除</el-button>
         </div>
     </el-card>
-
      <el-dialog
       title="修改商品信息"
       :visible.sync="editDialogVisible"
@@ -86,8 +100,11 @@ export default {
             images:[]
             */
         },
+        fileList:[],
         loading:true,
+        editImageVisible:false,
         editDialogVisible:false,
+        imageStr:"修改图片",
         editForm:{
           productId:"",
             productName:"",
@@ -148,20 +165,14 @@ export default {
               return this.$message.error(response.message);
             }
             this.productInfo = response.object;
-            this.productInfo.images=[
-                {
-                  productImageId: 0,
-                  productImageAddr: "https://i.postimg.cc/Bbg0RNLz/70448487-p0.png"
-                },
-                 {
-                  productImageId: 1,
-                  productImageAddr: "https://i.postimg.cc/pLyH1f20/70467532-p0.png"
-                },
-                 {
-                  productImageId: 2,
-                  productImageAddr: "https://i.postimg.cc/5tCMffQL/70987206-p0.jpg"
-                }
-              ];
+            for(let i=0;i<this.productInfo.images.length;i++){
+              this.productInfo.images[i].productImageAddr="http://localhost:8080"+this.productInfo.images[i].productImageAddr;
+              this.fileList[i]={
+                url:this.productInfo.images[i].productImageAddr,
+                name:"",
+                id:this.productInfo.images[i].productImageId
+              }
+              }
             this.loading=false;
             switch (this.productInfo.productState){
               case 0:{
@@ -217,15 +228,41 @@ export default {
         });
         });
     },
-    addImage(){
-        apiOwnerProductImageAdd({productId:this.productInfo.productId,image:this.imageInfo.stringfy}).then(response=>{
+    editImage(){
+        this.editImageVisible=!this.editImageVisible;
+        if(this.editImageVisible){
+           this.imageStr="完成修改";
+        }
+        else{
+          this.imageStr="修改图片";
+          this.getInfo();
+        }
+    },
+   async addImage(params){
+        
+        let file = params.file;
+        var formData = new FormData();
+         formData.append('productId', this.productInfo.productId);
+        formData.append('image', file);
+       
+        apiOwnerProductImageAdd(formData).then(response=>{
              if (!response.success) return this.$message.error(response.message);
+              this.$message({
+              showClose: true,
+              message: "添加成功",
+              type: 'success'
+            });
              this.getInfo();
         });
     },
-    deleteImage(iid){
-        apiOwnerProductImageDelete({productImgId:iid}).then(response=>{
+    deleteImage(file){
+        apiOwnerProductImageDelete({productImgId:file.id}).then(response=>{
              if (!response.success) return this.$message.error(response.message);
+             this.$message({
+              showClose: true,
+              message: "删除成功",
+              type: 'success'
+            });
              this.getInfo();
         });
     },
