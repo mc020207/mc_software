@@ -22,12 +22,12 @@
         <span>{{productInfo.productName}}</span>
         <div class="bottom clearfix">{{productInfo.productIntro}}</div>
       </div>
-      <!-- <div style="display: flex;justify-content:flex-end;">
+      <div style="display: flex;justify-content:flex-end;">
          <el-button  type="success" round  @click="buyProduct(productInfo.productId)">{{productInfo.productPrice}}  购买</el-button>
          <el-button  type="primary" round  @click="cartAddProduct(productInfo.productId)">加入购物车</el-button>
          <el-button @click="toShopProductList">该商店全部商品</el-button>
         <el-button @click="getShopInfo">商店信息</el-button>
-        </div> -->
+        </div>
     </el-card>
 
     <el-drawer
@@ -59,7 +59,7 @@
   </div>
 </template>
 <script>
-import {apiAdminProductInfo} from '@/api/api'
+import {apiVisitProductInfo,apiVisitShopInfo,apiOrderUserBuy,apiOrderUserAddCart} from '@/api/api'
 export default {
   data() {
     return {
@@ -76,78 +76,58 @@ export default {
   methods: {
     async getInfo() {
       var pid = window.sessionStorage.getItem("admin_productId");
-      // var normal = window.sessionStorage.getItem("normalShopInfo");
       if (pid == null) {
         // 非法访问
         this.$router.push("/home");
         return this.$message.error("非法访问");
       }
-      apiAdminProductInfo({productId:pid}).then(response =>{
-            // if(!response.success){
-            //   return this.$message.error(response.message);
-            // }
+      apiVisitProductInfo({productId:pid}).then(response =>{
+            if(!response.success){
+              return this.$message.error(response.message);
+            }
             this.productInfo = response.object;
-            this.productInfo={
-              productId: 14,
-              productName: "string",
-              productIntro: "string",
-              productPrice: 0,
-              productState: 0,
-              shopId: 1,
-              images: [
-                {
-                  productImageId: 0,
-                  productImageAddr: "https://i.postimg.cc/Bbg0RNLz/70448487-p0.png"
-                },
-                 {
-                  productImageId: 1,
-                  productImageAddr: "https://i.postimg.cc/pLyH1f20/70467532-p0.png"
-                },
-                 {
-                  productImageId: 2,
-                  productImageAddr: "https://i.postimg.cc/5tCMffQL/70987206-p0.jpg"
-                }
-              ]
-              };
+            for(let i=0;i<this.productInfo.images.length;i++){
+              this.productInfo.images[i].productImageAddr="http://localhost:8080"+this.productInfo.images[i].productImageAddr;
+            }
             this.loading=false;
         });
     },
-    // async getShopInfo() {
-    //   var shopid = this.productInfo.shopId;
-    //       apiVisitShopInfo({shopId:shopid}).then(response =>{
-    //         if(!response.success){
-    //           return this.$message.error(response.message);
-    //         }
-    //         this.shopInfo = response.object;
-    //         this.drawer = true;
-    //     });
-    // },
-    // async toShopProductList(){
-    //      window.sessionStorage.setItem("ShopProductList_shopId", this.productInfo.shopId);
-    //      var activePath='/visit/shop/product/list';
-    //      this.$parent.$parent.$parent.$parent.saveNaveState(activePath);
-    //      this.$router.push(activePath);
-    // },
-    //   async buyProduct(productId){
-    //   apiOrderUserBuy({productId:productId}).then(response =>{
-    //     if (!response.success) return this.$message.error(response.message);
-    //        this.$message({
-    //         showClose: true,
-    //         message: "购买成功",
-    //         type: 'success'
-    //       });
-    //  });
-    // },
-    //    async cartAddProduct(productId){
-    //   apiOrderUserAddCart({productId:productId}).then(response =>{
-    //     if (!response.success) return this.$message.error(response.message);
-    //        this.$message({
-    //         showClose: true,
-    //         message: "加入购物车成功",
-    //         type: 'success'
-    //       });
-    //  });
-    // }
+    async getShopInfo() {
+      var shopid = this.productInfo.shopId;
+          apiVisitShopInfo({shopId:shopid}).then(response =>{
+            if(!response.success){
+              return this.$message.error(response.message);
+            }
+            this.shopInfo = response.object;
+            this.drawer = true;
+        });
+    },
+    async toShopProductList(){
+         window.sessionStorage.setItem("ShopProductList_shopId", this.productInfo.shopId);
+         var activePath='/visit/shop/product/list';
+         this.$parent.$parent.$parent.$parent.saveNaveState(activePath);
+         this.$router.push(activePath);
+    },
+      async buyProduct(productId){
+      apiOrderUserBuy({productId:productId}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+           this.$message({
+            showClose: true,
+            message: "购买成功",
+            type: 'success'
+          });
+     });
+    },
+       async cartAddProduct(productId){
+      apiOrderUserAddCart({productId:productId}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+           this.$message({
+            showClose: true,
+            message: "加入购物车成功",
+            type: 'success'
+          });
+     });
+    }
     
   },
 };
