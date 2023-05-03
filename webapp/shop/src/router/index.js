@@ -5,10 +5,23 @@ import Register from "../components/Register.vue";
 import Home from "../components/Home.vue";
 import Welcome from '../components/Welcome'
 import UserInfo from '../components/user/UserInfo.vue'
-import ShopList from '../components/shop/ShopList.vue'
-import ShopInfo from '../components/shop/ShopInfo.vue'
-import MyShopInfo from '../components/owner/OwnerInfo.vue'
-import AdminList from '../components/admin/AdminList.vue'
+import UserAccount from "../components/user/UserAccount.vue";
+import UserCart from "../components/user/UserCart.vue";
+
+import ProductList from '../components/visit/ProductList.vue';
+import ProductInfo from '../components/visit/ProductInfo.vue';
+import ShopProductList from '../components/visit/ShopProductList.vue'; 
+import OwnerShopInfo from '../components/owner/OwnerInfo.vue';
+import OwnerProductList from '../components/owner/OwnerProductList.vue';
+import OwnerProductInfo from '../components/owner/OwnerProduct.vue';
+import OwnerAccount from '../components/owner/OwnerAccount.vue';
+import OwnerOrder from  '../components/owner/OwnerOrder.vue';
+import ShopRecord from '../components/record/ShopRecord.vue';
+import ProductRecord from '../components/record/ProductRecord.vue';
+import AdminShopOpen from '../components/admin/AdminShopOpen.vue';
+import AdminProfit from '../components/admin/AdminProfit.vue';
+
+import temp from "../components/temp.vue";
 Vue.use(VueRouter);
 
 
@@ -30,15 +43,29 @@ const routes = [
     component: Home,
     redirect:'/welcome',
     children:[{path:'/welcome',component:Welcome},
-    // admin_routes
-    {path:'/admin/list',component:AdminList},
-    // shop_routes
-    {path:'/shop/list',component:ShopList},
-    {path:'/shop/info',component:ShopInfo},
-    // owner_routes
-    {path:'/owner/info',component:MyShopInfo},
     //user_routes
     {path:'/user/info',component:UserInfo},
+    {path:'/user/account',component:UserAccount},
+    {path:'/user/cart',component:UserCart},
+    // visit_routes
+    {path:'/visit/product/list',component:ProductList},
+    {path:'/visit/product/info',component:ProductInfo},
+    {path:'/visit/shop/product/list',component:ShopProductList},
+    // owner_routes
+    {path:'/owner/info',component:OwnerShopInfo},
+    {path:'/owner/account',component:OwnerAccount},
+    {path:'/owner/order',component:OwnerOrder},
+    {path:'/owner/product/list',component:OwnerProductList},
+    {path:'/owner/product/Info',component:OwnerProductInfo},
+    // admin_routes
+    // {path:'/admin/list',component: AdminShopOpen},
+    { path:'/admin/profit',component:AdminProfit},
+    { path:'/temp',component:temp},
+    // { path:'/admin/product/info',component:AdminProductInfo},
+    // { path:'/admin/shop/info',component:AdminShopInfo},
+    // record_routes
+    {path:'/record/shop/list',component:ShopRecord},
+    {path:'/record/product/list',component:ProductRecord},
   ]
   },
 ];
@@ -53,10 +80,12 @@ router.beforeEach((to, from, next) => {
   //获取token
   const tokenStr=window.sessionStorage.getItem('token');
   if(!tokenStr) return next("/login");
-  let valid = ["/","/login","/register","/home",'/welcome','/admin/list','/shop/list','/shop/info','/owner/info','/user/info'];
-  for(let i = 0; i < valid.length; i++) {
-    if(to.path == valid[i]) return next();
-  }
-  next("/home");
+  //先开发，注释路由守卫
+  return next();
+  // let valid = ["/","/login","/register","/home",'/welcome','/admin/list','/shop/list','/shop/info','/owner/info','/user/info'];
+  // for(let i = 0; i < valid.length; i++) {
+  //   if(to.path == valid[i]) return next();
+  // }
+  // next("/home");
 });
 export default router;

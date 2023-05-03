@@ -30,24 +30,27 @@
             :default-active="activePath"
           >
             <!-- 一级菜单 -->
-            <el-submenu :index="item.id" v-for="item in menuList" :key="item.id">
+            <el-submenu :index="item.id" v-for="item in menuList" :key="item.id" >
               <!-- 一级菜单模板区域 -->
               <template slot="title">
-                <!-- 图标  先不搞，最后处理-->
+                <!-- 图标 -->
                 <i class="el-icon-location"></i>
                 <!-- 文本 -->
                 <span>{{ item.authName }}</span>
               </template>
               
               <!-- 二级菜单  -->
-              <el-menu-item :index="subItem.path" v-for="subItem in item.children" :key="subItem.path"
-               @click="saveNaveState(subItem.path)"
+               <template v-for="subItem in item.children">
+              <el-menu-item :index="subItem.path"  :key="subItem.path"
+               @click="saveNaveState(subItem.path)" v-if="getActivepath(subItem)"
               >
                 <!-- 图标 -->
                 <i class="el-icon-menu"></i>
                 <!-- 文本 -->
-                <span>{{subItem.nextName}}</span></el-menu-item
-              >
+                <span>{{subItem.nextName}}</span>
+              
+                </el-menu-item>
+              </template>
             </el-submenu>
           </el-menu>
         </el-aside>
@@ -104,10 +107,17 @@ export default {
           authName: "用户界面",
           children:[
             { 
-             
               path:"/user/info",
               nextName:"我的信息"
-            }
+            },
+            { 
+              path:"/user/account",
+              nextName:"账户流水"
+            },
+            {
+              path:'/user/cart',
+              nextName:"我的订单"
+            },
           ]
         },
         {
@@ -115,9 +125,16 @@ export default {
           authName: "商店界面",
           children:[
             { 
-    
-              path:"/shop/list",
-              nextName:"已开放商店列表"
+              path:"/visit/product/list",
+              nextName:"开放商品列表"
+            },
+            {
+              path:'/visit/product/info',
+              nextName:"商品详细信息"
+            },
+            {
+              path:'/visit/shop/product/list',
+              nextName:"该商店商品"
             }
           ]
         }
@@ -130,10 +147,17 @@ export default {
           authName: "用户界面",
           children:[
             { 
-             
               path:"/user/info",
               nextName:"我的信息"
-            }
+            },
+             { 
+              path:"/user/account",
+              nextName:"账户流水"
+            },
+            {
+              path:'/user/cart',
+              nextName:"我的订单"
+            },
           ]
         },
         {
@@ -141,9 +165,16 @@ export default {
           authName: "商店界面",
           children:[
             { 
-             
-              path:"/shop/list",
-              nextName:"已开放商店列表"
+              path:"/visit/product/list",
+              nextName:"开放商品列表"
+            },
+             {
+              path:'/visit/product/info',
+              nextName:"商品详细信息"
+            },
+              {
+              path:'/visit/shop/product/list',
+              nextName:"该商店商品"
             }
           ]
         },
@@ -152,10 +183,39 @@ export default {
           authName: "我的商店",
           children:[
             { 
-              
               path:"/owner/info",
               nextName:"我的商店信息"
-            }
+            },
+            {
+              path:'/owner/product/list',
+              nextName:"我的商品列表"
+              },
+            {
+              path:'/owner/product/Info',
+              nextName:"商品详细信息"
+            },
+             { 
+              path:"/owner/account",
+              nextName:"账户流水"
+            },
+            {
+              path:'/owner/order',
+              nextName:"商店订单"
+            },
+          ]
+        },
+        {
+          id:"record",
+          authName:"申请记录",
+          children:[
+            {
+              path:'/record/shop/list',
+              nextName:"商店申请记录"
+              },
+            {
+              path:'/record/product/list',
+              nextName:"商品申请记录"
+              }
           ]
         }
       ]
@@ -167,10 +227,17 @@ export default {
           authName: "用户界面",
           children:[
             { 
-             
               path:"/user/info",
               nextName:"我的信息"
-            }
+            },
+            { 
+              path:"/user/account",
+              nextName:"账户流水"
+            },
+            {
+              path:'/user/cart',
+              nextName:"我的订单"
+            },
           ]
         },
         {
@@ -178,10 +245,31 @@ export default {
           authName: "商店界面",
           children:[
             { 
-             
-              path:"/shop/list",
-              nextName:"已开放商店列表"
+              path:"/visit/product/list",
+              nextName:"开放商品列表"
+            },
+             {
+              path:'/visit/product/info',
+              nextName:"商品详细信息"
+            },
+              {
+              path:'/visit/shop/product/list',
+              nextName:"该商店商品"
             }
+          ]
+        },
+        {
+          id:"record",
+          authName:"申请记录",
+          children:[
+            {
+              path:'/record/shop/list',
+              nextName:"商店申请记录"
+              },
+            {
+              path:'/record/product/list',
+              nextName:"商品申请记录"
+              }
           ]
         },
         {
@@ -192,6 +280,10 @@ export default {
               
               path:"/admin/list",
               nextName:"待审核商店信息列表"
+            },
+             { 
+              path:"/admin/profit",
+              nextName:"账户流水"
             }
           ]
         }
@@ -210,6 +302,33 @@ export default {
     saveNaveState(activePath){
         window.sessionStorage.setItem('activePath',activePath);
         this.activePath=activePath;
+    },
+    getActivepath(subItem){
+      var ifshow=true;
+      switch (subItem.path){
+        case '/visit/product/info':{
+             let productId = window.sessionStorage.getItem("productId");
+              if(productId==null){
+                ifshow=false;
+              }
+              break;
+        };
+        case '/visit/shop/product/list':{
+              let shopId = window.sessionStorage.getItem("ShopProductList_shopId");
+              if(shopId==null){
+                ifshow=false;
+              }
+              break;
+        };
+        case '/owner/product/Info' :{
+              let OwnerproductId = window.sessionStorage.getItem("OwnerproductId");
+              if(OwnerproductId==null){
+                ifshow=false;
+              }
+             break;
+        }
+      }
+      return ifshow;
     }
   },
 };
