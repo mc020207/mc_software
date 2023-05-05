@@ -325,6 +325,11 @@ export default {
               break;
         };
         case '/owner/product/Info' :{
+          let shopIsOpen = window.sessionStorage.getItem("shopIsOpen");
+          if(shopIsOpen != 'true'){
+            window.sessionStorage.removeItem("OwnerproductId");
+            ifshow = false;
+          }
               let OwnerproductId = window.sessionStorage.getItem("OwnerproductId");
               if(OwnerproductId==null){
                 ifshow=false;
@@ -358,6 +363,18 @@ export default {
           }
         }
         case '/owner/account':{
+          let shopIsOpen = window.sessionStorage.getItem("shopIsOpen");
+          if(shopIsOpen != 'true'){
+            ifshow = false;
+          }
+        }
+        case '/record/shop/list':{
+          let shopIsOpen = window.sessionStorage.getItem("shopIsOpen");
+          if(shopIsOpen != 'true'){
+            ifshow = false;
+          }
+        }
+        case '/record/product/list':{
           let shopIsOpen = window.sessionStorage.getItem("shopIsOpen");
           if(shopIsOpen != 'true'){
             ifshow = false;

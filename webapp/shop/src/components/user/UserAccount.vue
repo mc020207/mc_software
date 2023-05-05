@@ -46,7 +46,7 @@
           <!-- 金额-->
         <el-form-item prop="money">
           <el-input
-            v-model.number="rechargeForm.money"
+            v-model="rechargeForm.money"
             prefix-icon="el-icon-zijin"
           ></el-input>
         </el-form-item>
@@ -70,7 +70,7 @@
           <!-- 金额-->
         <el-form-item prop="money">
           <el-input
-            v-model.number="withdrawForm.money"
+            v-model="withdrawForm.money"
             prefix-icon="el-icon-zijin"
           ></el-input>
         </el-form-item>
@@ -143,7 +143,7 @@ export default {
          money: [
           { required: true, message: "请输入金额", trigger: "blur" },
            { 
-           type:'number',
+          pattern:/-?(?:[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0\.0+|0)/,
             message: `需要是浮点数`,
             trigger: "blur",
           },
@@ -162,7 +162,7 @@ export default {
          money: [
           { required: true, message: "请输入金额", trigger: "blur" },
            { 
-           type:'number',
+           pattern:/-?(?:[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0\.0+|0)/,
             message: `需要是浮点数`,
             trigger: "blur",
           },
