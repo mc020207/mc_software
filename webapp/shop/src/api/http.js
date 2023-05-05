@@ -1,6 +1,6 @@
-import axios from "axios";
-// 创建axios实例
-const service = axios.create({
+import Axios from "axios";
+// 创建Axios实例
+const service = Axios.create({
   // baseURL: baseUrl, // api 的 base_url
   baseURL: '/front/', // api 的 base_url
   timeout: 300000, // 请求超时时间
