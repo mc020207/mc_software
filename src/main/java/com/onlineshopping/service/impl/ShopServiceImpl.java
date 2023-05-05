@@ -198,7 +198,11 @@ public class ShopServiceImpl implements ShopService {
     @Override
     @Transactional
     public ShopDisplayVO inspectShopDetail(Integer shopId) {
-        return new ShopDisplayVO(getShopByShopId(shopId, ConstantUtil.SHOP_IN_INSPECTION));
+        Shop shop = getShopByShopId(shopId, ConstantUtil.SHOP_IN_INSPECTION);
+        if (!Objects.equals(shop.getShopState(), ConstantUtil.SHOP_IN_INSPECTION) && !Objects.equals(shop.getShopState(), ConstantUtil.SHOP_IN_DELETE_INSPECTION)){
+            throw new ServiceException("该商店没有请求审核");
+        }
+        return new ShopDisplayVO(shop);
     }
 
     @Override

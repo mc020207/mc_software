@@ -43,7 +43,7 @@
                 and shopRegisterDate=#{shop.shopRegisterDate}
             </if>
             <if test="shop.shopState!=null">
-                shopState=#{shop.shopState}
+                and shopState=#{shop.shopState}
             </if>
         </where>
         <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
@@ -78,7 +78,7 @@
                 and shopRegisterDate=#{shopRegisterDate}
             </if>
             <if test="shopState!=null">
-                shopState=#{shopState}
+                and shopState=#{shopState}
             </if>
         </where>
     </select>
