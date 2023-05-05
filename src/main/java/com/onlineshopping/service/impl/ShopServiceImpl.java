@@ -240,6 +240,7 @@ public class ShopServiceImpl implements ShopService {
     @Transactional
     public void rejectShopRegister(Integer shopId, String reason) {
         // 修改商店状态
+        FormatUtil.checkNotNull("reason",reason);
         Shop shop = getShopByShopId(shopId, ConstantUtil.SHOP_IN_INSPECTION);
         shop.setShopState(ConstantUtil.SHOP_REJECTED);
         shopMapper.updateShopInfo(shop);
@@ -297,6 +298,7 @@ public class ShopServiceImpl implements ShopService {
     @Override
     @Transactional
     public void rejectShopDelete(Integer shopId, String reason) {
+        FormatUtil.checkNotNull("reason",reason);
         Shop shop = getShopByShopId(shopId, ConstantUtil.SHOP_IN_DELETE_INSPECTION);
         shop.setShopState(ConstantUtil.SHOP_OPEN);
         shopMapper.updateShopInfo(shop);
