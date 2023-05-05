@@ -316,14 +316,14 @@ export default {
                 ifshow=false;
               }
               break;
-        };
+        }
         case '/visit/shop/product/list':{
               let shopId = window.sessionStorage.getItem("ShopProductList_shopId");
               if(shopId==null){
                 ifshow=false;
               }
               break;
-        };
+        }
         case '/owner/product/Info' :{
           let shopIsOpen = window.sessionStorage.getItem("shopIsOpen");
           if(shopIsOpen != 'true'){

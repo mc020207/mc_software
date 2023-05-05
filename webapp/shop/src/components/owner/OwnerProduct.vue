@@ -178,23 +178,23 @@ export default {
               case 0:{
                 this.productInfo.productStateStr="审核待通过";
                   break;
-              };
+              }
               case 1:{
                 this.productInfo.productStateStr="审核未通过";
                   break;
-              };
+              }
               case 2:{
                 this.productInfo.productStateStr="已上架";
                   break;
-              };
+              }
               case 3:{
                 this.productInfo.productStateStr="已下架";
                   break;
-              };
+              }
               case 4:{
                 this.productInfo.productStateStr="已删除";
                   break;
-              };
+              }
             }
           });
     },
