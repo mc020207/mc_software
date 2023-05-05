@@ -19,8 +19,20 @@
       </template>
     <el-card v-loading="loading">
       <div style="padding: 1px;">
-        <span>{{productInfo.productName}}</span>
-        <div class="bottom clearfix">{{productInfo.productIntro}}</div>
+        <el-descriptions
+        title="商品信息"
+        :column="3"
+        border>
+        <el-descriptions-item label="商品名">{{
+          productInfo.productName
+        }}</el-descriptions-item>
+        <el-descriptions-item label="价格" :span="2">{{
+          productInfo.productPrice
+        }}</el-descriptions-item>
+         <el-descriptions-item label="商品简介">{{
+          productInfo.productIntro
+        }}</el-descriptions-item>
+      </el-descriptions>
       </div>
       <div style="display: flex;justify-content:flex-end;">
          <el-button  type="success" round  @click="productPass">通过</el-button>
