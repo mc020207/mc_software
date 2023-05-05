@@ -154,6 +154,9 @@ public class ShopServiceImpl implements ShopService {
     @Transactional
     public void deleteMyShop(HttpServletRequest request, HttpServletResponse response) {
         Shop myShop = getMyShop(request, false);
+        if (!Objects.equals(myShop.getShopState(), ConstantUtil.SHOP_OPEN)){
+            throw new ServiceException("商店没有开放,不允许删除商店");
+        }
         Product condition = new Product();
         condition.setShopId(myShop.getShopId());
         // 查看是不是商店的所有商品都没有未发货的纪录
