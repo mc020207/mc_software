@@ -184,6 +184,7 @@ export default {
           this.$router.push('/home');
           return this.$message.error(response.message);
         }
+        this.editInfoForm = response.object;
         this.userInfo = response.object;
         switch (this.userInfo.userRole){
         case 0:
@@ -203,15 +204,19 @@ export default {
         if (!valid) return;
       apiUserInfoEdit(this.editInfoForm).then(response=>{
         if (!response.success) return this.$message.error(response.message);
-        this.$message({
-            showClose: true,
-            message: "修改成功",
-            type: 'success'
-          });
-        this.infoDialogVisible=false;
-        this.getUserInfo();
+        else{
+          window.sessionStorage.setItem("token",response.object.token);
+          this.$message({
+              showClose: true,
+              message: "修改成功",
+              type: 'success'
+            });
+          this.infoDialogVisible=false;
+          this.getUserInfo();
+        }
       })
        })
+       
     },
       //重置表单
     reseteditInfoForm() {
@@ -222,17 +227,21 @@ export default {
     this.$refs.editPwdFormRef.validate(async (valid) => {
         if (!valid) return;
           var editPwdForm={...this.editPwdForm};
-        // editPwdForm.userOldPwd=this.$md5(editPwdForm.userOldPwd);
-        // editPwdForm.userNewPwd=this.$md5(editPwdForm.userNewPwd);
+        editPwdForm.userOldPwd=this.$md5(editPwdForm.userOldPwd);
+        editPwdForm.userNewPwd=this.$md5(editPwdForm.userNewPwd);
       apiUserPwdEdit(editPwdForm).then(response=>{
         if (!response.success) return this.$message.error(response.message);
-        this.$message({
-            showClose: true,
-            message: "修改成功",
-            type: 'success'
-          });
-        this.pwdDialogVisible=false;
-        this.getUserInfo();
+        else{
+          window.sessionStorage.setItem("token",response.object.token);
+          this.$message({
+              showClose: true,
+              message: "修改成功",
+              type: 'success'
+            });
+          this.pwdDialogVisible=false;
+          this.getUserInfo();
+          this.reseteditPwdForm();
+        }
       })
     })
     },

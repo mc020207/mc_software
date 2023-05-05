@@ -73,7 +73,7 @@ export default {
     return {
       productList: [],
       currentPage:1,
-      pageSize:9,   //一页的数量  应改成10个
+      pageSize:10,   //一页的数量  应改成10个
       total:0,
 
       drawer:false,
