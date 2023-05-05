@@ -151,11 +151,14 @@ export default {
           if (!valid) return;
           apiOwnerProductAdd(this.productRegisterForm).then(response =>{
               if(!response.success) return this.$message.error(response.message);
+              else{
+                this.addDialogVisible = false;
               this.$message({
               showClose: true,
               message: "添加成功",
               type: 'success'
             });
+              }
             this.getList();
           });
       });

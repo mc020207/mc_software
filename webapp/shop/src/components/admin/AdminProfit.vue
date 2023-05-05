@@ -20,9 +20,6 @@
         </el-option>
       </el-select>
     </template>
-        <template slot="extra">
-      <el-button type="primary" @click="rechargeDialogVisible = true" >充值</el-button>
-    </template>
      <template slot="extra">
       <el-button type="primary" @click="withdrawDialogVisible = true" >提现</el-button>
     </template>
@@ -31,31 +28,6 @@
    <el-descriptions-item label="状态">{{accountInfo.accountStateStr}}</el-descriptions-item>
 </el-descriptions>
     </el-card>
-
-      <el-dialog
-      title="请输入充值金额"
-      :visible.sync="rechargeDialogVisible"
-      width="30%">
-      <el-form
-        ref="rechargeFormRef"
-        :model="rechargeForm"
-        :rules="rechargeFormRules"
-        label-width="0px"
-      >
-          <!-- 金额-->
-        <el-form-item prop="money">
-          <el-input
-            v-model.number="rechargeForm.money"
-            prefix-icon="el-icon-zijin"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-          <!-- 按钮 -->
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="recharge">充值</el-button>
-      </span>
-    </el-dialog>
-
     <el-dialog
       title="请输入提现金额"
       :visible.sync="withdrawDialogVisible"
@@ -76,7 +48,7 @@
       </el-form>
           <!-- 按钮 -->
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="withdraw">充值</el-button>
+        <el-button type="primary" @click="withdraw">提现</el-button>
       </span>
     </el-dialog>
 
@@ -84,8 +56,8 @@
      <el-table :data="flowList" border stripe>
         <el-table-column type="index"></el-table-column>
         <el-table-column
-          label="对方账户名"
-          prop="accountName"
+          label="流水理由"
+          prop="flowStr"
           width="200"
         ></el-table-column>
         <el-table-column
@@ -111,7 +83,7 @@
 </template>
 
 <script>
-import {apiAccountInfo,apiAccountRecharge,apiAccountWithdraw} from '@/api/api'
+import {apiAccountInfo,apiAccountWithdraw} from '@/api/api'
 import {apiFlowToList,apiFlowFromList,apiFlowAllList} from '@/api/api'
 export default {
   data() {
@@ -127,35 +99,11 @@ export default {
         accountTypeStr:'',
         accountStateStr:''
       },
-      rechargeDialogVisible:false,
       withdrawDialogVisible:false,
-      rechargeForm:{
-        accountType:2,
-        money:""
-      },
       withdrawForm:{
         accountType:2,
         money:""
       },
-       rechargeFormRules:{
-         money: [
-          { required: true, message: "请输入金额", trigger: "blur" },
-           { 
-           type:'number',
-            message: `需要是浮点数`,
-            trigger: "blur",
-          },
-          { 
-            validator: (rules, value, callback) => {
-              if (value<=0) {
-                return callback(new Error("需要是正浮点数"));
-              }
-              return callback();
-            },
-            trigger: "blur",
-          },
-        ]
-       },
       withdrawFormRules:{
          money: [
           { required: true, message: "请输入金额", trigger: "blur" },
@@ -228,15 +176,6 @@ export default {
         }
       })
     },
-    recharge(){
-       this.$refs.rechargeFormRef.validate(async (valid) => {
-        if (!valid) return;
-      apiAccountRecharge(this.rechargeForm).then(response=>{
-        if (!response.success) return this.$message.error(response.message);
-        this.getAccountInfo().then(this.getFlowList());
-        this.rechargeDialogVisible=false;
-      })})
-    },
     withdraw(){
       this.$refs.withdrawFormRef.validate(async (valid) => {
         if (!valid) return;
@@ -256,13 +195,11 @@ export default {
         this.flowList = response.object.flows;
 
          for(let i=0;i<this.flowList.length;i++){
-            if(this.flowList[i].accountIdFrom==this.accountInfo.accountId){
-              this.flowList[i].accountName=this.flowList[i].nameTo;
+            switch(this.flowList[i].accountTypeTo){
+                case 4: this.flowList[i].flowStr = "提现";break;
+                default:this.flowList[i].flowStr = "出账";break;
+              }
               this.flowList[i].flowMoney=-this.flowList[i].flowMoney;
-            }
-            else{
-              this.flowList[i].accountName=this.flowList[i].nameFrom;
-            }
       }
       })
         break;
@@ -274,12 +211,9 @@ export default {
         this.flowList = response.object.flows;
 
          for(let i=0;i<this.flowList.length;i++){
-            if(this.flowList[i].accountIdFrom==this.accountInfo.accountId){
-              this.flowList[i].accountName=this.flowList[i].nameTo;
-              this.flowList[i].flowMoney=-this.flowList[i].flowMoney;
-            }
-            else{
-              this.flowList[i].accountName=this.flowList[i].nameFrom;
+            switch(this.flowList[i].accountTypeFrom){
+                case 3: this.flowList[i].flowStr = "商城营利";break;
+                default:this.flowList[i].flowStr = "入账";break;
             }
       }
       })
@@ -293,11 +227,17 @@ export default {
 
          for(let i=0;i<this.flowList.length;i++){
             if(this.flowList[i].accountIdFrom==this.accountInfo.accountId){
-              this.flowList[i].accountName=this.flowList[i].nameTo;
+              switch(this.flowList[i].accountTypeTo){
+                case 4: this.flowList[i].flowStr = "提现";break;
+                default:this.flowList[i].flowStr = "出账";break;
+              }
               this.flowList[i].flowMoney=-this.flowList[i].flowMoney;
             }
             else{
-              this.flowList[i].accountName=this.flowList[i].nameFrom;
+              switch(this.flowList[i].accountTypeFrom){
+                case 3: this.flowList[i].flowStr = "商城营利";break;
+                default:this.flowList[i].flowStr = "入账";break;
+            }
             }
       }
       })

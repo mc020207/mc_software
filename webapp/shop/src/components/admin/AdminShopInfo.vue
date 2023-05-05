@@ -97,8 +97,8 @@ export default {
       if(this.shopInfo.shopState == 0){
         apiAdminShopOpenPass({shopId:this.shopInfo.shopId}).then(response=>{
         if (!response.success) return this.$message.error(response.message);
-        });
-        window.sessionStorage.removeItem("admin_shopId");
+        else{
+          window.sessionStorage.removeItem("admin_shopId");
         this.$parent.$parent.$parent.$parent.saveNaveState("/admin/open/list");
         this.$message({
             showClose: true,
@@ -106,12 +106,15 @@ export default {
             type: 'success'
         });
         this.$router.push("/admin/open/list");
+        }
+        });
+        
       }
       else{
         apiAdminShopDeletePass({shopId:this.shopInfo.shopId}).then(response=>{
         if (!response.success) return this.$message.error(response.message);
-        });
-        window.sessionStorage.removeItem("admin_shopId");
+        else{
+          window.sessionStorage.removeItem("admin_shopId");
         this.$parent.$parent.$parent.$parent.saveNaveState("/admin/delete/list");
         this.$message({
             showClose: true,
@@ -119,14 +122,16 @@ export default {
             type: 'success'
         });
         this.$router.push("/admin/delete/list");
+        }
+        });
       }
     },
     async shopInspectReject(){
       if(this.shopInfo.shopState == 0){
         apiAdminShopOpenReject({shopId:this.shopInfo.shopId,reason:this.reason}).then(response=>{
         if (!response.success) return this.$message.error(response.message);
-        });
-        window.sessionStorage.removeItem("admin_shopId");
+        else{
+          window.sessionStorage.removeItem("admin_shopId");
         this.$parent.$parent.$parent.$parent.saveNaveState("/admin/open/list");
         this.$message({
             showClose: true,
@@ -134,12 +139,14 @@ export default {
             type: 'success'
         });
         this.$router.push("/admin/open/list");
+        }
+        });
       }
       else{
         apiAdminShopDeleteReject({shopId:this.shopInfo.shopId,reason:this.reason}).then(response=>{
         if (!response.success) return this.$message.error(response.message);
-        });
-        window.sessionStorage.removeItem("admin_shopId");
+        else{
+          window.sessionStorage.removeItem("admin_shopId");
         this.$parent.$parent.$parent.$parent.saveNaveState("/admin/delete/list");
         this.$message({
             showClose: true,
@@ -147,6 +154,8 @@ export default {
             type: 'success'
         });
         this.$router.push("/admin/delete/list");
+        }
+        });
       }
     }
   },

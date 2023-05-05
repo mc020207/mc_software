@@ -77,7 +77,7 @@
       </el-form>
           <!-- 按钮 -->
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="withdraw">充值</el-button>
+        <el-button type="primary" @click="withdraw">提现</el-button>
       </span>
     </el-dialog>
 
@@ -86,8 +86,8 @@
      <el-table :data="flowList" border stripe>
         <el-table-column type="index"></el-table-column>
         <el-table-column
-          label="对方账户名"
-          prop="accountName"
+          label="流水理由"
+          prop="flowStr"
           width="200"
         ></el-table-column>
         <el-table-column
@@ -258,13 +258,12 @@ export default {
         this.flowList = response.object.flows;
 
          for(let i=0;i<this.flowList.length;i++){
-            if(this.flowList[i].accountIdFrom==this.accountInfo.accountId){
-              this.flowList[i].accountName=this.flowList[i].nameTo;
+              switch(this.flowList[i].accountTypeTo){
+                case 4: this.flowList[i].flowStr = "提现";break;
+                case 3: this.flowList[i].flowStr = "付款";break;
+                default:this.flowList[i].flowStr = "出账";break;
+              }
               this.flowList[i].flowMoney=-this.flowList[i].flowMoney;
-            }
-            else{
-              this.flowList[i].accountName=this.flowList[i].nameFrom;
-            }
       }
       })
         break;
@@ -276,12 +275,9 @@ export default {
         this.flowList = response.object.flows;
 
          for(let i=0;i<this.flowList.length;i++){
-            if(this.flowList[i].accountIdFrom==this.accountInfo.accountId){
-              this.flowList[i].accountName=this.flowList[i].nameTo;
-              this.flowList[i].flowMoney=-this.flowList[i].flowMoney;
-            }
-            else{
-              this.flowList[i].accountName=this.flowList[i].nameFrom;
+            switch(this.flowList[i].accountTypeFrom){
+                case 4: this.flowList[i].flowStr = "充值";break;
+                default:this.flowList[i].flowStr = "入账";break;
             }
       }
       })
@@ -295,11 +291,18 @@ export default {
 
          for(let i=0;i<this.flowList.length;i++){
             if(this.flowList[i].accountIdFrom==this.accountInfo.accountId){
-              this.flowList[i].accountName=this.flowList[i].nameTo;
+              switch(this.flowList[i].accountTypeTo){
+                case 4: this.flowList[i].flowStr = "提现";break;
+                case 3: this.flowList[i].flowStr = "付款";break;
+                default:this.flowList[i].flowStr = "出账";break;
+              }
               this.flowList[i].flowMoney=-this.flowList[i].flowMoney;
             }
             else{
-              this.flowList[i].accountName=this.flowList[i].nameFrom;
+              switch(this.flowList[i].accountTypeFrom){
+                case 4: this.flowList[i].flowStr = "充值";break;
+                default:this.flowList[i].flowStr = "入账";break;
+            }
             }
       }
       })

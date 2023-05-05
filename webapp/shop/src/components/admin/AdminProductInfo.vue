@@ -72,8 +72,8 @@ export default {
     async productPass(){
       apiAdminProductPass({productId:this.productInfo.productId}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
-      });
-      window.sessionStorage.removeItem("admin_productId");
+        else{
+          window.sessionStorage.removeItem("admin_productId");
         this.$parent.$parent.$parent.$parent.saveNaveState("/admin/product/list");
         this.$message({
             showClose: true,
@@ -81,6 +81,9 @@ export default {
             type: 'success'
         });
         this.$router.push("/admin/product/list");
+        }
+      });
+      
     },
    async productReject(){
       apiAdminProductReject({productId:this.productInfo.productId,reason:this.reason}).then(response =>{

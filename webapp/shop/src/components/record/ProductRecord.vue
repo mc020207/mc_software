@@ -61,8 +61,8 @@ export default {
         for(let i=0;i<this.recordList.length;i++){
          switch(this.recordList[i].productRecordState){
             case 0:this.recordList[i].productRecordStateStr = "未处理";break;
-            case 1:this.recordList[i].productRecordStateStr = "上架申请通过";break;
-            case 2:this.recordList[i].productRecordStateStr = "上架申请拒绝";break;
+            case 1:this.recordList[i].productRecordStateStr = "上架申请拒绝";break;
+            case 2:this.recordList[i].productRecordStateStr = "上架申请通过";break;
           }
         }
       })
