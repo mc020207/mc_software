@@ -80,12 +80,10 @@ export default {
   },
   created() {
     this.getShopList();
+    this.getShopList();
   },
   methods: {
     async getShopList() {
-    //   var result=await this.$http.get('/user/info',{
-    //     page:this.currentPage
-    //   });
       var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
       if(t!="2"){
         this.$router.push("/home");
@@ -105,7 +103,7 @@ export default {
         this.$router.push("/home");
         return this.$message.error("非法访问");
       }
-      apiAdminList({page:this.currentPage}).then(response =>{
+      apiAdminShopOpenList({page:this.currentPage}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
         this.total = response.object.totalNumber;
         this.inspectShopList = response.object.shops;
@@ -115,7 +113,7 @@ export default {
 
     async shopInspectInfo(shopId){
          window.sessionStorage.setItem("admin_shopId", shopId);
-         var activePath="admin/shop/info";
+         var activePath="/admin/shop/info";
          //这么写有点逆天，不过能跑
          this.$parent.$parent.$parent.$parent.saveNaveState(activePath);
          this.$router.push(activePath);
@@ -125,23 +123,34 @@ export default {
       apiAdminShopOpenPass({shopId:shopId}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
       });
+      if(shopId == parseInt(window.sessionStorage.getItem("admin_shopId"))){
+        window.sessionStorage.removeItem("admin_shopId");
+        location.reload();
+      }
       var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
       if(t!="2"){
         this.$router.push("/home");
         return this.$message.error("非法访问");
       }
       this.getShopList();
+      this.getShopList();
     },
+
    async shopInspectReject(shopId){
       //var result=await this.$http.get('/inspect/reject',shopId);
-      apiAdminShopOpenReject({shopId:shopId}).then(response =>{
+      apiAdminShopOpenReject({shopId:shopId,reason:"no specific reasons"}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
       });
+      if(shopId == parseInt(window.sessionStorage.getItem("admin_shopId"))){
+        window.sessionStorage.removeItem("admin_shopId");
+        location.reload();
+      }
       var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
       if(t!="2"){
         this.$router.push("/home");
         return this.$message.error("非法访问");
       }
+      this.getShopList();
       this.getShopList();
     }
   },

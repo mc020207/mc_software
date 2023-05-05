@@ -3,7 +3,7 @@
     <!-- 导航区 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>商店界面</el-breadcrumb-item>
+      <el-breadcrumb-item>审核员</el-breadcrumb-item>
       <el-breadcrumb-item>当前商店</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 面包屑卡片视图 -->
@@ -28,39 +28,28 @@
         <el-descriptions-item label="注册日期">{{
           shopInfo.shopRegisterDate
         }}</el-descriptions-item>
+        <el-descriptions-item label="审核状态">{{
+          shopStateStr
+        }}</el-descriptions-item>
       </el-descriptions>
     </el-card>
-      <!-- <el-table :data="productShopList" border stripe>
-        <el-table-column type="index"></el-table-column>
-         <el-table-column
-          label="商品id"
-          prop="productId"
-          width="550"
-        ></el-table-column>
-        <el-table-column
-          label="商品名"
-          prop="productName"
-          width="550"
-        ></el-table-column>
-      </el-table> -->
-       <!-- 分页区域 -->
-      <!-- <el-pagination 
-       layout="total, prev, pager, next, jumper"
-      @current-change="handleCurrentChange"
-      :current-page="currentPage"
-      :page-size="pageSize"
-      :total="total"> -->
-    <!-- </el-pagination> -->
-     
+    <div style="display: flex;justify-content:flex-end;">
+         <el-button  type="success" round  @click="shopInspectPass">通过</el-button>
+         <el-button  type="primary" round  @click="shopInspectReject">拒绝</el-button>
+          <input v-model="reason" type="primary" placeholder="请输入拒绝理由" />
+         <el-button @click="toAdminList">返回审核列表</el-button>
+    </div>
   </div>
 </template>
 
 <script>
-import {apiAdminShopInfo} from '@/api/api'
+import {apiAdminShopInfo,apiAdminShopOpenPass,apiAdminShopOpenReject,apiAdminShopDeletePass,apiAdminShopDeleteReject} from '@/api/api'
 export default {
   data() {
       return {
-        shopInfo:{}
+        shopInfo:{},
+        reason:"no specific reasons",
+        shopStateStr:""
     };
   },
   created() {
@@ -86,8 +75,80 @@ export default {
               return this.$message.error(response.message);
             }
             this.shopInfo = response.object;
+            if(this.shopInfo.shopState == 0){
+              this.shopStateStr = "待审核";
+            }
+            else{
+              this.shopStateStr = "待删除";
+            }
         });
     },
+    async toAdminList(){
+      if(this.shopInfo.shopState == 0){
+        this.$parent.$parent.$parent.$parent.saveNaveState("/admin/open/list");
+        this.$router.push("/admin/open/list");
+      }
+      else{
+        this.$parent.$parent.$parent.$parent.saveNaveState("/admin/delete/list");
+        this.$router.push("/admin/delete/list");
+      }
+    },
+    async shopInspectPass(){
+      if(this.shopInfo.shopState == 0){
+        apiAdminShopOpenPass({shopId:this.shopInfo.shopId}).then(response=>{
+        if (!response.success) return this.$message.error(response.message);
+        });
+        window.sessionStorage.removeItem("admin_shopId");
+        this.$parent.$parent.$parent.$parent.saveNaveState("/admin/open/list");
+        this.$message({
+            showClose: true,
+            message: "通过成功",
+            type: 'success'
+        });
+        this.$router.push("/admin/open/list");
+      }
+      else{
+        apiAdminShopDeletePass({shopId:this.shopInfo.shopId}).then(response=>{
+        if (!response.success) return this.$message.error(response.message);
+        });
+        window.sessionStorage.removeItem("admin_shopId");
+        this.$parent.$parent.$parent.$parent.saveNaveState("/admin/delete/list");
+        this.$message({
+            showClose: true,
+            message: "通过成功",
+            type: 'success'
+        });
+        this.$router.push("/admin/delete/list");
+      }
+    },
+    async shopInspectReject(){
+      if(this.shopInfo.shopState == 0){
+        apiAdminShopOpenReject({shopId:this.shopInfo.shopId,reason:this.reason}).then(response=>{
+        if (!response.success) return this.$message.error(response.message);
+        });
+        window.sessionStorage.removeItem("admin_shopId");
+        this.$parent.$parent.$parent.$parent.saveNaveState("/admin/open/list");
+        this.$message({
+            showClose: true,
+            message: "拒绝成功",
+            type: 'success'
+        });
+        this.$router.push("/admin/open/list");
+      }
+      else{
+        apiAdminShopDeleteReject({shopId:this.shopInfo.shopId,reason:this.reason}).then(response=>{
+        if (!response.success) return this.$message.error(response.message);
+        });
+        window.sessionStorage.removeItem("admin_shopId");
+        this.$parent.$parent.$parent.$parent.saveNaveState("/admin/delete/list");
+        this.$message({
+            showClose: true,
+            message: "拒绝成功",
+            type: 'success'
+        });
+        this.$router.push("/admin/delete/list");
+      }
+    }
   },
 };
 </script>

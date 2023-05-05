@@ -3,7 +3,7 @@
     <!-- 导航区 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>商店界面</el-breadcrumb-item>
+      <el-breadcrumb-item>审核员</el-breadcrumb-item>
       <el-breadcrumb-item>商品详细信息</el-breadcrumb-item>
     </el-breadcrumb>
       <template>
@@ -23,51 +23,24 @@
         <div class="bottom clearfix">{{productInfo.productIntro}}</div>
       </div>
       <div style="display: flex;justify-content:flex-end;">
-         <el-button  type="success" round  @click="buyProduct(productInfo.productId)">{{productInfo.productPrice}}  购买</el-button>
-         <el-button  type="primary" round  @click="cartAddProduct(productInfo.productId)">加入购物车</el-button>
-         <el-button @click="toShopProductList">该商店全部商品</el-button>
-        <el-button @click="getShopInfo">商店信息</el-button>
+         <el-button  type="success" round  @click="productPass">通过</el-button>
+         <el-button  type="primary" round  @click="productReject">拒绝</el-button>
+         <input v-model="reason" type="primary" placeholder="请输入拒绝理由" />
+         <el-button @click="toAdminList">返回待审核商品列表</el-button>
         </div>
     </el-card>
 
-    <el-drawer
-      :with-header="false"
-      :visible.sync="drawer">
-      <el-card>
-      <el-descriptions
-        title="商店信息"
-        :column="1"
-        border>
-        <el-descriptions-item label="商店名">{{
-          shopInfo.shopName
-        }}</el-descriptions-item>
-        <el-descriptions-item label="商店简介">{{
-          shopInfo.shopIntro
-        }}</el-descriptions-item>
-        <el-descriptions-item label="商店地址">{{
-          shopInfo.shopAddr
-        }}</el-descriptions-item>
-        <el-descriptions-item label="注册资金" :span="2">{{
-          shopInfo.shopRegisterFund
-        }}</el-descriptions-item>
-        <el-descriptions-item label="注册日期">{{
-          shopInfo.shopRegisterDate
-        }}</el-descriptions-item>
-      </el-descriptions>
-    </el-card>
-</el-drawer>
   </div>
 </template>
 <script>
-import {apiVisitProductInfo,apiVisitShopInfo,apiOrderUserBuy,apiOrderUserAddCart} from '@/api/api'
+import {apiAdminProductPass,apiAdminProductReject,apiAdminProductInfo} from '@/api/api'
 export default {
   data() {
     return {
         productInfo:{},
         loading:true,
-        drawer:false,
-
-        shopInfo:""
+        shopInfo:"",
+        reason:"no specific reasons"
     };
   },
   created() {
@@ -81,7 +54,7 @@ export default {
         this.$router.push("/home");
         return this.$message.error("非法访问");
       }
-      apiVisitProductInfo({productId:pid}).then(response =>{
+      apiAdminProductInfo({productId:pid}).then(response =>{
             if(!response.success){
               return this.$message.error(response.message);
             }
@@ -92,42 +65,40 @@ export default {
             this.loading=false;
         });
     },
-    async getShopInfo() {
-      var shopid = this.productInfo.shopId;
-          apiVisitShopInfo({shopId:shopid}).then(response =>{
-            if(!response.success){
-              return this.$message.error(response.message);
-            }
-            this.shopInfo = response.object;
-            this.drawer = true;
+    async toAdminList(){
+        this.$parent.$parent.$parent.$parent.saveNaveState("/admin/product/list");
+        this.$router.push("/admin/product/list");
+    },
+    async productPass(){
+      apiAdminProductPass({productId:this.productInfo.productId}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+      });
+      window.sessionStorage.removeItem("admin_productId");
+        this.$parent.$parent.$parent.$parent.saveNaveState("/admin/product/list");
+        this.$message({
+            showClose: true,
+            message: "通过成功",
+            type: 'success'
         });
+        this.$router.push("/admin/product/list");
     },
-    async toShopProductList(){
-         window.sessionStorage.setItem("ShopProductList_shopId", this.productInfo.shopId);
-         var activePath='/visit/shop/product/list';
-         this.$parent.$parent.$parent.$parent.saveNaveState(activePath);
-         this.$router.push(activePath);
-    },
-      async buyProduct(productId){
-      apiOrderUserBuy({productId:productId}).then(response =>{
+   async productReject(){
+      apiAdminProductReject({productId:this.productInfo.productId,reason:this.reason}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
-           this.$message({
+        else{
+          window.sessionStorage.removeItem("admin_productId");
+        this.$parent.$parent.$parent.$parent.saveNaveState("/admin/product/list");
+        this.$message({
             showClose: true,
-            message: "购买成功",
+            message: "删除成功",
             type: 'success'
-          });
-     });
+        });
+        this.$router.push("/admin/product/list");
+        }
+      });
     },
-       async cartAddProduct(productId){
-      apiOrderUserAddCart({productId:productId}).then(response =>{
-        if (!response.success) return this.$message.error(response.message);
-           this.$message({
-            showClose: true,
-            message: "加入购物车成功",
-            type: 'success'
-          });
-     });
-    }
+    
+
     
   },
 };

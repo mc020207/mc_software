@@ -259,32 +259,36 @@ export default {
           ]
         },
         {
-          id:"record",
-          authName:"申请记录",
-          children:[
-            {
-              path:'/record/shop/list',
-              nextName:"商店申请记录"
-              },
-            {
-              path:'/record/product/list',
-              nextName:"商品申请记录"
-              }
-          ]
-        },
-        {
           id:"admin",
           authName: "管理员",
           children:[
             { 
-              
-              path:"/admin/list",
+              path:"/admin/open/list",
               nextName:"待审核商店信息列表"
             },
-             { 
+            {
+              path:"/admin/delete/list",
+              nextName:"待删除商店信息列表"
+            },
+            {
+              path:"/admin/shop/info",
+              nextName:"商店详细信息"
+            },
+            {
+              path:"/admin/product/list",
+              nextName:"待审核商品列表"
+            },
+            {
+              path:"/admin/product/info",
+              nextName:"商品详细信息"
+            },
+            { 
               path:"/admin/profit",
-              nextName:"账户流水"
-            }
+              nextName:"利润账户流水"
+            },
+            { path:'/admin/middle',
+              nextName:'中间账户流水'
+            },
           ]
         }
       ]
@@ -323,6 +327,20 @@ export default {
         case '/owner/product/Info' :{
               let OwnerproductId = window.sessionStorage.getItem("OwnerproductId");
               if(OwnerproductId==null){
+                ifshow=false;
+              }
+             break;
+        }
+        case '/admin/product/info' :{
+              let AdminproductId = window.sessionStorage.getItem("admin_productId");
+              if(AdminproductId==null){
+                ifshow=false;
+              }
+             break;
+        }
+        case '/admin/shop/info' :{
+              let AdminshopId = window.sessionStorage.getItem("admin_shopId");
+              if(AdminshopId==null){
                 ifshow=false;
               }
              break;

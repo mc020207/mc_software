@@ -4,7 +4,7 @@
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>管理员</el-breadcrumb-item>
-      <el-breadcrumb-item>商城账户流水</el-breadcrumb-item>
+      <el-breadcrumb-item>中间账户流水</el-breadcrumb-item>
     </el-breadcrumb>
 
      <!-- 面包屑卡片视图 -->
@@ -117,7 +117,7 @@ export default {
   data() {
     return {
       AccountType:{
-        accountType:2
+        accountType:3
       },
       accountInfo: {
         accountId:0,
@@ -130,11 +130,11 @@ export default {
       rechargeDialogVisible:false,
       withdrawDialogVisible:false,
       rechargeForm:{
-        accountType:2,
+        accountType:3,
         money:""
       },
       withdrawForm:{
-        accountType:2,
+        accountType:3,
         money:""
       },
        rechargeFormRules:{
@@ -213,8 +213,8 @@ export default {
         if(this.accountInfo==null){
           this.$message.error('空值错误')
         }
-        if(this.accountInfo.accountType==2){
-          this.accountInfo.accountTypeStr="商店账户";
+        if(this.accountInfo.accountType==3){
+          this.accountInfo.accountTypeStr="中间账户";
         }
         else{
               this.$message.error("非法访问");
@@ -250,7 +250,7 @@ export default {
     async getFlowList() {
     switch (this.opValue){
       case 1:{
-        apiFlowFromList({accountType:2,page:this.currentPage}).then(response =>{
+        apiFlowFromList({accountType:3,page:this.currentPage}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
         this.total = response.object.totalNumber;
         this.flowList = response.object.flows;
@@ -268,7 +268,7 @@ export default {
         break;
       }
       case 2:{
-        apiFlowToList({accountType:2,page:this.currentPage}).then(response =>{
+        apiFlowToList({accountType:3,page:this.currentPage}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
         this.total = response.object.totalNumber;
         this.flowList = response.object.flows;
@@ -286,7 +286,7 @@ export default {
         break;
       }
       case 3:{
-        apiFlowAllList({accountType:2,page:this.currentPage}).then(response =>{
+        apiFlowAllList({accountType:3,page:this.currentPage}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
         this.total = response.object.totalNumber;
         this.flowList = response.object.flows;

@@ -20,6 +20,11 @@ import ShopRecord from '../components/record/ShopRecord.vue';
 import ProductRecord from '../components/record/ProductRecord.vue';
 import AdminShopOpen from '../components/admin/AdminShopOpen.vue';
 import AdminProfit from '../components/admin/AdminProfit.vue';
+import AdminMiddle from '../components/admin/AdminMiddle.vue';
+import AdminProduct from '../components/admin/AdminProduct.vue';
+import AdminProductInfo from '../components/admin/AdminProductInfo.vue';
+import AdminShopDelete from '../components/admin/AdminShopDelete.vue';
+import AdminShopInfo from '../components/admin/AdminShopInfo.vue';
 
 import temp from "../components/temp.vue";
 Vue.use(VueRouter);
@@ -58,11 +63,14 @@ const routes = [
     {path:'/owner/product/list',component:OwnerProductList},
     {path:'/owner/product/Info',component:OwnerProductInfo},
     // admin_routes
-    // {path:'/admin/list',component: AdminShopOpen},
+    { path:'/admin/middle',component:AdminMiddle},
+    { path:'/admin/open/list',component: AdminShopOpen},
     { path:'/admin/profit',component:AdminProfit},
     { path:'/temp',component:temp},
-    // { path:'/admin/product/info',component:AdminProductInfo},
-    // { path:'/admin/shop/info',component:AdminShopInfo},
+    { path:'/admin/product/list',component:AdminProduct},
+    { path:'/admin/product/info',component:AdminProductInfo},
+    { path:'/admin/shop/info',component:AdminShopInfo},
+    { path:'/admin/delete/list',component:AdminShopDelete},
     // record_routes
     {path:'/record/shop/list',component:ShopRecord},
     {path:'/record/product/list',component:ProductRecord},

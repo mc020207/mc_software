@@ -1,34 +1,51 @@
-
 <template>
   <div>
     <!-- 导航区 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>商店界面</el-breadcrumb-item>
+      <el-breadcrumb-item>管理员</el-breadcrumb-item>
       <el-breadcrumb-item>待审核商品列表</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 面包屑卡片视图 -->
-  <el-row v-for="(o,index_i) in 2" :key="o">
-  <el-col :span="4" v-for="(o,index_j) in 5" :key="o" :offset="index_j?1:0">
-    <el-card :body-style="{ padding: '0px' }"  style="width:195px;height:280px" v-if="index_i*5+index_j<productList.length">
-      <!-- <el-image :src="productList[index_i*2+index_j].images.productImageAddr" style="width:200px;" fit="fill"> -->
-          <el-image src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" style="width:100%;height:195" fit="fill">
-         <div slot="error" class="image-slot">
-        <i class="el-icon-picture-outline"></i>
-      </div>
-      </el-image>
-      <div style="padding: 1px;">
-        <span>{{productList[index_i*5+index_j].productName}}</span>
-        <div class="bottom clearfix">{{productList[index_i*5+index_j].productIntro}}</div>
-      </div>
-         <!-- <el-button size="small" round @click="buyProduct(productList[index_i*5+index_j].productId)">{{productList[index_i*5+index_j].productPrice}}  购买</el-button> -->
-         <el-button @click="productReject(productList[index_i*5+index_j].productId)">通过</el-button>
-         <el-button @click="productPass(productList[index_i*5+index_j].productId)">拒绝</el-button>
-         <el-button @click="productInspectInfo(productList[index_i*5+index_j].productId)">详情</el-button>
-    </el-card>
-  </el-col>
-</el-row>
- <!-- 分页区域 -->
+    <el-card>
+      <!-- 商店列表区 -->
+      <el-table :data="productList" border stripe>
+        <el-table-column type="index"></el-table-column>
+        <el-table-column
+          label="商品名"
+          prop="productName"
+          width="150"
+        ></el-table-column>
+        <el-table-column
+          label="简介"
+          prop="productIntro"
+          width="400"
+        ></el-table-column>
+        <el-table-column
+          label="商品价格"
+          prop="productPrice"
+          width="100"
+        ></el-table-column>
+        <el-table-column label="审批">
+            <template slot-scope="scope">
+                  <!-- 详情 -->
+                   <el-tooltip class="item" effect="dark" content="详细信息" placement="top" :enterable="false">
+                  <el-button type="success" icon="el-icon-s-grid" size='mini' @click="productInfo(scope.row.productId)"></el-button>
+                </el-tooltip>
+                          
+                <!-- 同意 -->
+                  <el-tooltip class="item" effect="dark" content="同意" placement="top" :enterable="false">
+                   <el-button type="primary" icon="el-icon-check" size='mini' @click="productPass(scope.row.productId)"></el-button>
+                </el-tooltip>
+                <!-- 拒绝 -->
+                  <el-tooltip class="item" effect="dark" content="拒绝" placement="top" :enterable="false">
+                  <el-button type="danger" icon="el-icon-close" size='mini' @click="productReject(scope.row.productId)"></el-button>
+                </el-tooltip>
+               
+            </template>
+             </el-table-column>
+      </el-table>
+      <!-- 分页区域 -->
       <el-pagination 
        layout="total, prev, pager, next, jumper"
       @current-change="handleCurrentChange"
@@ -36,6 +53,7 @@
       :page-size="pageSize"
       :total="total">
     </el-pagination>
+    </el-card>
   </div>
 </template>
 
@@ -46,72 +64,61 @@ export default {
     return {
       productList: [],
       currentPage:1,
-      pageSize:9,   //一页的数量  应改成10个
+      pageSize:9,   //一页的数量
       total:0
     };
   },
   created() {
     this.getList();
+    this.getList();
   },
   methods: {
     async getList() {
-      apiVisitProductList({page:this.currentPage}).then(response =>{
+      var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
+      if(t!="2"){
+        this.$router.push("/home");
+        return this.$message.error("非法访问");
+      }
+      apiAdminProductList({page:this.currentPage}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
         this.total = response.object.totalNumber;
         this.productList = response.object.products;
-      });
+      })
     },
-    //监听页面值改变的事件
+      //监听页面值改变的事件
     handleCurrentChange(newPage){
        this.currentPage=newPage;
        this.getList();
     },
-    //待处理事件逻辑
-
-    async productInspectInfo(productId){
+    async productInfo(productId){
          window.sessionStorage.setItem("admin_productId", productId);
-         var activePath='/admin/product/info';
+         var activePath="/admin/product/info";
+         //这么写有点逆天，不过能跑
          this.$parent.$parent.$parent.$parent.saveNaveState(activePath);
-        //不知道要不要加商店按钮
-        //window.sessionStorage.removeItem("ShopProductList_shopId");
          this.$router.push(activePath);
     },
-     async productPass(productid){
-      // var result=await this.$http.get('/inspect/pass',shopId);
-      apiAdminProductPass({productId:productid}).then(response =>{
+   async productPass(productId){
+      apiAdminProductPass({productId:productId}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
       });
-      var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
-      if(t!="2"){
-        this.$router.push("/home");
-        return this.$message.error("非法访问");
+      if(productId == parseInt(window.sessionStorage.getItem("admin_productId"))){
+        window.sessionStorage.removeItem("admin_productId");
+        location.reload();
       }
       this.getList();
+      this.getList();
     },
-   async  productReject(productid){
-      // var result=await this.$http.get('/inspect/pass',shopId);
-      apiAdminProductReject({productId:productid}).then(response =>{
+   async productReject(productId){
+      apiAdminProductReject({productId:productId,reason:"no specific reasons"}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
       });
-      var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
-      if(t!="2"){
-        this.$router.push("/home");
-        return this.$message.error("非法访问");
+      if(productId == parseInt(window.sessionStorage.getItem("admin_productId"))){
+        window.sessionStorage.removeItem("admin_productId");
+        location.reload();
       }
+      this.getList();
       this.getList();
     },
   },
 };
 </script>
-
-<style lang="less" scoped>
-.el-row {
-    margin-bottom: 15px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-  .el-col {
-    border-radius: 4px;
-  }
-</style>

@@ -4,7 +4,7 @@
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>管理员</el-breadcrumb-item>
-      <el-breadcrumb-item>商城账户流水</el-breadcrumb-item>
+      <el-breadcrumb-item>利润账户流水</el-breadcrumb-item>
     </el-breadcrumb>
 
      <!-- 面包屑卡片视图 -->
@@ -214,7 +214,7 @@ export default {
           this.$message.error('空值错误')
         }
         if(this.accountInfo.accountType==2){
-          this.accountInfo.accountTypeStr="商店账户";
+          this.accountInfo.accountTypeStr="利润账户";
         }
         else{
               this.$message.error("非法访问");

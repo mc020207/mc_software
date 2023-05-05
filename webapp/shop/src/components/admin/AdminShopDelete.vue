@@ -4,7 +4,7 @@
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>管理员</el-breadcrumb-item>
-      <el-breadcrumb-item>待审核商店信息列表</el-breadcrumb-item>
+      <el-breadcrumb-item>待删除商店信息列表</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 面包屑卡片视图 -->
     <el-card>
@@ -80,6 +80,7 @@ export default {
   },
   created() {
     this.getShopList();
+    this.getShopList();
   },
   methods: {
     async getShopList() {
@@ -115,7 +116,7 @@ export default {
 
     async shopInspectInfo(shopId){
          window.sessionStorage.setItem("admin_shopId", shopId);
-         var activePath="admin/shop/info";
+         var activePath="/admin/shop/info";
          //这么写有点逆天，不过能跑
          this.$parent.$parent.$parent.$parent.saveNaveState(activePath);
          this.$router.push(activePath);
@@ -125,23 +126,33 @@ export default {
       apiAdminShopDeletePass({shopId:shopId}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
       });
+      if(shopId == parseInt(window.sessionStorage.getItem("admin_shopId"))){
+        window.sessionStorage.removeItem("admin_shopId");
+        location.reload();
+      }
       var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
       if(t!="2"){
         this.$router.push("/home");
         return this.$message.error("非法访问");
       }
       this.getShopList();
+      this.getShopList();
     },
    async shopInspectReject(shopId){
       //var result=await this.$http.get('/inspect/reject',shopId);
-      apiAdminShopDeleteReject({shopId:shopId}).then(response =>{
+      apiAdminShopDeleteReject({shopId:shopId,reason:"no specific reasons"}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
       });
+      if(shopId == parseInt(window.sessionStorage.getItem("admin_shopId"))){
+        window.sessionStorage.removeItem("admin_shopId");
+        location.reload();
+      }
       var t = this.$decoder(window.sessionStorage.getItem('token')).userRole;
       if(t!="2"){
         this.$router.push("/home");
         return this.$message.error("非法访问");
       }
+      this.getShopList();
       this.getShopList();
     }
   },
