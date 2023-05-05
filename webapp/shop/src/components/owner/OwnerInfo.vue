@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import {apiOwnerShopRegister,apiOwnerShopInfo,apiOwnerShopDelete} from '@/api/api'
+import {apiOwnerShopRegister,apiOwnerShopInfo,apiOwnerShopDelete,apiOwnerProductList} from '@/api/api'
 export default {
   data() {
     return {

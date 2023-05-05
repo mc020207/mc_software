@@ -7,7 +7,7 @@
       <el-breadcrumb-item>商品详细信息</el-breadcrumb-item>
     </el-breadcrumb>
       <template>
-        <el-carousel :interval="4000" type="card"  v-loading="loading" height="450px" >
+        <el-carousel :interval="4000" type="card"  v-loading="loading" height="400px" >
           <el-carousel-item v-for="item in productInfo.images" :key="item.productImageId">
               <el-image :src="item.productImageAddr" style="width:100%;height:100%" fit="fill">
             <div slot="error" class="image-slot">
@@ -21,7 +21,7 @@
       <div style="padding: 1px;">
         <el-descriptions
         title="商品信息"
-        :column="3"
+        :column="2"
         border>
         <el-descriptions-item label="商品名">{{
           productInfo.productName
