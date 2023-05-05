@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from "axios";
 // 创建axios实例
 const service = axios.create({
   // baseURL: baseUrl, // api 的 base_url
