@@ -30,7 +30,7 @@
         </el-form-item>
         <!-- 按钮 -->
         <el-form-item class="btns">
-          <el-button type="primary" @click="login">登录</el-button>
+          <el-button type="primary" @click="login" @keyup.enter="keyDown(e)">登录</el-button>
           <el-button type="success" @click="register">注册</el-button>
           <el-button type="info" @click="resetLoginForm">重置</el-button>
         </el-form-item>
@@ -120,9 +120,25 @@ export default {
     },
     register(){
         this.$router.push("/register");
-    }
+    },
+    // 点击回车键登录
+    keyDown(e) {
+      // 回车则执行登录方法 enter键的ASCII是13
+      if (e.keyCode ==13 || e.keyCode == 100) {
+        this.login(); // 定义的登录方法
+      }
+    },
 
   },
+  // 绑定监听事件
+  mounted () {
+    window.addEventListener('keydown', this.keyDown)
+  },
+  // 销毁事件
+  destroyed () {
+    window.removeEventListener('keydown', this.keyDown, false)
+  }
+
 };
 </script>
 
