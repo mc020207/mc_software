@@ -196,7 +196,9 @@ public class OrderServiceImpl implements OrderService {
         // 中间账户向商家商店账户转账
         Account accountCondition = new Account();
         accountCondition.setAccountType(ConstantUtil.ACCOUNT_SHOP);
-        accountCondition.setUserId(order.getUserId());
+        String token = JwtUserUtil.getToken(request);
+        String userId = JwtUserUtil.getInfo(token, "userId");
+        accountCondition.setUserId(Integer.parseInt(userId));
         Account account = accountMapper.selectAccount(accountCondition).get(0);
         accountService.transfer(ConstantUtil.ACCOUNT_MIDDLE_ID, account.getAccountId(), order.getOrderMoney());
 
