@@ -117,9 +117,9 @@ public class ProductServiceImpl implements ProductService {
      * @Description: 根据Condition包装ProductsDisplayVO
      * @Author: Ma-Cheng
      */
-    private ProductsDisplayVO getProductDisplayList(Product condition, Integer startRow) {
+    private ProductsDisplayVO getProductDisplayList(Product condition, Integer startRow,Integer num) {
         Integer totalNum = productMapper.countProducts(condition);
-        List<Product> products = productMapper.selectProducts(condition, startRow, ConstantUtil.PAGE_SIZE);
+        List<Product> products = productMapper.selectProducts(condition, startRow, num);
         List<ProductDisplayVO> productDisplayVOList = new ArrayList<>();
         for (Product product : products) {
             productDisplayVOList.add(getProductDisplay(product));
@@ -281,7 +281,7 @@ public class ProductServiceImpl implements ProductService {
         FormatUtil.checkPositive("page", page);
         Product product = new Product();
         product.setProductState(ConstantUtil.PRODUCT_ON_SHELF);
-        return getProductDisplayList(product, (page - 1) * ConstantUtil.PAGE_SIZE);
+        return getProductDisplayList(product, (page - 1) * ConstantUtil.PRODUCT_PAGE_SIZE,ConstantUtil.PRODUCT_PAGE_SIZE);
     }
 
     @Override
@@ -299,7 +299,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = new Product();
         product.setShopId(shopId);
         product.setProductState(ConstantUtil.PRODUCT_ON_SHELF);
-        return getProductDisplayList(product, (page - 1) * ConstantUtil.PAGE_SIZE);
+        return getProductDisplayList(product, (page - 1) * ConstantUtil.PRODUCT_PAGE_SIZE,ConstantUtil.PRODUCT_PAGE_SIZE);
     }
 
     @Override
@@ -317,7 +317,7 @@ public class ProductServiceImpl implements ProductService {
         Shop shop = getShop(request);
         Product product = new Product();
         product.setShopId(shop.getShopId());
-        return getProductDisplayList(product, (page - 1) * ConstantUtil.PAGE_SIZE);
+        return getProductDisplayList(product, (page - 1) * ConstantUtil.PRODUCT_PAGE_SIZE,ConstantUtil.PRODUCT_PAGE_SIZE);
     }
 
     @Override
@@ -335,7 +335,7 @@ public class ProductServiceImpl implements ProductService {
         FormatUtil.checkPositive("page", page);
         Product product = new Product();
         product.setProductState(ConstantUtil.PRODUCT_IN_INSPECTION);
-        return getProductDisplayList(product, (page - 1) * ConstantUtil.PAGE_SIZE);
+        return getProductDisplayList(product, (page - 1) * ConstantUtil.PAGE_SIZE,ConstantUtil.PAGE_SIZE);
     }
 
     @Override

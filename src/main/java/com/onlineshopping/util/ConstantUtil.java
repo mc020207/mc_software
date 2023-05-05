@@ -59,6 +59,7 @@ public final class ConstantUtil {
     public static final Integer USER_ADMIN_ID = 2;
 
     // 分页信息
+    public static final Integer PRODUCT_PAGE_SIZE=10;
     public static final Integer PAGE_SIZE = 9;
 
     // 最低商户启动资金
