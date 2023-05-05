@@ -13,7 +13,7 @@
     <!-- 面包屑卡片视图 -->
   <el-row v-for="(o,index_i) in 2" :key="o">
   <el-col :span="4" v-for="(o,index_j) in 5" :key="o" :offset="index_j?1:0">
-    <el-card :body-style="{ padding: '0px' }"  style="width:195px;height:300px" v-if="index_i*5+index_j<productList.length">
+    <el-card :body-style="{ padding: '0px' }"  style="width:195px;height:280px" v-if="index_i*5+index_j<productList.length">
        <el-image :src="productList[index_i*5+index_j].images[0].productImageAddr" style="width:100%;height:195px;" fit="fill">
          <div slot="error" class="image-slot">
         <i class="el-icon-picture-outline"></i>
@@ -26,9 +26,6 @@
         border>
         <el-descriptions-item label="商品名">{{
          productList[index_i*5+index_j].productName
-        }}</el-descriptions-item>
-         <el-descriptions-item label="商品简介">{{
-          productList[index_i*5+index_j].productIntro
         }}</el-descriptions-item>
       </el-descriptions>
       </div>
