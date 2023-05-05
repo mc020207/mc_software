@@ -72,7 +72,7 @@
       <el-input  placeholder="请输入商品简介" v-model="editForm.productIntro" ></el-input>
       </el-form-item>
       <el-form-item prop="productPrice">
-      <el-input  placeholder="请输入商品价格" v-model.number="editForm.productPrice" ></el-input>
+      <el-input  placeholder="请输入商品价格" v-model="editForm.productPrice" ></el-input>
       </el-form-item>
     </el-form>
       <!-- 按钮 -->
@@ -126,7 +126,7 @@ export default {
         productPrice:[
            { required: true, message: "请输入注册资金", trigger: "blur" },
            { 
-           type:'number',
+            pattern:/-?(?:[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0\.0+|0)/,
             message: `需要是的浮点数`,
             trigger: "blur",
           },
