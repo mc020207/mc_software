@@ -61,7 +61,7 @@
         <!-- 注册资金 -->
         <el-form-item prop="shopRegisterFund">
           <el-input
-            v-model.number="shopRegisterForm.shopRegisterFund"
+            v-model="shopRegisterForm.shopRegisterFund"
             prefix-icon="el-icon-zijin"
           ></el-input>
         </el-form-item>
@@ -130,8 +130,8 @@ export default {
         shopRegisterFund: [
           { required: true, message: "请输入注册资金", trigger: "blur" },
            { 
-           type:'number',
-            message: `需要是大于1000的浮点数`,
+           pattern:/-?(?:[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0\.0+|0)/,
+            message: `需要是浮点数`,
             trigger: "blur",
           },
           { 
