@@ -185,6 +185,7 @@ export default {
         if(!response.success){
           this.shopInfo.shopState = -1;
           this.shopStateRegister="注册商店";
+          window.sessionStorage.setItem("shopIsOpen","false");
         }
         else{
           this.shopInfo = response.object;
@@ -194,6 +195,14 @@ export default {
             case 2:this.shopInfo.shopStateStr = "商店开放";break;
             case 3:this.shopInfo.shopStateStr = "删除待通过";break;
             case 4:this.shopInfo.shopStateStr = "商店已删除";break;
+          }
+          if(this.shopInfo.shopState == 2 && window.sessionStorage.getItem("shopIsOpen") != "true"){
+            window.sessionStorage.setItem("shopIsOpen","true");
+            location.reload();
+          }
+          else if(this.shopInfo.shopState != 2 && window.sessionStorage.getItem("shopIsOpen") == "true"){
+            window.sessionStorage.setItem("shopIsOpen","false");
+            location.reload();
           }
           apiOwnerProductList({page:this.currentPage}).then(response =>{
             if(!response.success) return this.$message.error(response.message);

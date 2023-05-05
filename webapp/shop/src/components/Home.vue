@@ -345,6 +345,24 @@ export default {
               }
              break;
         }
+        case '/owner/order':{
+          let shopIsOpen = window.sessionStorage.getItem("shopIsOpen");
+          if(shopIsOpen != 'true'){
+            ifshow = false;
+          }
+        }
+        case '/owner/product/list':{
+          let shopIsOpen = window.sessionStorage.getItem("shopIsOpen");
+          if(shopIsOpen != 'true'){
+            ifshow = false;
+          }
+        }
+        case '/owner/account':{
+          let shopIsOpen = window.sessionStorage.getItem("shopIsOpen");
+          if(shopIsOpen != 'true'){
+            ifshow = false;
+          }
+        }
       }
       return ifshow;
     }
