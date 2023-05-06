@@ -130,7 +130,7 @@ export default {
         shopRegisterFund: [
           { required: true, message: "请输入注册资金", trigger: "blur" },
            { 
-           pattern:/-?(?:[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0\.0+|0)/,
+           pattern:/-?(?:[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0\.0+|\d*)/,
             message: `需要是浮点数`,
             trigger: "blur",
           },

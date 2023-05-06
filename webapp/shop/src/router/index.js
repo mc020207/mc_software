@@ -25,8 +25,6 @@ import AdminProduct from '../components/admin/AdminProduct.vue';
 import AdminProductInfo from '../components/admin/AdminProductInfo.vue';
 import AdminShopDelete from '../components/admin/AdminShopDelete.vue';
 import AdminShopInfo from '../components/admin/AdminShopInfo.vue';
-
-import temp from "../components/temp.vue";
 Vue.use(VueRouter);
 
 
@@ -66,7 +64,6 @@ const routes = [
     { path:'/admin/middle',component:AdminMiddle},
     { path:'/admin/open/list',component: AdminShopOpen},
     { path:'/admin/profit',component:AdminProfit},
-    { path:'/temp',component:temp},
     { path:'/admin/product/list',component:AdminProduct},
     { path:'/admin/product/info',component:AdminProductInfo},
     { path:'/admin/shop/info',component:AdminShopInfo},
