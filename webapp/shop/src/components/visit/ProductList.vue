@@ -71,7 +71,7 @@ export default {
             }
             else{
               this.productList[i].images[0]={
-                productImageAddr:"https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png",
+                productImageAddr:require('../../assets/image/0.jpg'),
               }
             }
         }

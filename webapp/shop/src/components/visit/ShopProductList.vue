@@ -20,8 +20,14 @@
       </div>
       </el-image>
       <div style="padding: 1px;">
-        <span>{{productList[index_i*5+index_j].productName}}</span>
-        <div class="bottom clearfix">{{productList[index_i*5+index_j].productIntro}}</div>
+         <el-descriptions
+        :column="1"
+        size="mini"
+        border>
+        <el-descriptions-item label="商品名">{{
+         productList[index_i*5+index_j].productName
+        }}</el-descriptions-item>
+      </el-descriptions>
       </div>
          <el-button size="small" round @click="buyProduct(productList[index_i*5+index_j].productId)">{{productList[index_i*5+index_j].productPrice}}  购买</el-button>
          <el-button @click="productInspectInfo(productList[index_i*5+index_j].productId)">详情</el-button>
@@ -97,7 +103,7 @@ export default {
             }
             else{
               this.productList[i].images[0]={
-                productImageAddr:"https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png",
+                productImageAddr:require('../../assets/image/0.jpg'),
               }
             }
         }
