@@ -25,6 +25,9 @@
             <if test="order.orderMoney!=null">
                 and orderMoney=#{order.orderMoney}
             </if>
+            <if test="order.orderGroupId!=null">
+                and orderGroupId=#{order.orderGroupId}
+            </if>
         </where>
         <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
             limit #{startRow},#{num}
@@ -55,6 +58,9 @@
             </if>
             <if test="order.orderMoney!=null">
                 and `order`.orderMoney=#{order.orderMoney}
+            </if>
+            <if test="order.orderGroupId!=null">
+                and orderGroupId=#{order.orderGroupId}
             </if>
         </where>
         <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
@@ -90,6 +96,9 @@
             <if test="orderMoney!=null">
                 and orderMoney=#{orderMoney}
             </if>
+            <if test="order.orderGroupId!=null">
+                and orderGroupId=#{order.orderGroupId}
+            </if>
         </where>
     </select>
 
@@ -117,12 +126,15 @@
             <if test="order.orderMoney!=null">
                 and `order`.orderMoney=#{order.orderMoney}
             </if>
+            <if test="order.orderGroupId!=null">
+                and orderGroupId=#{order.orderGroupId}
+            </if>
         </where>
     </select>
 
     <insert id="insertOrder">
-        insert into `order` (userId, productId, orderState, orderDate, orderMoney)
-        values (#{userId}, #{productId}, #{orderState}, #{orderDate}, #{orderMoney})
+        insert into `order` (userId, productId, orderState, orderDate, orderMoney,productNum,orderGroupId)
+        values (#{userId}, #{productId}, #{orderState}, #{orderDate}, #{orderMoney},#{productNum},#{orderGroupId})
     </insert>
 
     <update id="updateOrderInfo">
@@ -142,6 +154,12 @@
             </if>
             <if test="orderMoney!=null">
                 , orderMoney=#{orderMoney}
+            </if>
+            <if test="productNum!=null">
+                , productNum=#{productNum}
+            </if>
+            <if test="orderGroupId">
+                , orderGroupId=#{orderGroupId}
             </if>
         </set>
         where orderId=#{orderId}
@@ -169,6 +187,12 @@
             <if test="order.orderMoney!=null">
                 and orderMoney=#{order.orderMoney}
             </if>
+            <if test="productNum!=null">
+                and productNum=#{productNum}
+            </if>
+            <if test="orderGroupId">
+                and orderGroupId=#{orderGroupId}
+            </if>
         </where>
     </update>
 
@@ -177,5 +201,9 @@
         from `order`
         where orderId = #{orderId};
     </delete>
+
+    <select id="getMaxGroupId" resultType="int">
+        select max(orderGroupId) from `order`
+    </select>
 
 </mapper>

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/order")
 public class OrderController {
@@ -16,10 +18,10 @@ public class OrderController {
     OrderService orderService;
 
     @RequestMapping(value = "/user/buy", method = RequestMethod.GET)
-    public CommonResult userBuyDirect(Integer productId, HttpServletRequest request, HttpServletResponse response) {
+    public CommonResult userBuyDirect(Integer productId, Integer productNum, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            orderService.buyProductDirectly(productId, request, response);
+            orderService.buyProductDirectly(productId, productNum, request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
@@ -29,10 +31,10 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/user/cart/add", method = RequestMethod.GET)
-    public CommonResult userAddCart(Integer productId, HttpServletRequest request, HttpServletResponse response) {
+    public CommonResult userAddCart(Integer productId,Integer productNum, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            orderService.addToCart(productId, request, response);
+            orderService.addToCart(productId,productNum, request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
@@ -40,6 +42,20 @@ public class OrderController {
         cm.setSuccess(true);
         return cm;
     }
+
+    @RequestMapping(value = "/user/cart/edit", method = RequestMethod.GET)
+    public CommonResult changeProductNumInCart(Integer orderId,Integer productNum, HttpServletRequest request, HttpServletResponse response){
+        CommonResult cm = new CommonResult(false);
+        try {
+            orderService.changeProductNumInCart(orderId, productNum, request, response);
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
+        return cm;
+    }
+
 
     @RequestMapping(value = "/user/cart/delete", method = RequestMethod.GET)
     public CommonResult userDeleteCart(Integer orderId, HttpServletRequest request, HttpServletResponse response) {
@@ -55,7 +71,7 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/user/cart/buy", method = RequestMethod.GET)
-    public CommonResult userBuyFromCart(Integer orderId, HttpServletRequest request, HttpServletResponse response) {
+    public CommonResult userBuyFromCart(List<Integer> orderId, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
             orderService.buyProductFromCart(orderId, request, response);
@@ -67,11 +83,63 @@ public class OrderController {
         return cm;
     }
 
-    @RequestMapping(value = "/owner/send", method = RequestMethod.GET)
-    public CommonResult ownerSendProduct(Integer orderId, HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/user/confirm", method = RequestMethod.GET)
+    public CommonResult userConfirmOrderGroup(List<Integer> orderIds, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            orderService.sendProduct(orderId, request, response);
+            orderService.userConfirmOrderGroup(orderIds, request, response);
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
+        return cm;
+    }
+
+    @RequestMapping(value = "/user/pay", method = RequestMethod.GET)
+    public CommonResult userPayOrderGroup(Integer orderGroupId, HttpServletRequest request, HttpServletResponse response) {
+        CommonResult cm = new CommonResult(false);
+        try {
+            cm.setObject(orderService.userPayOrderGroup(orderGroupId, request, response));
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
+        return cm;
+    }
+
+    @RequestMapping(value = "/user/cancel", method = RequestMethod.GET)
+    public CommonResult userCancelOrderGroup(Integer orderGroupId, HttpServletRequest request, HttpServletResponse response) {
+        CommonResult cm = new CommonResult(false);
+        try {
+            cm.setObject(orderService.userCancelOrderGroup(orderGroupId, request, response));
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
+        return cm;
+    }
+
+    @RequestMapping(value = "/user/view/all", method = RequestMethod.GET)
+    public CommonResult viewAllOrderGroup(Integer page, HttpServletRequest request, HttpServletResponse response) {
+        CommonResult cm = new CommonResult(false);
+        try {
+            cm.setObject(orderService.viewAllOrderGroup(page, request, response));
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
+        return cm;
+    }
+
+    @RequestMapping(value = "/user/view", method = RequestMethod.GET)
+    public CommonResult viewOrderGroup(Integer page,Integer orderGroupId, HttpServletRequest request, HttpServletResponse response) {
+        CommonResult cm = new CommonResult(false);
+        try {
+            cm.setObject(orderService.viewOrderGroup(page, orderGroupId, request, response));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

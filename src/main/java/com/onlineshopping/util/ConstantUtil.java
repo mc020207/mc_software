@@ -33,9 +33,11 @@ public final class ConstantUtil {
     public static final Integer PRODUCT_REJECTED = 1;
     public static final Integer PRODUCT_IN_INSPECTION = 0;
     // orderState
-    public static final Integer ORDER_RECEIVE = 2;
-    public static final Integer ORDER_NOT_RECEIVE = 1;
-    public static final Integer ORDER_NOT_PAY = 0;
+    public static final Integer ORDER_CANCELED = 4;
+    public static final Integer ORDER_RECEIVE = 3;
+    public static final Integer ORDER_NOT_RECEIVE = 2;
+    public static final Integer ORDER_NOT_PAY = 1;
+    public static final Integer ORDER_ADD_TO_CART = 0;
     // ProductRecordState
     public static final Integer PRODUCT_RECORD_PASS = 2;
     public static final Integer PRODUCT_RECORD_REJECT = 1;
@@ -59,7 +61,7 @@ public final class ConstantUtil {
     public static final Integer USER_ADMIN_ID = 2;
 
     // 分页信息
-    public static final Integer PRODUCT_PAGE_SIZE=10;
+    public static final Integer PRODUCT_PAGE_SIZE = 10;
     public static final Integer PAGE_SIZE = 9;
 
     // 最低商户启动资金

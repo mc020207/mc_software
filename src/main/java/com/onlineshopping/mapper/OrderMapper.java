@@ -24,4 +24,5 @@ public interface OrderMapper {
     void updateOrderState(Order order, Integer newState);
 
     void deleteOrderById(Integer orderId);
+    Integer getMaxGroupId();
 }

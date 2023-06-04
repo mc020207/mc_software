@@ -39,7 +39,13 @@ public class OrderServiceImpl implements OrderService {
     AccountService accountService;
     @Resource
     AccountMapper accountMapper;
-
+    private Integer nowGroupId=null;
+    private Integer getNextGroupId(){
+        if (nowGroupId==null) nowGroupId=orderMapper.getMaxGroupId();
+        if (nowGroupId==null) nowGroupId=0;
+        nowGroupId+=1;
+        return nowGroupId;
+    }
     /**
      * @Description: 获取token中的用户ID
      * @Author: Ma-Cheng
@@ -141,18 +147,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void buyProductDirectly(Integer productId, HttpServletRequest request, HttpServletResponse response) {
+    public void buyProductDirectly(Integer productId, Integer productNum, HttpServletRequest request, HttpServletResponse response) {
         FormatUtil.checkPositive("productId", productId);
         Product product = checkProductCanBuy(productId);
         // 插入订单
-        Order order = new Order(null, getUserId(request), productId, ConstantUtil.ORDER_NOT_RECEIVE, new Timestamp(System.currentTimeMillis()), product.getProductPrice());
+        Order order = new Order(null, getUserId(request), productId, ConstantUtil.ORDER_NOT_RECEIVE, new Timestamp(System.currentTimeMillis()), product.getProductPrice(),productNum,getNextGroupId());
         orderMapper.insertOrder(order);
         // 个人账户向中间账户转账
-        Account accountCondition = new Account();
-        accountCondition.setAccountType(ConstantUtil.ACCOUNT_USER);
-        accountCondition.setUserId(order.getUserId());
-        Account account = accountMapper.selectAccount(accountCondition).get(0);
-        accountService.transfer(account.getAccountId(), ConstantUtil.ACCOUNT_MIDDLE_ID, order.getOrderMoney());
+//        Account accountCondition = new Account();
+//        accountCondition.setAccountType(ConstantUtil.ACCOUNT_USER);
+//        accountCondition.setUserId(order.getUserId());
+//        Account account = accountMapper.selectAccount(accountCondition).get(0);
+//        accountService.transfer(account.getAccountId(), ConstantUtil.ACCOUNT_MIDDLE_ID, order.getOrderMoney());
     }
 
     @Override

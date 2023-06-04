@@ -10,6 +10,11 @@ public class Order implements Serializable {
     private Integer orderState;
     private Timestamp orderDate;
     private Double orderMoney;
+    private Integer productNum;
+    private Integer orderGroupId;
+
+    public Order() {
+    }
 
     @Override
     public String toString() {
@@ -20,6 +25,8 @@ public class Order implements Serializable {
                 ", orderState=" + orderState +
                 ", orderDate=" + orderDate +
                 ", orderMoney=" + orderMoney +
+                ", productNum=" + productNum +
+                ", orderGroupId=" + orderGroupId +
                 '}';
     }
 
@@ -71,15 +78,30 @@ public class Order implements Serializable {
         this.orderMoney = orderMoney;
     }
 
-    public Order(Integer orderId, Integer userId, Integer productId, Integer orderState, Timestamp orderDate, Double orderMoney) {
+    public Integer getProductNum() {
+        return productNum;
+    }
+
+    public void setProductNum(Integer productNum) {
+        this.productNum = productNum;
+    }
+
+    public Integer getOrderGroupId() {
+        return orderGroupId;
+    }
+
+    public void setOrderGroupId(Integer orderGroupId) {
+        this.orderGroupId = orderGroupId;
+    }
+
+    public Order(Integer orderId, Integer userId, Integer productId, Integer orderState, Timestamp orderDate, Double orderMoney, Integer productNum, Integer orderGroupId) {
         this.orderId = orderId;
         this.userId = userId;
         this.productId = productId;
         this.orderState = orderState;
         this.orderDate = orderDate;
         this.orderMoney = orderMoney;
-    }
-
-    public Order() {
+        this.productNum = productNum;
+        this.orderGroupId = orderGroupId;
     }
 }
