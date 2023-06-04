@@ -1,6 +1,7 @@
 package com.onlineshopping.service;
 
 import com.onlineshopping.model.vo.CommonResult;
+import com.onlineshopping.model.vo.OrderDisplayVO;
 import com.onlineshopping.model.vo.OrdersDisplayVO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,13 +25,13 @@ public interface OrderService {
      * @Description: 用户直接购买某商品
      * @Author: Ma-Cheng
      */
-    void buyProductDirectly(Integer productId, Integer productNum, HttpServletRequest request, HttpServletResponse response);
+    OrdersDisplayVO buyProductDirectly(Integer productId, Integer productNum, HttpServletRequest request, HttpServletResponse response);
 
     /**
      * @Description: 用户购买购物车中的商品
      * @Author: Ma-Cheng
      */
-    void buyProductFromCart(List<Integer> orderId, HttpServletRequest request, HttpServletResponse response);
+    OrdersDisplayVO buyProductFromCart(List<Integer> orderIds, HttpServletRequest request, HttpServletResponse response);
 
     /**
      * @Description: 用户获取购物车列表
@@ -73,5 +74,4 @@ public interface OrderService {
     OrdersDisplayVO userCancelOrderGroup(Integer orderGroupId, HttpServletRequest request, HttpServletResponse response);
     OrdersDisplayVO viewAllOrderGroup(Integer page, HttpServletRequest request, HttpServletResponse response);
     OrdersDisplayVO viewOrderGroup(Integer page,Integer orderGroupId, HttpServletRequest request, HttpServletResponse response);
-    void changeProductNumInCart(Integer orderId,Integer productNum, HttpServletRequest request, HttpServletResponse response)
 }

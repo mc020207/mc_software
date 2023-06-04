@@ -35,7 +35,7 @@
     </select>
 
     <select id="selectOrdersByShopId" resultType="Order">
-        select orderId, `order`.userId as userId, `order`.productId as productId, orderState, orderDate, orderMoney
+        select orderId, `order`.userId as userId, `order`.productId as productId, orderState, orderDate, orderMoney,productNum,orderGroupId
         from `order`,product,shop
         <where>
             `order`.productId=product.productId
@@ -60,7 +60,7 @@
                 and `order`.orderMoney=#{order.orderMoney}
             </if>
             <if test="order.orderGroupId!=null">
-                and orderGroupId=#{order.orderGroupId}
+                and `order`orderGroupId=#{order.orderGroupId}
             </if>
         </where>
         <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
@@ -96,8 +96,8 @@
             <if test="orderMoney!=null">
                 and orderMoney=#{orderMoney}
             </if>
-            <if test="order.orderGroupId!=null">
-                and orderGroupId=#{order.orderGroupId}
+            <if test="orderGroupId!=null">
+                and orderGroupId=#{orderGroupId}
             </if>
         </where>
     </select>
@@ -127,7 +127,7 @@
                 and `order`.orderMoney=#{order.orderMoney}
             </if>
             <if test="order.orderGroupId!=null">
-                and orderGroupId=#{order.orderGroupId}
+                and `order`.orderGroupId=#{order.orderGroupId}
             </if>
         </where>
     </select>
@@ -158,7 +158,7 @@
             <if test="productNum!=null">
                 , productNum=#{productNum}
             </if>
-            <if test="orderGroupId">
+            <if test="orderGroupId!=null">
                 , orderGroupId=#{orderGroupId}
             </if>
         </set>
@@ -187,11 +187,11 @@
             <if test="order.orderMoney!=null">
                 and orderMoney=#{order.orderMoney}
             </if>
-            <if test="productNum!=null">
-                and productNum=#{productNum}
+            <if test="order.productNum!=null">
+                and productNum=#{order.productNum}
             </if>
-            <if test="orderGroupId">
-                and orderGroupId=#{orderGroupId}
+            <if test="order.orderGroupId">
+                and orderGroupId=#{order.orderGroupId}
             </if>
         </where>
     </update>
@@ -205,5 +205,23 @@
     <select id="getMaxGroupId" resultType="int">
         select max(orderGroupId) from `order`
     </select>
-
+    <select id="selectOrderGroupIdByUserId" resultType="int">
+        select distinct orderGroupId from `order`
+        where userId=#{userId}
+        <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
+            limit #{startRow},#{num}
+        </if>
+    </select>
+    <select id="countOrderGroupIdByUserId" resultType="int">
+        select count(distinct orderGroupId) from `order`
+        where userId=#{userId}
+    </select>
+    <select id="selectOrdersByOrderGroupIds" resultType="Order">
+        select * from `order`
+        where orderGroupId in
+        <foreach collection="groupIds" item="groupId" separator="," open="(" close=")">
+            #{groupId}
+        </foreach>
+        order by orderGroupId
+    </select>
 </mapper>

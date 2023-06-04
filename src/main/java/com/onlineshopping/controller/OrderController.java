@@ -1,5 +1,6 @@
 package com.onlineshopping.controller;
 
+import com.onlineshopping.exception.ServiceException;
 import com.onlineshopping.model.vo.CommonResult;
 import com.onlineshopping.service.OrderService;
 import jakarta.annotation.Resource;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -71,10 +74,13 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/user/cart/buy", method = RequestMethod.GET)
-    public CommonResult userBuyFromCart(List<Integer> orderId, HttpServletRequest request, HttpServletResponse response) {
+    public CommonResult userBuyFromCart(Integer[] orderIds, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            orderService.buyProductFromCart(orderId, request, response);
+            if (orderIds==null){
+                throw new ServiceException("没有选中的订单");
+            }
+            cm.setObject(orderService.buyProductFromCart(Arrays.asList(orderIds), request, response));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
@@ -84,10 +90,13 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/user/confirm", method = RequestMethod.GET)
-    public CommonResult userConfirmOrderGroup(List<Integer> orderIds, HttpServletRequest request, HttpServletResponse response) {
+    public CommonResult userConfirmOrderGroup(Integer[] orderIds, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            orderService.userConfirmOrderGroup(orderIds, request, response);
+            if (orderIds==null){
+                throw new ServiceException("没有选中的订单");
+            }
+            cm.setObject(orderService.userConfirmOrderGroup(Arrays.asList(orderIds), request, response));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
@@ -179,6 +188,19 @@ public class OrderController {
         CommonResult cm = new CommonResult(false);
         try {
             cm.setObject(orderService.userReceiveList(page, request, response));
+        } catch (Exception e) {
+            cm.setMessage(e.getMessage());
+            return cm;
+        }
+        cm.setSuccess(true);
+        return cm;
+    }
+
+    @RequestMapping(value = "/owner/send", method = RequestMethod.GET)
+    public CommonResult ownerSend(Integer orderId, HttpServletRequest request, HttpServletResponse response) {
+        CommonResult cm = new CommonResult(false);
+        try {
+            orderService.sendProduct(orderId, request, response);
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

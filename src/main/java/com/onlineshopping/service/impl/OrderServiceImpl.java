@@ -64,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
         if (order == null) {
             throw new ServiceException("订单不存在");
         }
-        if (!Objects.equals(order.getOrderState(), ConstantUtil.ORDER_NOT_PAY)) {
+        if (!Objects.equals(order.getOrderState(), ConstantUtil.ORDER_NOT_PAY)&& !Objects.equals(order.getOrderState(), ConstantUtil.ORDER_ADD_TO_CART)) {
             throw new ServiceException("该订单已付款");
         }
         Integer userId = getUserId(request);
@@ -78,9 +78,9 @@ public class OrderServiceImpl implements OrderService {
      * @Description: 根据给出的Condition组装OrdersDisplayVo
      * @Author: Ma-Cheng
      */
-    private OrdersDisplayVO getOrdersDisplayVo(Order condition, Integer startRow) {
+    private OrdersDisplayVO getOrdersDisplayVo(Order condition, Integer startRow,Integer num) {
         Integer totalNumber = orderMapper.countOrders(condition);
-        List<Order> orders = orderMapper.selectOrders(condition, startRow, ConstantUtil.PAGE_SIZE);
+        List<Order> orders = orderMapper.selectOrders(condition, startRow, num);
         return new OrdersDisplayVO(getOrderDisplayVOList(orders), totalNumber);
     }
 
@@ -92,7 +92,9 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDisplayVO> orderDisplayVOList = new ArrayList<>();
         for (Order order : orders) {
             Product product = productMapper.selectProductById(order.getProductId());
-            orderDisplayVOList.add(new OrderDisplayVO(order, product));
+            OrderDisplayVO orderDisplayVO = new OrderDisplayVO(order, product);
+            orderDisplayVO.setShopName(shopMapper.selectShopByShopId(product.getShopId()).getShopName());
+            orderDisplayVOList.add(orderDisplayVO);
         }
         return orderDisplayVOList;
     }
@@ -127,14 +129,27 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public void addToCart(Integer productId, HttpServletRequest request, HttpServletResponse response) {
+    public void addToCart(Integer productId,Integer productNum, HttpServletRequest request, HttpServletResponse response) {
         FormatUtil.checkPositive("productId", productId);
+        FormatUtil.checkPositive("productNum",productNum);
         Integer userId = getUserId(request);
         // 检查商品是否可以购买
         Product product = checkProductCanBuy(productId);
         // 插入订单
-        Order order = new Order(null, userId, productId, ConstantUtil.ORDER_NOT_PAY, new Timestamp(System.currentTimeMillis()), product.getProductPrice());
-        orderMapper.insertOrder(order);
+        Order condition = new Order(null, userId, productId, ConstantUtil.ORDER_ADD_TO_CART, null, null,null,null);
+        List<Order> orders = orderMapper.selectOrders(condition, 0, 1);
+        if (orders==null||orders.size()==0){
+            condition.setOrderDate(new Timestamp(System.currentTimeMillis()));
+            condition.setOrderMoney(product.getProductPrice());
+            condition.setProductNum(productNum);
+            orderMapper.insertOrder(condition);
+        }else{
+            Order order = orders.get(0);
+            order.setOrderDate(new Timestamp(System.currentTimeMillis()));
+            order.setProductNum(order.getProductNum()+productNum);
+            order.setOrderMoney(product.getProductPrice());
+            orderMapper.updateOrderInfo(order);
+        }
     }
 
     @Override
@@ -147,12 +162,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void buyProductDirectly(Integer productId, Integer productNum, HttpServletRequest request, HttpServletResponse response) {
+    public OrdersDisplayVO buyProductDirectly(Integer productId, Integer productNum, HttpServletRequest request, HttpServletResponse response) {
         FormatUtil.checkPositive("productId", productId);
+        FormatUtil.checkPositive("productNum", productNum);
         Product product = checkProductCanBuy(productId);
         // 插入订单
-        Order order = new Order(null, getUserId(request), productId, ConstantUtil.ORDER_NOT_RECEIVE, new Timestamp(System.currentTimeMillis()), product.getProductPrice(),productNum,getNextGroupId());
+        Order order = new Order(null, getUserId(request), productId, ConstantUtil.ORDER_NOT_PAY, new Timestamp(System.currentTimeMillis()), product.getProductPrice(),productNum,getNextGroupId());
         orderMapper.insertOrder(order);
+        return null;
         // 个人账户向中间账户转账
 //        Account accountCondition = new Account();
 //        accountCondition.setAccountType(ConstantUtil.ACCOUNT_USER);
@@ -163,21 +180,33 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void buyProductFromCart(Integer orderId, HttpServletRequest request, HttpServletResponse response) {
-        FormatUtil.checkPositive("orderId", orderId);
-        Order order = getMyOrderById(orderId, request);
-        Product product = checkProductCanBuy(order.getProductId());
-        // 更改Order状态
-        order.setOrderState(ConstantUtil.ORDER_NOT_RECEIVE);
-        order.setOrderDate(new Timestamp(System.currentTimeMillis()));
-        order.setOrderMoney(product.getProductPrice());
-        orderMapper.updateOrderInfo(order);
+    public OrdersDisplayVO buyProductFromCart(List<Integer> orderIds, HttpServletRequest request, HttpServletResponse response) {
+        if (orderIds==null||orderIds.size()==0){
+            throw new ServiceException("没有选中的商品");
+        }
+        List<Order> orders=new ArrayList<>();
+        for (Integer orderId : orderIds){
+            FormatUtil.checkPositive("orderId", orderId);
+            Order order = getMyOrderById(orderId, request);
+            if (!Objects.equals(order.getOrderState(), ConstantUtil.ORDER_ADD_TO_CART)){
+                throw new ServiceException("选中不是购物车中的商品");
+            }
+            Product product = checkProductCanBuy(order.getProductId());
+            // 更改Order状态
+            order.setOrderDate(new Timestamp(System.currentTimeMillis()));
+            order.setOrderMoney(product.getProductPrice());
+            orders.add(order);
+            orderMapper.updateOrderInfo(order);
+        }
+        List<OrderDisplayVO> orderDisplayVOList = getOrderDisplayVOList(orders);
+        return new OrdersDisplayVO(orderDisplayVOList,orderIds.size());
         // 个人账户向中间账户转账
-        Account accountCondition = new Account();
-        accountCondition.setAccountType(ConstantUtil.ACCOUNT_USER);
-        accountCondition.setUserId(order.getUserId());
-        Account account = accountMapper.selectAccount(accountCondition).get(0);
-        accountService.transfer(account.getAccountId(), ConstantUtil.ACCOUNT_MIDDLE_ID, order.getOrderMoney());
+//        Account accountCondition = new Account();
+//        accountCondition.setAccountType(ConstantUtil.ACCOUNT_USER);
+//        accountCondition.setUserId(order.getUserId());
+//        Account account = accountMapper.selectAccount(accountCondition).get(0);
+//        accountService.transfer(account.getAccountId(), ConstantUtil.ACCOUNT_MIDDLE_ID, order.getOrderMoney());
+//        return null;
     }
 
     @Override
@@ -206,8 +235,7 @@ public class OrderServiceImpl implements OrderService {
         String userId = JwtUserUtil.getInfo(token, "userId");
         accountCondition.setUserId(Integer.parseInt(userId));
         Account account = accountMapper.selectAccount(accountCondition).get(0);
-        accountService.transfer(ConstantUtil.ACCOUNT_MIDDLE_ID, account.getAccountId(), order.getOrderMoney());
-
+        accountService.transfer(ConstantUtil.ACCOUNT_MIDDLE_ID, account.getAccountId(), order.getOrderMoney()*order.getProductNum());
     }
 
     @Override
@@ -215,8 +243,8 @@ public class OrderServiceImpl implements OrderService {
     public OrdersDisplayVO getCartList(Integer page, HttpServletRequest request, HttpServletResponse response) {
         FormatUtil.checkPositive("page", page);
         Integer userId = getUserId(request);
-        Order condition = new Order(null, userId, null, ConstantUtil.ORDER_NOT_PAY, null, null);
-        return getOrdersDisplayVo(condition, (page - 1) * ConstantUtil.PAGE_SIZE);
+        Order condition = new Order(null, userId, null, ConstantUtil.ORDER_ADD_TO_CART, null, null,null,null);
+        return getOrdersDisplayVo(condition, (page - 1) * ConstantUtil.PAGE_SIZE,ConstantUtil.PAGE_SIZE);
     }
 
     @Override
@@ -224,8 +252,8 @@ public class OrderServiceImpl implements OrderService {
     public OrdersDisplayVO userUnReceiveList(Integer page, HttpServletRequest request, HttpServletResponse response) {
         FormatUtil.checkPositive("page", page);
         Integer userId = getUserId(request);
-        Order condition = new Order(null, userId, null, ConstantUtil.ORDER_NOT_RECEIVE, null, null);
-        return getOrdersDisplayVo(condition, (page - 1) * ConstantUtil.PAGE_SIZE);
+        Order condition = new Order(null, userId, null, ConstantUtil.ORDER_NOT_RECEIVE, null, null,null,null);
+        return getOrdersDisplayVo(condition, (page - 1) * ConstantUtil.PAGE_SIZE,ConstantUtil.PAGE_SIZE);
     }
 
     @Override
@@ -233,8 +261,8 @@ public class OrderServiceImpl implements OrderService {
     public OrdersDisplayVO userReceiveList(Integer page, HttpServletRequest request, HttpServletResponse response) {
         FormatUtil.checkPositive("page", page);
         Integer userId = getUserId(request);
-        Order condition = new Order(null, userId, null, ConstantUtil.ORDER_RECEIVE, null, null);
-        return getOrdersDisplayVo(condition, (page - 1) * ConstantUtil.PAGE_SIZE);
+        Order condition = new Order(null, userId, null, ConstantUtil.ORDER_RECEIVE, null, null,null,null);
+        return getOrdersDisplayVo(condition, (page - 1) * ConstantUtil.PAGE_SIZE,ConstantUtil.PAGE_SIZE);
     }
 
     @Override
@@ -259,5 +287,108 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orders = orderMapper.selectOrdersByShopId(condition, shop.getShopId(), (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
         Integer totalNumber = orderMapper.countOrdersByShopId(condition, shop.getShopId());
         return new OrdersDisplayVO(getOrderDisplayVOList(orders), totalNumber);
+    }
+
+    @Override
+    @Transactional
+    public OrdersDisplayVO userConfirmOrderGroup(List<Integer> orderIds, HttpServletRequest request, HttpServletResponse response) {
+        if (orderIds==null||orderIds.size()==0){
+            throw new ServiceException("没有选中的商品");
+        }
+        List<Order> orders=new ArrayList<>();
+        for (Integer orderId : orderIds){
+            FormatUtil.checkPositive("orderId", orderId);
+            Order order = getMyOrderById(orderId, request);
+            Product product = checkProductCanBuy(order.getProductId());
+            if (!Objects.equals(order.getOrderState(), ConstantUtil.ORDER_ADD_TO_CART)){
+                throw new ServiceException("选中不是购物车中的商品");
+            }
+            // 更改Order状态
+            order.setOrderDate(new Timestamp(System.currentTimeMillis()));
+            order.setOrderState(ConstantUtil.ORDER_NOT_PAY);
+            order.setOrderMoney(product.getProductPrice());
+            order.setOrderGroupId(getNextGroupId());
+            orders.add(order);
+            orderMapper.updateOrderInfo(order);
+        }
+        List<OrderDisplayVO> orderDisplayVOList = getOrderDisplayVOList(orders);
+        return new OrdersDisplayVO(orderDisplayVOList,orderIds.size());
+    }
+
+    @Override
+    @Transactional
+    public OrdersDisplayVO userPayOrderGroup(Integer orderGroupId, HttpServletRequest request, HttpServletResponse response) {
+        FormatUtil.checkPositive("orderGroupId",orderGroupId);
+        Order condition = new Order();
+        condition.setOrderGroupId(orderGroupId);
+        condition.setUserId(getUserId(request));
+        OrdersDisplayVO ordersDisplayVo = getOrdersDisplayVo(condition, null, null);
+        double totalMoney=0.0;
+        for (OrderDisplayVO orderDisplayVO:ordersDisplayVo.getOrders()){
+            getMyOrderById(orderDisplayVO.getOrderId(), request);
+            totalMoney+=orderDisplayVO.getOrderMoney()*orderDisplayVO.getProductNum();
+        }
+        orderMapper.updateOrderState(condition,ConstantUtil.ORDER_NOT_RECEIVE);
+        // 个人账户向中间账户转账
+        Account accountCondition = new Account();
+        accountCondition.setAccountType(ConstantUtil.ACCOUNT_USER);
+        accountCondition.setUserId(getUserId(request));
+        Account account = accountMapper.selectAccount(accountCondition).get(0);
+        accountService.transfer(account.getAccountId(), ConstantUtil.ACCOUNT_MIDDLE_ID, totalMoney);
+        return ordersDisplayVo;
+    }
+
+    @Override
+    @Transactional
+    public OrdersDisplayVO userCancelOrderGroup(Integer orderGroupId, HttpServletRequest request, HttpServletResponse response) {
+        FormatUtil.checkPositive("orderGroupId",orderGroupId);
+        Order condition = new Order();
+        condition.setOrderGroupId(orderGroupId);
+        condition.setUserId(getUserId(request));
+        List<Order> orders = orderMapper.selectOrders(condition, null, null);
+        if (orders==null||orders.size()==0){
+            throw new ServiceException(("订单不存在"));
+        }
+        if (!Objects.equals(orders.get(0).getOrderState(), ConstantUtil.ORDER_NOT_PAY)){
+            throw new ServiceException("订单类型错误");
+        }
+        orderMapper.updateOrderState(condition,ConstantUtil.ORDER_CANCELED);
+        return getOrdersDisplayVo(condition, null, null);
+    }
+
+    @Override
+    @Transactional
+    public OrdersDisplayVO viewAllOrderGroup(Integer page, HttpServletRequest request, HttpServletResponse response) {
+        Integer userId = getUserId(request);
+        List<Integer> orderGroupIds = orderMapper.selectOrderGroupIdByUserId(userId, (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
+        Integer totalNumber=orderMapper.countOrderGroupIdByUserId(userId);
+        List<Order> orders = orderGroupIds.size()==0?new ArrayList<>():orderMapper.selectOrdersByOrderGroupIds(orderGroupIds, null, null);
+        List<OrderDisplayVO> orderDisplayVOList = getOrderDisplayVOList(orders);
+        return new OrdersDisplayVO(orderDisplayVOList,totalNumber);
+    }
+
+    @Override
+    @Transactional
+    public OrdersDisplayVO viewOrderGroup(Integer page, Integer orderGroupId, HttpServletRequest request, HttpServletResponse response) {
+        Order condition = new Order();
+        condition.setOrderGroupId(orderGroupId);
+        return getOrdersDisplayVo(condition, (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
+    }
+
+    @Override
+    @Transactional
+    public void changeProductNumInCart(Integer orderId, Integer productNum, HttpServletRequest request, HttpServletResponse response) {
+        FormatUtil.checkPositive("orderId",orderId);
+        FormatUtil.checkNotNull("productNum",productNum);
+        if (productNum<0){
+            throw new ServiceException("商品数量不可以改为负数");
+        }
+        if (productNum==0){
+            deleteFromCart(orderId, request, response);
+            return;
+        }
+        Order order = getMyOrderById(orderId, request);
+        order.setProductNum(productNum);
+        orderMapper.updateOrderInfo(order);
     }
 }
