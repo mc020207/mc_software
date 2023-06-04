@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
         FormatUtil.checkUserPhone(userPhone);
         FormatUtil.checkUserIdCard(userIdCard);
         FormatUtil.checkUserEmail(userEmail);
-        FormatUtil.checkUserPwd(userPwd);
+//        FormatUtil.checkUserPwd(userPwd);
         // 唯一性检查
         checkUnique("userName", userName);
         checkUnique("userPhone", userPhone);
@@ -188,7 +188,7 @@ public class UserServiceImpl implements UserService {
         if (!userPwd.equals(userOldPwd))
             throw new ServiceException("原密码输入错误");
         // 检查新密码
-        FormatUtil.checkUserPwd(userNewPwd);
+//        FormatUtil.checkUserPwd(userNewPwd);
         // 修改User
         Integer userId = Integer.valueOf(JwtUserUtil.getInfo(token, "userId"));
         User user = new User();
