@@ -68,10 +68,34 @@ public interface OrderService {
      * @Author: Ma-Cheng
      */
     OrdersDisplayVO ownerFinishList(Integer page, HttpServletRequest request, HttpServletResponse response);
+    /**
+     * @Description: 更改购物车的商品数量
+     * @Author: Ma-Cheng
+     */
     void changeProductNumInCart(Integer orderId,Integer productNum, HttpServletRequest request, HttpServletResponse response);
+    /**
+     * @Description: 用户提交订单
+     * @Author: Ma-Cheng
+     */
     OrdersDisplayVO userConfirmOrderGroup(List<Integer> orderIds, HttpServletRequest request, HttpServletResponse response);
+    /**
+     * @Description: 用户支付订单
+     * @Author: Ma-Cheng
+     */
     OrdersDisplayVO userPayOrderGroup(Integer orderGroupId, HttpServletRequest request, HttpServletResponse response);
+    /**
+     * @Description: 用户撤销订单
+     * @Author: Ma-Cheng
+     */
     OrdersDisplayVO userCancelOrderGroup(Integer orderGroupId, HttpServletRequest request, HttpServletResponse response);
+    /**
+     * @Description: 用户查看所有订单
+     * @Author: Ma-Cheng
+     */
     OrdersDisplayVO viewAllOrderGroup(Integer page, HttpServletRequest request, HttpServletResponse response);
+    /**
+     * @Description: 用户查看某一个订单
+     * @Author: Ma-Cheng
+     */
     OrdersDisplayVO viewOrderGroup(Integer page,Integer orderGroupId, HttpServletRequest request, HttpServletResponse response);
 }
