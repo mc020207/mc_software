@@ -158,9 +158,9 @@ export function apiOrderUserCartBuy(params) {
   })
 }
 
-export function apiOrderUserCartDelete(params) {
+export function apiOrderUserCartEdit(params) {
   return service({
-    url: '/order/user/cart/delete',
+    url: '/order/user/cart/edit',
     method: 'get',
     params
   })

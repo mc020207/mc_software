@@ -74,13 +74,18 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/user/cart/buy", method = RequestMethod.GET)
-    public CommonResult userBuyFromCart(Integer[] orderIds, HttpServletRequest request, HttpServletResponse response) {
+    public CommonResult userBuyFromCart(String orderIds,HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            if (orderIds==null){
+            String[] s = orderIds.split(" ");
+            List<Integer> orders=new ArrayList<>();
+            if (s.length==0){
                 throw new ServiceException("没有选中的订单");
             }
-            cm.setObject(orderService.buyProductFromCart(Arrays.asList(orderIds), request, response));
+            for (String x : s){
+                orders.add(Integer.parseInt(x));
+            }
+            cm.setObject(orderService.buyProductFromCart(orders, request, response));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

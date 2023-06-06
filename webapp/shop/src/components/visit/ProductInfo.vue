@@ -32,8 +32,8 @@
       </el-descriptions>
       </div>
       <div style="display: flex;justify-content:flex-end;">
-         <el-button  type="success" round  @click="buyProduct(productInfo.productId)">{{productInfo.productPrice}}  购买</el-button>
-         <el-button  type="primary" round  @click="cartAddProduct(productInfo.productId)">加入购物车</el-button>
+         <el-button  type="success" round  @click="ClickBuy(0)">{{productInfo.productPrice}}  购买</el-button>
+         <el-button  type="primary" round  @click="ClickBuy(1)">加入购物车</el-button>
          <el-button @click="toShopProductList">该商店全部商品</el-button>
         <el-button @click="getShopInfo">商店信息</el-button>
         </div>
@@ -63,8 +63,33 @@
           shopInfo.shopRegisterDate
         }}</el-descriptions-item>
       </el-descriptions>
+
     </el-card>
 </el-drawer>
+     <!-- 购买件数 -->
+    <el-dialog
+      title="购买件数"
+      :visible.sync="NumDialogVisible"
+      width="30%">
+    <el-descriptions
+        :column="1"
+        size="mini"
+        border>
+        <el-descriptions-item label="总价格" >{{
+         this.productTotalPrice
+        }}</el-descriptions-item>
+         <el-descriptions-item label="件数">{{
+         this.productNum
+        }}</el-descriptions-item>
+      </el-descriptions>
+      
+          <!-- 按钮 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button type="danger" v-show="productNum>0" @click="subNum">-</el-button>
+        <el-button type="success" @click="addNum">+</el-button>
+        <el-button type="primary" @click="BuyProduct">提交</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -76,7 +101,11 @@ export default {
         loading:true,
         drawer:false,
 
-        shopInfo:""
+        shopInfo:"",
+        NumDialogVisible:false,
+        productNum:1,
+        productTotalPrice:0,
+        buyOrCart:0,
     };
   },
   created() {
@@ -117,8 +146,24 @@ export default {
          this.$parent.$parent.$parent.$parent.saveNaveState(activePath);
          this.$router.push(activePath);
     },
-      async buyProduct(productId){
-      apiOrderUserBuy({productId:productId}).then(response =>{
+     ClickBuy(buyOrCart){
+      this.buyOrCart=buyOrCart;
+      this.NumDialogVisible=true;
+      this.productTotalPrice=this.productInfo.productPrice*this.productNum;
+    },
+    async BuyProduct(){
+      if(this.buyOrCart){
+    apiOrderUserAddCart({productId:this.productInfo.productId,productNum:this.productNum}).then(response =>{
+            if (!response.success) return this.$message.error(response.message);
+              this.$message({
+                showClose: true,
+                message: "加入购物车成功",
+                type: 'success'
+              });
+        });
+      }
+      else{
+           apiOrderUserBuy({productId:this.productInfo.productId,productNum:this.productNum}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
            this.$message({
             showClose: true,
@@ -126,16 +171,17 @@ export default {
             type: 'success'
           });
      });
+      }
+       this.productNum=1;
+          this.NumDialogVisible=false;
     },
-       async cartAddProduct(productId){
-      apiOrderUserAddCart({productId:productId}).then(response =>{
-        if (!response.success) return this.$message.error(response.message);
-           this.$message({
-            showClose: true,
-            message: "加入购物车成功",
-            type: 'success'
-          });
-     });
+    subNum(){
+      this.productNum--;
+      this.productTotalPrice=this.productInfo.productPrice*this.productNum;
+    },
+    addNum(){
+    this.productNum++;
+    this.productTotalPrice=this.productInfo.productPrice*this.productNum;
     }
     
   },

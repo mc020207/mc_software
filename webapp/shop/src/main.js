@@ -10,6 +10,7 @@ import "./assets/css/global.css";
 
 import jwt_decode from "jwt-decode";
 import md5 from "js-md5";
+import qs from  'qs';
 // import axios from "axios";
 // import  VueCookies  from "vue-cookies";
 
@@ -33,6 +34,7 @@ Vue.config.productionTip = false;
 
 Vue.prototype.$decoder = jwt_decode;
 Vue.prototype.$md5 = md5;
+Vue.prototype.$qs = qs;
 new Vue({
   router,
 
