@@ -14,5 +14,5 @@ server:
 mybatis:
   mapper-locations: classpath:/com/onlineshopping/mapper/*.xml
   type-aliases-package: com.onlineshopping.model.entity
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

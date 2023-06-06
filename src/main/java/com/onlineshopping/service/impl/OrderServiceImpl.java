@@ -338,7 +338,7 @@ public class OrderServiceImpl implements OrderService {
         accountCondition.setUserId(getUserId(request));
         Account account = accountMapper.selectAccount(accountCondition).get(0);
         accountService.transfer(account.getAccountId(), ConstantUtil.ACCOUNT_MIDDLE_ID, totalMoney);
-        return ordersDisplayVo;
+        return getOrdersDisplayVo(condition, null, null);
     }
 
     @Override
@@ -361,10 +361,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrdersDisplayVO viewAllOrderGroup(Integer page, HttpServletRequest request, HttpServletResponse response) {
+    public OrdersDisplayVO viewAllOrderGroup(Integer page,Integer orderState, HttpServletRequest request, HttpServletResponse response) {
         Integer userId = getUserId(request);
-        List<Integer> orderGroupIds = orderMapper.selectOrderGroupIdByUserId(userId, (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
-        Integer totalNumber=orderMapper.countOrderGroupIdByUserId(userId);
+        List<Integer> orderGroupIds = orderMapper.selectOrderGroupIdByUserId(userId,orderState, (page - 1) * ConstantUtil.PAGE_SIZE, ConstantUtil.PAGE_SIZE);
+        Integer totalNumber=orderMapper.countOrderGroupIdByUserId(userId,orderState);
         List<Order> orders = orderGroupIds.size()==0?new ArrayList<>():orderMapper.selectOrdersByOrderGroupIds(orderGroupIds, null, null);
         List<OrderDisplayVO> orderDisplayVOList = getOrderDisplayVOList(orders);
         return new OrdersDisplayVO(orderDisplayVOList,totalNumber);

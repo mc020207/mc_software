@@ -139,10 +139,10 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/user/view/all", method = RequestMethod.GET)
-    public CommonResult viewAllOrderGroup(Integer page, HttpServletRequest request, HttpServletResponse response) {
+    public CommonResult viewAllOrderGroup(Integer page,Integer orderState, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            cm.setObject(orderService.viewAllOrderGroup(page, request, response));
+            cm.setObject(orderService.viewAllOrderGroup(page,orderState, request, response));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
