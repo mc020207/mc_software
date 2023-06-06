@@ -10,8 +10,8 @@ public interface OrderMapper {
     List<Order> selectOrders(Order order, Integer startRow, Integer num);
 
     List<Order> selectOrdersByShopId(Order order, Integer shopId, Integer startRow, Integer num);
-    List<Integer> selectOrderGroupIdByUserId(Integer userId, Integer startRow, Integer num);
-    Integer countOrderGroupIdByUserId(Integer userId);
+    List<Integer> selectOrderGroupIdByUserId(Integer userId,Integer orderState, Integer startRow, Integer num);
+    Integer countOrderGroupIdByUserId(Integer userId,Integer orderState);
     List<Order> selectOrdersByOrderGroupIds(List<Integer> groupIds, Integer startRow, Integer num);
 
     Order selectOrderById(Integer orderId);

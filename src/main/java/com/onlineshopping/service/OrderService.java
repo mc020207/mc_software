@@ -92,7 +92,7 @@ public interface OrderService {
      * @Description: 用户查看所有订单
      * @Author: Ma-Cheng
      */
-    OrdersDisplayVO viewAllOrderGroup(Integer page, HttpServletRequest request, HttpServletResponse response);
+    OrdersDisplayVO viewAllOrderGroup(Integer page,Integer orderState, HttpServletRequest request, HttpServletResponse response);
     /**
      * @Description: 用户查看某一个订单
      * @Author: Ma-Cheng

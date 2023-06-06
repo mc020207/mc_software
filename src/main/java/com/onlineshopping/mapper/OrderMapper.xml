@@ -208,6 +208,18 @@
     <select id="selectOrderGroupIdByUserId" resultType="int">
         select distinct orderGroupId from `order`
         where userId=#{userId}
+        <if test="orderState==4">
+            and orderState=4
+        </if>
+        <if test="orderState==2">
+            and (orderState=2 or orderState=3)
+        </if>
+        <if test="orderState==3">
+            and (orderState=2 or orderState=3)
+        </if>
+        <if test="orderState==1">
+            and orderState=1
+        </if>
         <if test="startRow!=null and startRow>=0 and num!=null and num>=0">
             limit #{startRow},#{num}
         </if>
@@ -215,6 +227,18 @@
     <select id="countOrderGroupIdByUserId" resultType="int">
         select count(distinct orderGroupId) from `order`
         where userId=#{userId}
+        <if test="orderState==4">
+            and orderState=4
+        </if>
+        <if test="orderState==2">
+            and (orderState=2 or orderState=3)
+        </if>
+        <if test="orderState==3">
+            and (orderState=2 or orderState=3)
+        </if>
+        <if test="orderState==1">
+            and orderState=1
+        </if>
     </select>
     <select id="selectOrdersByOrderGroupIds" resultType="Order">
         select * from `order`
