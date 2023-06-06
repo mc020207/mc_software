@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -77,15 +78,7 @@ public class OrderController {
     public CommonResult userBuyFromCart(String orderIds,HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            String[] s = orderIds.split(" ");
-            List<Integer> orders=new ArrayList<>();
-            if (s.length==0){
-                throw new ServiceException("没有选中的订单");
-            }
-            for (String x : s){
-                orders.add(Integer.parseInt(x));
-            }
-            cm.setObject(orderService.buyProductFromCart(orders, request, response));
+            cm.setObject(orderService.buyProductFromCart(getIntegerListFromString(orderIds), request, response));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
@@ -94,14 +87,23 @@ public class OrderController {
         return cm;
     }
 
+    private List<Integer> getIntegerListFromString(String orderIds) {
+        String[] s = orderIds.split(" ");
+        List<Integer> orders=new ArrayList<>();
+        if (s.length==0){
+            throw new ServiceException("没有选中的订单");
+        }
+        for (String x : s){
+            orders.add(Integer.parseInt(x));
+        }
+        return orders;
+    }
+
     @RequestMapping(value = "/user/confirm", method = RequestMethod.GET)
-    public CommonResult userConfirmOrderGroup(Integer[] orderIds, HttpServletRequest request, HttpServletResponse response) {
+    public CommonResult userConfirmOrderGroup(String orderIds, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            if (orderIds==null){
-                throw new ServiceException("没有选中的订单");
-            }
-            cm.setObject(orderService.userConfirmOrderGroup(Arrays.asList(orderIds), request, response));
+            cm.setObject(orderService.userConfirmOrderGroup(getIntegerListFromString(orderIds), request, response));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;
