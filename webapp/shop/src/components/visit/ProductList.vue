@@ -131,7 +131,7 @@ export default {
         if (!response.success) return this.$message.error(response.message);
            this.$message({
             showClose: true,
-            message: "购买成功",
+            message: "下单成功",
             type: 'success'
           });
           this.productNum=1;

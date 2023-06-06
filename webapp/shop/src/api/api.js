@@ -133,6 +133,42 @@ export function apiOrderUserBuy(params) {
     params
   })
 }
+export function apiOrderUserConfirm(params) {
+  return service({
+    url: 'order/user/confirm',
+    method: 'get',
+    params
+  })
+}
+export function apiOrderUserPay(params) {
+  return service({
+    url: 'order/user/pay',
+    method: 'get',
+    params
+  })
+}
+export function apiOrderUserCancel(params) {
+  return service({
+    url: 'order/user/cancel',
+    method: 'get',
+    params
+  })
+}
+export function apiOrderUserViewAll(params) {
+  return service({
+    url: 'order/user/view/all',
+    method: 'get',
+    params
+  })
+}
+export function apiOrderUserView(params) {
+  return service({
+    url: 'order/user/view',
+    method: 'get',
+    params
+  })
+}
+
 
 export function apiOrderUserAddCart(params) {
   return service({

@@ -10,7 +10,7 @@
     <el-descriptions :title="options[opValue].label" direction="vertical" :column="3" border>
           <!-- 流水表区 -->
       <template slot="extra"  >
-      <el-button type="primary"  style="margin-right: 10px;" @click="orderCartListBuy">下单</el-button>
+      <el-button type="primary"  style="margin-right: 10px;" v-if="opValue==0" @click="orderCartListBuy">下单</el-button>
       <el-select v-model="opValue" style="margin-right: 10px;" placeholder="请选择" @change="getOrderList">
         <el-option
           v-for="item in options"
@@ -21,7 +21,7 @@
       </el-select>
     </template>
       </el-descriptions>
-       <el-table :data="orderList" border stripe :row-style="{height: '49px'}" :cell-style="{padding: '0'}" >
+       <el-table v-if="opValue==0" :data="orderList" border stripe :row-style="{height: '49px'}" :cell-style="{padding: '0'}" >
         <el-table-column type="index"></el-table-column>
         <el-table-column
           label="商品名"
@@ -63,6 +63,15 @@
         </el-table-column>
       </el-table>
 
+    </el-card>
+    <template v-if="options!=0">
+        <el-row  v-for="(o) in orderGroup" :key="o.groupId" >
+          <el-card>
+
+          </el-card>
+        </el-row>
+    </template>
+    
        <!-- 分页区域 -->
       <el-pagination 
        layout="total, prev, pager, next, jumper"
@@ -71,17 +80,40 @@
       :page-size="pageSize"
       :total="total">
     </el-pagination>
-    </el-card>
+
+      <el-dialog
+      title="购买件数"
+      :visible.sync="orderDialogVisible"
+      width="30%">
+    <el-descriptions
+        :column="1"
+        size="mini"
+        border>
+        <el-descriptions-item label="总价格" >{{
+         this.productTotalPrice
+        }}</el-descriptions-item>
+         <el-descriptions-item label="商品数">{{
+         this.productNum
+        }}</el-descriptions-item>
+      </el-descriptions>
+      
+          <!-- 按钮 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="confirmOrder">提交</el-button>
+        <el-button type="primary" @click="cancelOrder">取消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {apiOrderUserCartBuy,apiOrderUserCartEdit,apiOrderUserCartList,apiOrderUserReceiveList,apiOrderUserWaitList} from '@/api/api'
+import {apiOrderUserCartBuy,apiOrderUserCartEdit,apiOrderUserCartList,apiOrderUserReceiveList,apiOrderUserWaitList,apiOrderUserConfirm} from '@/api/api'
 
 export default {
   data() {
     return {
       orderList: [],
+      orderGroup:[],
       currentPage:1,
       pageSize:9,   //一页的数量
       total:0,
@@ -94,7 +126,7 @@ export default {
         },
          {
           value:1,
-          label: '已购买待收货商品列表'
+          label: '待收货商品列表'
         },
         {
           value:2,
@@ -102,9 +134,16 @@ export default {
         },
         {
           value:3,
-          label: '未发货商品列表'
+          label: '已撤销订单列表'
+        },
+        {
+          value:4,
+          label: '所有订单列表'
         }
       ],
+      orderDialogVisible:false,
+      productNum:0,
+      productTotalPrice:0,
     };
   },
   created() {
@@ -129,10 +168,12 @@ export default {
            apiOrderUserWaitList({page:this.currentPage}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
         this.total = response.object.totalNumber;
-        this.orderList = response.object.orders;
-        for(let i=0;i<this.orderList.length;i++){
+            this.orderList = response.object.orders;
+            for(let i=0;i<this.orderList.length;i++){
         this.orderList[i].productTotalPrice=this.orderList[i].orderMoney*this.orderList[i].productNum;
-      }
+            }
+             console.log(this.orderList.length);
+            this.classifyOrder();
       })
          break;
       }
@@ -141,9 +182,10 @@ export default {
         if (!response.success) return this.$message.error(response.message);
         this.total = response.object.totalNumber;
         this.orderList = response.object.orders;
-        for(let i=0;i<this.orderList.length;i++){
+            for(let i=0;i<this.orderList.length;i++){
         this.orderList[i].productTotalPrice=this.orderList[i].orderMoney*this.orderList[i].productNum;
-      }
+            }
+        this.classifyOrder();
       })
          break;
       }
@@ -152,9 +194,22 @@ export default {
         if (!response.success) return this.$message.error(response.message);
         this.total = response.object.totalNumber;
         this.orderList = response.object.orders;
-        for(let i=0;i<this.orderList.length;i++){
+            for(let i=0;i<this.orderList.length;i++){
         this.orderList[i].productTotalPrice=this.orderList[i].orderMoney*this.orderList[i].productNum;
+            }
+        this.classifyOrder();
+      })
+         break;
       }
+      case 4:{
+           apiOrderUserReceiveList({page:this.currentPage}).then(response =>{
+        if (!response.success) return this.$message.error(response.message);
+        this.total = response.object.totalNumber;
+          this.orderList = response.object.orders;
+              for(let i=0;i<this.orderList.length;i++){
+        this.orderList[i].productTotalPrice=this.orderList[i].orderMoney*this.orderList[i].productNum;
+            }
+          this.classifyOrder();
       })
          break;
       }
@@ -162,6 +217,22 @@ export default {
           this.$message.error("非法访问");
           this.$router.push("/login");
       }
+    },
+    // 将oder分成不同的组
+    classifyOrder(){
+        var j=-1;
+        // console.log(this.orderList.length);
+        for(let i=0;i<this.orderList.length;i++){
+            if(i==0||this.orderList[i][0].orderGroupId!=this.orderList[i-1][0].orderGroupId){
+              this.orderGroup[++j].push(this.orderList[i]);
+              //  console.log(this.orderList[i]);
+            }
+            else{
+               this.orderGroup[j].push(this.orderList[i]);
+              //  console.log(this.orderList[i]);
+            }
+        }
+        // console.log(this.orderGroup[1]);
     },
       //监听页面值改变的事件
     handleCurrentChange(newPage){
@@ -180,7 +251,7 @@ export default {
             orderIds.push(this.orderList[i].orderId);
         }
       }
-      console.log(orderIds);
+
       var str='';
       for(let i=0;i<orderIds.length;i++){
         if(i==0){
@@ -199,6 +270,15 @@ export default {
         });
         this.total = response.object.totalNumber;
         this.orderList = response.object.orders;
+          this.orderDialogVisible=true;
+
+          this.productNum=0;
+          this.productTotalPrice=0;
+         for(let i=0;i<this.orderList.length;i++){
+            this.productNum+=this.orderList[i].productNum;
+            this.productTotalPrice+=this.orderList[i].orderMoney;
+          }
+
     });
     },
   async  orderCartInfo(productId){
@@ -259,6 +339,34 @@ export default {
         this.getOrderList();
     })
       
+    },
+   async confirmOrder(){
+     var orderIds=[];
+       for(let i=0;i<this.orderList.length;i++){
+            orderIds.push(this.orderList[i].orderId);
+      }
+      var str='';
+      for(let i=0;i<orderIds.length;i++){
+        if(i==0){
+          str+=orderIds[i];
+        }
+        else{
+          str+=" "+orderIds[i];
+        }
+      }
+      apiOrderUserConfirm({orderIds:str}).then(response =>{
+        if(!response.success) return this.$message.error(response.message);
+         this.$message({
+          showClose: true,
+          message: '提交成功',
+          type: 'success'
+        });
+        this.orderDialogVisible=false;
+    });
+    },
+    async cancelOrder(){
+      this.getOrderList();
+      this.orderDialogVisible=false;
     }
   },
 };

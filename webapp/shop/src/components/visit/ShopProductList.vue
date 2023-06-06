@@ -29,11 +29,35 @@
         }}</el-descriptions-item>
       </el-descriptions>
       </div>
-         <el-button size="small" round @click="buyProduct(productList[index_i*5+index_j].productId)">{{productList[index_i*5+index_j].productPrice}}  购买</el-button>
+         <el-button size="small" round @click="ClickBuy(productList[index_i*5+index_j].productId,index_i*5+index_j)">{{productList[index_i*5+index_j].productPrice}}  购买</el-button>
          <el-button @click="productInspectInfo(productList[index_i*5+index_j].productId)">详情</el-button>
     </el-card>
   </el-col>
 </el-row>
+
+    <el-dialog
+      title="购买件数"
+      :visible.sync="NumDialogVisible"
+      width="30%">
+    <el-descriptions
+        :column="1"
+        size="mini"
+        border>
+        <el-descriptions-item label="总价格" >{{
+         this.productTotalPrice
+        }}</el-descriptions-item>
+         <el-descriptions-item label="件数">{{
+         this.productNum
+        }}</el-descriptions-item>
+      </el-descriptions>
+      
+          <!-- 按钮 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button type="danger" v-show="productNum>0" @click="subNum">-</el-button>
+        <el-button type="success" @click="addNum">+</el-button>
+        <el-button type="primary" @click="BuyProduct">提交</el-button>
+      </span>
+    </el-dialog>
  <!-- 分页区域 -->
  <el-pagination 
        layout="total, prev, pager, next, jumper"
@@ -84,6 +108,11 @@ export default {
 
       drawer:false,
       shopInfo:"",
+       productId:0,
+      productNum:1,
+      NumDialogVisible:false,
+      productIndex:0,
+      productTotalPrice:0
     };
   },
   created() {
@@ -133,16 +162,33 @@ export default {
             this.drawer = true;
         });
     },
-       async buyProduct(productId){
-      apiOrderUserBuy({productId:productId}).then(response =>{
+    ClickBuy(productId,index){
+      this.productId=productId;
+      this.NumDialogVisible=true;
+      this.productIndex=index;
+      this.productTotalPrice=this.productList[this.productIndex].productPrice*this.productNum;
+    },
+    async BuyProduct(){
+      apiOrderUserBuy({productId:this.productId,productNum:this.productNum}).then(response =>{
         if (!response.success) return this.$message.error(response.message);
            this.$message({
             showClose: true,
-            message: "购买成功",
+            message: "下单成功",
             type: 'success'
           });
+          this.productNum=1;
+          this.NumDialogVisible=false;
      });
+    },
+    subNum(){
+      this.productNum--;
+      this.productTotalPrice=this.productList[this.productIndex].productPrice*this.productNum;
+    },
+    addNum(){
+    this.productNum++;
+    this.productTotalPrice=this.productList[this.productIndex].productPrice*this.productNum;
     }
+    
   },
 };
 </script>
