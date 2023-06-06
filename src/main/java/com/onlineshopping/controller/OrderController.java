@@ -24,7 +24,7 @@ public class OrderController {
     public CommonResult userBuyDirect(Integer productId, Integer productNum, HttpServletRequest request, HttpServletResponse response) {
         CommonResult cm = new CommonResult(false);
         try {
-            orderService.buyProductDirectly(productId, productNum, request, response);
+            cm.setObject(orderService.buyProductDirectly(productId, productNum, request, response));
         } catch (Exception e) {
             cm.setMessage(e.getMessage());
             return cm;

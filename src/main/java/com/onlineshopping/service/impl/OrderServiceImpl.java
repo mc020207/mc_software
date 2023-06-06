@@ -167,9 +167,12 @@ public class OrderServiceImpl implements OrderService {
         FormatUtil.checkPositive("productNum", productNum);
         Product product = checkProductCanBuy(productId);
         // 插入订单
-        Order order = new Order(null, getUserId(request), productId, ConstantUtil.ORDER_NOT_PAY, new Timestamp(System.currentTimeMillis()), product.getProductPrice(),productNum,getNextGroupId());
+        Integer orderGroupId=getNextGroupId();
+        Order order = new Order(null, getUserId(request), productId, ConstantUtil.ORDER_NOT_PAY, new Timestamp(System.currentTimeMillis()), product.getProductPrice(),productNum,orderGroupId);
         orderMapper.insertOrder(order);
-        return null;
+        Order condition = new Order();
+        condition.setOrderGroupId(orderGroupId);
+        return getOrdersDisplayVo(condition,null,null);
         // 个人账户向中间账户转账
 //        Account accountCondition = new Account();
 //        accountCondition.setAccountType(ConstantUtil.ACCOUNT_USER);
